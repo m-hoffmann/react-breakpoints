@@ -158,11 +158,11 @@ class ReactBreakpoints extends React.Component<
     };
   }
 
-  componentWillReceiveProps(nextProps: ReactBreakpointsProps) {
-    const { breakpoints: newBreakpoint } = nextProps;
+  componentDidUpdateProps(prevProps: ReactBreakpointsProps) {
+    const { breakpoints: prevBreakpoint } = prevProps;
     const { breakpoints } = this.props;
-    if (newBreakpoint != breakpoints) {
-      this.updateBreakpoints(newBreakpoint);
+    if (prevBreakpoint != breakpoints) {
+      this.updateBreakpoints(breakpoints);
     }
   }
 
@@ -225,11 +225,11 @@ class ReactBreakpoints extends React.Component<
     });
   }
 
-  private calculateCurrentBreakpoint(screenWidth: number) {
-    return ReactBreakpoints.calculateBreakpoint(
-      screenWidth,
-      this.state.sortedBreakpoints,
-    );
+  static calculateCurrentBreakpoint(
+    screenWidth: number,
+    sortedBreakpoints: SortedBreakpoints,
+  ) {
+    return ReactBreakpoints.calculateBreakpoint(screenWidth, sortedBreakpoints);
   }
 
   private readWidth = (event?: UIEvent | Event) => {
@@ -247,7 +247,10 @@ class ReactBreakpoints extends React.Component<
 
     let screenWidth = this.convertScreenWidth(width);
 
-    const current = this.calculateCurrentBreakpoint(screenWidth);
+    const current = ReactBreakpoints.calculateCurrentBreakpoint(
+      screenWidth,
+      this.state.sortedBreakpoints,
+    );
 
     this.setState(state => {
       if (state.currentBreakpoint === current) {
@@ -282,7 +285,7 @@ class ReactBreakpoints extends React.Component<
     const { children } = this.props;
     return (
       <BreakpointsContext.Provider value={this.getContextValues()}>
-        {children && children}
+        {children}
       </BreakpointsContext.Provider>
     );
   }
