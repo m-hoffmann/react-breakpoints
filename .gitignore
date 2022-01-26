@@ -1,7 +1,6 @@
 /node_modules
 .DS_Store
 lib
-es
 .vscode
 .idea
 example/node_modules

@@ -1,5 +1,3 @@
-.babelrc
-modules
 node_modules
 README.md
 CHANGELOG.md

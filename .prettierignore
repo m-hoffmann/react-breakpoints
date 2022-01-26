@@ -1,6 +1,6 @@
 package.json
 package-lock.json
-.babelrc
+tsconfig.json
 .npmignore
 .gitignore
 README.md
