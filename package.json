@@ -22,8 +22,8 @@
     "compile:es": "cross-env BABEL_ENV=es babel modules --out-dir es --ignore test.js",
     "prepublishOnly": "npm run compile",
     "prettier": "pretty-quick --staged",
-    "precommit": "npm run prettier",
-    "prepush": "npm run prettier",
+    "precommit_": "npm run prettier",
+    "prepush_": "npm run prettier",
     "test": "jest"
   },
   "peerDependencies": {
