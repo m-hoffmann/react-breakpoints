@@ -200,12 +200,14 @@ class ReactBreakpoints extends React.Component<
     }
   }
 
-  static sortBreakpoints(breakpoints: BreakpointMap): SortedBreakpoints {
+  private static sortBreakpoints(
+    breakpoints: BreakpointMap,
+  ): SortedBreakpoints {
     return Object.entries(breakpoints).sort((a, b) => b[1] - a[1]);
   }
 
   // breakpoints should be sorted
-  static calculateBreakpoint(
+  private static calculateBreakpoint(
     screenWidth: number,
     breakpoints: [string, number][],
   ): string {
@@ -225,7 +227,7 @@ class ReactBreakpoints extends React.Component<
     });
   }
 
-  static calculateCurrentBreakpoint(
+  private static calculateCurrentBreakpoint(
     screenWidth: number,
     sortedBreakpoints: SortedBreakpoints,
   ) {

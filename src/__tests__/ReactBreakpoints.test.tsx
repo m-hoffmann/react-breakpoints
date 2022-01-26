@@ -1,56 +1,152 @@
-import React from 'react';
-import { shallow } from 'enzyme';
+import React, { useContext } from 'react';
+import { render, screen } from '@testing-library/react';
+
 import ReactBreakpoints from '../ReactBreakpoints';
+import { BreakpointsContext } from '../BreakpointsContext';
+import { BreakpointsProps } from '../breakpoints';
 
 describe('<ReactBreakpoints />', function () {
-  it('sorts breakpoints once', () => {
-    const breakpoints = {
-      mobile: 320,
-      desktopHuge: 1920,
-    };
-    const spy = jest.fn(ReactBreakpoints.sortBreakpoints);
-    ReactBreakpoints.sortBreakpoints = spy;
-    const wrapper = shallow(<ReactBreakpoints breakpoints={breakpoints} />);
-    const instance = wrapper.instance();
-    // call readWidth, the event listener, multiple times
-    for (let i = 0; i < 5; i++) {
-      instance.calculateCurrentBreakpoint(320 * i);
-    }
-    expect(spy.mock.calls.length).toBe(1);
-  });
-  it('calculates breakpoint correctly', function () {
-    const breakpoints = {
-      mobile: 320,
-      mobileLandscape: 480,
-      tablet: 768,
-      tabletLandscape: 1024,
-      desktop: 1200,
-      desktopWide: 1500,
-      desktopHuge: 1920,
-    };
-    const wrapper = shallow(<ReactBreakpoints breakpoints={breakpoints} />);
-    const instance = wrapper.instance();
-    Object.keys(breakpoints).forEach(function (k) {
-      const value = breakpoints[k];
-      expect(instance.calculateCurrentBreakpoint(value + 1)).toEqual(k);
+  const propsMock = jest.fn();
+
+  function Children() {
+    const props = useContext(BreakpointsContext);
+    propsMock(props);
+    return <div data-test-id="children" />;
+  }
+
+  beforeEach(() => {
+    propsMock.mockReset();
+    propsMock.mockImplementation((props: BreakpointsProps) => {
+      return props;
     });
+    jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
-  it('breakpoints need not to be sorted', () => {
+  it('explodes if there are no breakpoints', function () {
+    expect(() =>
+      render(<ReactBreakpoints breakpoints={{}} children={<Children />} />),
+    ).toThrow();
+  });
+
+  it('renders its children', function () {
+    const result = render(
+      <ReactBreakpoints
+        breakpoints={{ xs: 1 }}
+        children={<div data-test-id="children" />}
+      />,
+    );
+
+    expect(result.findByTestId('children')).resolves.toBeDefined();
+  });
+
+  it('passed breakpoints through context', function () {
     const breakpoints = {
-      mobileLandscape: 480,
-      tabletLandscape: 1024,
-      desktop: 1200,
-      desktopHuge: 1920,
-      desktopWide: 1500,
-      tablet: 768,
       mobile: 320,
+      tablet: 768,
+      desktop: 1200,
     };
-    const wrapper = shallow(<ReactBreakpoints breakpoints={breakpoints} />);
-    const instance = wrapper.instance();
-    Object.keys(breakpoints).forEach(function (k) {
-      const value = breakpoints[k];
-      expect(instance.calculateCurrentBreakpoint(value + 1)).toEqual(k);
-    });
+
+    render(
+      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
+    );
+
+    expect(propsMock.mock.results).toMatchObject([
+      { type: 'return', value: { breakpoints } },
+    ]);
+  });
+
+  it('detects currentBreakpoint "desktop" for innerWidth = 1920', function () {
+    const breakpoints = {
+      mobile: 320,
+      tablet: 768,
+      desktop: 1200,
+    };
+
+    global.innerWidth = 1920;
+
+    render(
+      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
+    );
+
+    expect(propsMock.mock.results).toMatchObject([
+      { type: 'return', value: { breakpoints, currentBreakpoint: 'desktop' } },
+    ]);
+  });
+
+  it('detects currentBreakpoint "tablet" for innerWidth = 800', function () {
+    const breakpoints = {
+      mobile: 320,
+      tablet: 768,
+      desktop: 1200,
+    };
+
+    global.innerWidth = 800;
+
+    render(
+      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
+    );
+
+    expect(propsMock.mock.results).toMatchObject([
+      { type: 'return', value: { breakpoints, currentBreakpoint: 'tablet' } },
+    ]);
+  });
+
+  it('detects currentBreakpoint "mobile" for innerWidth = 240', function () {
+    const breakpoints = {
+      mobile: 320,
+      tablet: 768,
+      desktop: 1200,
+    };
+
+    global.innerWidth = 240;
+
+    render(
+      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
+    );
+
+    expect(propsMock.mock.results).toMatchObject([
+      { type: 'return', value: { breakpoints, currentBreakpoint: 'mobile' } },
+    ]);
+  });
+
+  it('detects currentBreakpoint "mobile" for innerWidth = 100', function () {
+    const breakpoints = {
+      mobile: 320,
+      tablet: 768,
+      desktop: 1200,
+    };
+
+    global.innerWidth = 100;
+
+    render(
+      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
+    );
+
+    expect(propsMock.mock.results).toMatchObject([
+      { type: 'return', value: { breakpoints, currentBreakpoint: 'mobile' } },
+    ]);
+  });
+
+  it('detects screenWidth = 1234 if snapMode = false', function () {
+    const breakpoints = {
+      mobile: 320,
+      tablet: 768,
+      desktop: 1200,
+    };
+
+    const screenWidth = 1234;
+    global.innerWidth = screenWidth;
+
+    render(
+      <ReactBreakpoints
+        breakpoints={breakpoints}
+        children={<Children />}
+        snapMode={false}
+      />,
+    );
+
+    expect(propsMock.mock.results).toMatchObject([
+      { type: 'return', value: { breakpoints, screenWidth } },
+    ]);
   });
 });
