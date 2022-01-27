@@ -240,6 +240,76 @@ describe('<ReactBreakpoints />', function () {
     ]);
   });
 
+  it('re-renders if the same object reference is passed again for breakpoints', function () {
+    const breakpoints = {
+      mobile: 320,
+      tablet: 768,
+      desktop: 1200,
+    };
+
+    const screenWidth = 800; // = 50em
+    global.innerWidth = screenWidth;
+
+    const result = render(
+      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
+    );
+
+    result.rerender(
+      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
+    );
+
+    expect(propsMock.mock.results).toMatchObject([
+      {
+        type: 'return',
+        value: { breakpoints, currentBreakpoint: 'tablet' },
+      },
+      {
+        type: 'return',
+        value: { breakpoints, currentBreakpoint: 'tablet' },
+      },
+    ]);
+  });
+
+  it('re-renders when breakpoints is a new object reference, unfortunately', function () {
+    const initialBreakPoints = {
+      mobile: 320,
+      tablet: 768,
+      desktop: 1200,
+    };
+
+    const nextBreakpoints = {
+      ...initialBreakPoints,
+    };
+
+    const screenWidth = 800; // = 50em
+    global.innerWidth = screenWidth;
+
+    const result = render(
+      <ReactBreakpoints
+        breakpoints={initialBreakPoints}
+        children={<Children />}
+      />,
+    );
+
+    result.rerender(
+      <ReactBreakpoints
+        breakpoints={nextBreakpoints}
+        children={<Children />}
+      />,
+    );
+
+    expect(propsMock.mock.results).toMatchObject([
+      {
+        type: 'return',
+        value: { breakpoints: initialBreakPoints, currentBreakpoint: 'tablet' },
+      },
+      {
+        type: 'return',
+        value: { breakpoints: nextBreakpoints, currentBreakpoint: 'tablet' },
+      },
+    ]);
+  });
+
   it('detects changes in window size', function () {
     const breakpoints = {
       mobile: 320,
