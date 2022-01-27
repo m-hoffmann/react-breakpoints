@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import ReactBreakpoints from '../ReactBreakpoints';
 import { BreakpointsContext } from '../BreakpointsContext';
@@ -19,7 +19,9 @@ describe('<ReactBreakpoints />', function () {
     propsMock.mockImplementation((props: BreakpointsProps) => {
       return props;
     });
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {
+      /* linter */
+    });
   });
 
   it('explodes if there are no breakpoints', function () {

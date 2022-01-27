@@ -7,6 +7,6 @@ import { useContext } from 'react';
  * - needs ReactBreakpoints
  * @returns The breakpoint props
  */
-export function useBreakpoints<K extends BreakpointKey>(): K {
-  return useContext(BreakpointsContext) as unknown as K;
+export function useBreakpoints<K extends BreakpointKey>(): BreakpointsProps<K> {
+  return useContext(BreakpointsContext) as BreakpointsProps<K>;
 }

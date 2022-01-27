@@ -1,11 +1,11 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import './index.css'
-import App from './App'
-import registerServiceWorker from './registerServiceWorker'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import registerServiceWorker from './registerServiceWorker';
 
 // import Provider
-import ReactBreakpoints from 'react-breakpoints'
+import ReactBreakpoints from 'react-breakpoints-todo';
 
 // declare breakpoints
 const breakpoints = {
@@ -16,12 +16,12 @@ const breakpoints = {
   desktop: 1200,
   desktopWide: 1500,
   desktopHuge: 1920,
-}
+};
 
 ReactDOM.render(
   <ReactBreakpoints breakpoints={breakpoints}>
     <App />
   </ReactBreakpoints>,
   document.getElementById('root'),
-)
-registerServiceWorker()
+);
+registerServiceWorker();

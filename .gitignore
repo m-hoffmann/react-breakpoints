@@ -4,3 +4,4 @@ lib
 .vscode
 .idea
 example/node_modules
+*.tgz

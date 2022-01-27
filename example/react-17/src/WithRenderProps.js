@@ -1,12 +1,12 @@
-import React from 'react'
-import { Media } from 'react-breakpoints'
+import React from 'react';
+import { Media } from 'react-breakpoints-todo';
 
-const DummyComponent = ({ name }) => <div>{name}</div>
+const DummyComponent = ({ name }) => <div>{name}</div>;
 
 const WithRenderProps = props => {
   return (
     <div>
-      <h3>With Render Props</h3>
+      <h3>With Render Props Media Component</h3>
       <Media>
         {({ breakpoints, currentBreakpoint }) => (
           <React.Fragment>
@@ -38,7 +38,7 @@ const WithRenderProps = props => {
         )}
       </Media>
     </div>
-  )
-}
+  );
+};
 
-export default WithRenderProps
+export default WithRenderProps;

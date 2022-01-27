@@ -3,7 +3,7 @@ module.exports = {
   // `<rootDir>` is a token Jest substitutes
   roots: ['<rootDir>/src'],
 
-  testEnvironment: "jsdom",  
+  testEnvironment: 'jsdom',
 
   // Jest transformations -- this adds support for TypeScript
   // using ts-jest
@@ -16,7 +16,7 @@ module.exports = {
   // extended assertions to Jest
   setupFilesAfterEnv: [
     // '@testing-library/react/cleanup-after-each',
-    '@testing-library/jest-dom/extend-expect',    
+    '@testing-library/jest-dom/extend-expect',
   ],
 
   // Test spec file resolution pattern
@@ -26,4 +26,6 @@ module.exports = {
 
   // Module file extensions for importing
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
+
+  modulePathIgnorePatterns: ['example'],
 };

@@ -1,12 +1,12 @@
-import React from 'react'
-import { withBreakpoints } from 'react-breakpoints'
+import React from 'react';
+import { withBreakpoints } from 'react-breakpoints-todo';
 
-const DummyComponent = ({ name }) => <div>{name}</div>
+const DummyComponent = ({ name }) => <div>{name}</div>;
 
 const WithHOC = ({ breakpoints, currentBreakpoint }) => {
   return (
     <div>
-      <h3>With Render Props</h3>
+      <h3>With withBreakpoints HOC</h3>
       <h4>
         Your current breakpoint is{' '}
         <code>
@@ -32,7 +32,7 @@ const WithHOC = ({ breakpoints, currentBreakpoint }) => {
         }}
       />
     </div>
-  )
-}
+  );
+};
 
-export default withBreakpoints(WithHOC)
+export default withBreakpoints(WithHOC);

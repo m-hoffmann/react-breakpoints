@@ -33,3 +33,9 @@ export interface BreakpointsProps<K extends BreakpointKey = BreakpointKey> {
    */
   screenWidth?: number;
 }
+
+/**
+ * Array with breakpoints
+ * @example,  [["xs", 320], [md: 640]]
+ */
+export type SortedBreakpoints = [string, number][];

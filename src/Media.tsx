@@ -1,12 +1,12 @@
 import { ReactNode } from 'react';
-import { BreakpointKey } from './breakpoints';
+import { BreakpointKey, BreakpointsProps } from './breakpoints';
 import { useBreakpoints } from './useBreakpoints';
 
 /**
  * Props for Media Component
  */
 export interface MediaProps<K extends BreakpointKey> {
-  children(value: K): React.ReactNode;
+  children(value: BreakpointsProps<K>): React.ReactNode;
 }
 
 /**

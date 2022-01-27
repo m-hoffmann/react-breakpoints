@@ -2,7 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import debounce from 'lodash.debounce';
 
-import { em, stripUnit } from './utils';
+import {
+  sortBreakpoints,
+  convertScreenWidth,
+  calculateBreakpoint,
+} from './utils';
 
 import { BreakpointsContext } from './BreakpointsContext';
 
@@ -18,11 +22,16 @@ import {
 const globalWindow: Window | null =
   typeof window !== 'undefined' ? window : null;
 
-export interface ReactBreakpointsProps {
+/**
+ * Props for ReactBreakpoints
+ */
+export interface ReactBreakpointsProps<
+  K extends BreakpointKey = BreakpointKey,
+> {
   /**
    * Your breakpoints object.
    */
-  breakpoints: BreakpointMap;
+  breakpoints: BreakpointMap<K>;
   /**
    * The type of unit that your breakpoints should use - px or em.
    * @default "px"
@@ -58,33 +67,18 @@ export interface ReactBreakpointsProps {
   snapMode?: boolean;
 }
 
-/**
- * Array with breakpoints
- * @example,  [["xs", 320], [md: 640]]
- */
-type SortedBreakpoints = [string, number][];
-
 interface ReactBreakpointsState {
-  /**
-   * Copy of breakpoints
-   */
-  breakpoints: BreakpointMap;
-  /**
-   * Sorted breakpoints
-   */
-  sortedBreakpoints: SortedBreakpoints;
-
   /**
    * Name of current breakpoint
    * undefined if `snapMode=true`
    */
-  currentBreakpoint?: BreakpointKey;
+  currentBreakpoint: BreakpointKey;
 
   /**
    * Current screen width
    * undefined if `snapMode=false`
    */
-  screenWidth?: number;
+  screenWidth: number;
 }
 
 /**
@@ -116,59 +110,19 @@ class ReactBreakpoints extends React.Component<
 
   constructor(props: ReactBreakpointsProps) {
     super(props);
-    const { breakpoints, defaultBreakpoint, guessedBreakpoint } = this.props;
+    const { breakpoints } = this.props;
 
     // throw Error if no breakpoints were passed
-    if (!breakpoints) throw new Error(ERRORS.NO_BREAKPOINTS);
+    if (!breakpoints) {
+      throw new Error(ERRORS.NO_BREAKPOINTS);
+    }
+
     // throw Error if breakpoints is not an object
-    if (typeof breakpoints !== 'object') throw new Error(ERRORS.NOT_OBJECT);
-
-    let currentBreakpoint = '';
-
-    const sortedBreakpoints = ReactBreakpoints.sortBreakpoints(breakpoints);
-
-    // if we are on the client, we directly compote the breakpoint using window width
-    if (globalWindow) {
-      currentBreakpoint = ReactBreakpoints.calculateBreakpoint(
-        this.convertScreenWidth(globalWindow.innerWidth),
-        sortedBreakpoints,
-      );
-    } else if (guessedBreakpoint) {
-      currentBreakpoint = ReactBreakpoints.calculateBreakpoint(
-        guessedBreakpoint,
-        sortedBreakpoints,
-      );
-    } else if (defaultBreakpoint) {
-      currentBreakpoint = ReactBreakpoints.calculateBreakpoint(
-        defaultBreakpoint,
-        sortedBreakpoints,
-      );
+    if (typeof breakpoints !== 'object') {
+      throw new Error(ERRORS.NOT_OBJECT);
     }
 
-    const screenWidth = globalWindow
-      ? this.convertScreenWidth(globalWindow.innerWidth)
-      : defaultBreakpoint;
-    this.state = {
-      breakpoints: breakpoints ?? {},
-      // if we are on the client, we set the screen width to the window width,
-      // otherwise, we use the default breakpoint
-      screenWidth: screenWidth,
-      currentBreakpoint: currentBreakpoint,
-      sortedBreakpoints,
-    };
-  }
-
-  componentDidUpdateProps(prevProps: ReactBreakpointsProps) {
-    const { breakpoints: prevBreakpoint } = prevProps;
-    const { breakpoints } = this.props;
-    if (prevBreakpoint != breakpoints) {
-      this.updateBreakpoints(breakpoints);
-    }
-  }
-
-  convertScreenWidth(screenWidth: number): number {
-    const { breakpointUnit } = this.props;
-    return breakpointUnit === 'em' ? stripUnit(em(screenWidth)) : screenWidth;
+    this.state = ReactBreakpoints.calculateBreakpointState(props);
   }
 
   componentDidMount() {
@@ -186,6 +140,7 @@ class ReactBreakpoints extends React.Component<
       globalWindow.addEventListener('orientationchange', this.readWidth);
     }
   }
+
   componentWillUnmount() {
     if (globalWindow) {
       if (this.props.debounceResize) {
@@ -200,75 +155,74 @@ class ReactBreakpoints extends React.Component<
     }
   }
 
-  private static sortBreakpoints(
-    breakpoints: BreakpointMap,
-  ): SortedBreakpoints {
-    return Object.entries(breakpoints).sort((a, b) => b[1] - a[1]);
-  }
+  componentDidUpdate(prevProps: ReactBreakpointsProps) {
+    if (prevProps.breakpoints !== this.props.breakpoints) {
+      this.setState(state => {
+        const nextState = ReactBreakpoints.calculateBreakpointState(this.props);
+        if (state.currentBreakpoint === nextState.currentBreakpoint) {
+          return null; // no patch
+        }
 
-  // breakpoints should be sorted
-  private static calculateBreakpoint(
-    screenWidth: number,
-    breakpoints: [string, number][],
-  ): string {
-    for (let b of breakpoints) {
-      if (screenWidth >= b[1]) {
-        return b[0];
-      }
+        return nextState;
+      });
     }
-    // screenWidth is below lowest breakpoint,
-    // so it will still be set to equal lowest breakpoint instead of null
-    return breakpoints[breakpoints.length - 1][0];
   }
 
-  private updateBreakpoints(breakpoints: BreakpointMap): void {
-    this.setState({
-      sortedBreakpoints: ReactBreakpoints.sortBreakpoints(breakpoints),
-    });
-  }
-
-  private static calculateCurrentBreakpoint(
-    screenWidth: number,
-    sortedBreakpoints: SortedBreakpoints,
-  ) {
-    return ReactBreakpoints.calculateBreakpoint(screenWidth, sortedBreakpoints);
-  }
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private readWidth = (event?: UIEvent | Event) => {
-    const { snapMode } = this.props;
-
-    // TODO: find out why if there are any additional elemens with innerWidth
-    type ElementWithInnerWidth = Window;
-    const element: ElementWithInnerWidth | undefined =
-      event?.target as ElementWithInnerWidth;
-
-    // read width from event or window
-    const width = element?.innerWidth
-      ? element.innerWidth
-      : globalWindow?.innerWidth ?? 0;
-
-    let screenWidth = this.convertScreenWidth(width);
-
-    const current = ReactBreakpoints.calculateCurrentBreakpoint(
-      screenWidth,
-      this.state.sortedBreakpoints,
-    );
-
     this.setState(state => {
-      if (state.currentBreakpoint === current) {
+      const nextState = ReactBreakpoints.calculateBreakpointState(this.props);
+      if (state.currentBreakpoint === nextState.currentBreakpoint) {
         return null; // no patch
       }
-      if (snapMode) {
-        return {
-          currentBreakpoint: current,
-        };
-      } else {
-        return {
-          screenWidth,
-        };
-      }
+
+      return nextState;
     });
   };
+
+  /**
+   * Called when
+   * - window size or changes
+   * - window orientation changes
+   * - new breakpoints passed
+   * @param screenWidth
+   */
+  private static calculateBreakpointState(
+    props: ReactBreakpointsProps,
+  ): ReactBreakpointsState {
+    const { breakpoints, defaultBreakpoint, guessedBreakpoint } = props;
+
+    // with fallback from defaultProps
+    const breakpointUnit = props.breakpointUnit as BreakpointUnit;
+
+    let currentBreakpoint = '';
+
+    const screenWidth = globalWindow
+      ? convertScreenWidth(globalWindow.innerWidth, breakpointUnit)
+      : 0;
+
+    const sortedBreakpoints = sortBreakpoints(breakpoints);
+
+    // if we are on the client, we directly compose the breakpoint using window width
+    if (globalWindow) {
+      currentBreakpoint = calculateBreakpoint(screenWidth, sortedBreakpoints);
+    } else if (guessedBreakpoint) {
+      currentBreakpoint = calculateBreakpoint(
+        guessedBreakpoint,
+        sortedBreakpoints,
+      );
+    } else if (defaultBreakpoint) {
+      currentBreakpoint = calculateBreakpoint(
+        defaultBreakpoint,
+        sortedBreakpoints,
+      );
+    }
+
+    return {
+      screenWidth,
+      currentBreakpoint,
+    };
+  }
 
   private getSnapModeProps = (): Pick<
     BreakpointsProps,

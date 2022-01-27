@@ -1,12 +1,12 @@
 {
-  "name": "example",
+  "name": "react-breakpoints-app-react-16",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "react": "^16.4.0",
-    "react-dom": "^16.4.0",
-    "react-scripts": "1.1.4",
-    "react-breakpoints": "^3.0.2"
+    "react": "^16.8.0",
+    "react-breakpoints-todo": "..\\react-breakpoints-todo-4.0.0-3.tgz",
+    "react-dom": "^16.14.0",
+    "react-scripts": "1.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
