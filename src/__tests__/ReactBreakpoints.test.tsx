@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 
 import ReactBreakpoints from '../ReactBreakpoints';
 import { BreakpointsContext } from '../BreakpointsContext';
@@ -195,6 +195,85 @@ describe('<ReactBreakpoints />', function () {
 
     expect(propsMock.mock.results).toMatchObject([
       { type: 'return', value: { breakpoints, currentBreakpoint: 'tablet' } },
+    ]);
+  });
+
+  it('detects changes in breakpoints', function () {
+    const initialBreakPoints = {
+      mobile: 320,
+      tablet: 768,
+      desktop: 1200,
+    };
+
+    const nextBreakpoints = {
+      sm: 320,
+      md: 768,
+      lg: 1200,
+    };
+
+    const screenWidth = 800; // = 50em
+    global.innerWidth = screenWidth;
+
+    const result = render(
+      <ReactBreakpoints
+        breakpoints={initialBreakPoints}
+        children={<Children />}
+      />,
+    );
+
+    result.rerender(
+      <ReactBreakpoints
+        breakpoints={nextBreakpoints}
+        children={<Children />}
+      />,
+    );
+
+    expect(propsMock.mock.results).toMatchObject([
+      {
+        type: 'return',
+        value: { breakpoints: initialBreakPoints, currentBreakpoint: 'tablet' },
+      },
+      {
+        type: 'return',
+        value: { breakpoints: nextBreakpoints, currentBreakpoint: 'md' },
+      },
+    ]);
+  });
+
+  it('detects changes in window size', function () {
+    const breakpoints = {
+      mobile: 320,
+      tablet: 768,
+      desktop: 1200,
+    };
+
+    global.innerWidth = 1920;
+
+    render(
+      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
+    );
+
+    global.innerWidth = 800;
+
+    fireEvent.resize(global.window);
+
+    global.innerWidth = 600;
+
+    fireEvent.resize(global.window);
+
+    expect(propsMock.mock.results).toMatchObject([
+      {
+        type: 'return',
+        value: { breakpoints, currentBreakpoint: 'desktop' },
+      },
+      {
+        type: 'return',
+        value: { breakpoints, currentBreakpoint: 'tablet' },
+      },
+      {
+        type: 'return',
+        value: { breakpoints, currentBreakpoint: 'mobile' },
+      },
     ]);
   });
 });

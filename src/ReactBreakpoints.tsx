@@ -87,7 +87,7 @@ interface ReactBreakpointsState {
  * - `withBreakpoints`
  * - `useBreakpoints`
  */
-class ReactBreakpoints extends React.Component<
+class ReactBreakpoints extends React.PureComponent<
   ReactBreakpointsProps,
   ReactBreakpointsState
 > {
@@ -107,6 +107,24 @@ class ReactBreakpoints extends React.Component<
     debounceDelay: PropTypes.number,
     snapMode: PropTypes.bool,
   };
+
+  static getDerivedStateFromProps(
+    props: ReactBreakpointsProps,
+    state: ReactBreakpointsState,
+  ) {
+    const nextState = ReactBreakpoints.calculateBreakpointState(props);
+
+    // patch the state if something changes
+    if (
+      nextState.currentBreakpoint !== state.currentBreakpoint ||
+      nextState.screenWidth !== state.screenWidth
+    ) {
+      return { ...state, ...ReactBreakpoints.calculateBreakpointState(props) };
+    }
+
+    // keep existing state
+    return state;
+  }
 
   constructor(props: ReactBreakpointsProps) {
     super(props);
@@ -152,19 +170,6 @@ class ReactBreakpoints extends React.Component<
         globalWindow.addEventListener('resize', this.readWidth);
       }
       globalWindow.removeEventListener('orientationchange', this.readWidth);
-    }
-  }
-
-  componentDidUpdate(prevProps: ReactBreakpointsProps) {
-    if (prevProps.breakpoints !== this.props.breakpoints) {
-      this.setState(state => {
-        const nextState = ReactBreakpoints.calculateBreakpointState(this.props);
-        if (state.currentBreakpoint === nextState.currentBreakpoint) {
-          return null; // no patch
-        }
-
-        return nextState;
-      });
     }
   }
 
