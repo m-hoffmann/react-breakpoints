@@ -151,4 +151,50 @@ describe('<ReactBreakpoints />', function () {
       { type: 'return', value: { breakpoints, screenWidth } },
     ]);
   });
+
+  it('detects currentBreakpoint "desktop" for innerWidth = 1920 with breakpointUnit = "em"', function () {
+    const breakpoints = {
+      mobile: 20, // 20em = 320px
+      tablet: 48, // 48em = 768px
+      desktop: 75, //  75em = 1200px
+    };
+
+    const screenWidth = 1920; // = 120em
+    global.innerWidth = screenWidth;
+
+    render(
+      <ReactBreakpoints
+        breakpoints={breakpoints}
+        breakpointUnit="em"
+        children={<Children />}
+      />,
+    );
+
+    expect(propsMock.mock.results).toMatchObject([
+      { type: 'return', value: { breakpoints, currentBreakpoint: 'desktop' } },
+    ]);
+  });
+
+  it('detects currentBreakpoint "tablet" for innerWidth = 800 with breakpointUnit = "em"', function () {
+    const breakpoints = {
+      mobile: 20, // 20em = 320px
+      tablet: 48, // 48em = 768px
+      desktop: 75, //  75em = 1200px
+    };
+
+    const screenWidth = 800; // = 50em
+    global.innerWidth = screenWidth;
+
+    render(
+      <ReactBreakpoints
+        breakpoints={breakpoints}
+        breakpointUnit="em"
+        children={<Children />}
+      />,
+    );
+
+    expect(propsMock.mock.results).toMatchObject([
+      { type: 'return', value: { breakpoints, currentBreakpoint: 'tablet' } },
+    ]);
+  });
 });
