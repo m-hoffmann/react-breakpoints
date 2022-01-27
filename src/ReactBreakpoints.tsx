@@ -19,8 +19,7 @@ import {
   BreakpointUnit,
 } from './breakpoints';
 
-const globalWindow: Window | null =
-  typeof window !== 'undefined' ? window : null;
+const globalWindow = typeof window !== 'undefined' ? window : null;
 
 /**
  * Props for ReactBreakpoints
@@ -63,8 +62,18 @@ export interface ReactBreakpointsProps<
    * when breakpoint changes, instead potentially re-rendering when
    * calculateCurrentBreakpoint returns a new value.
    * @default true
+   * @deprecated Remove this since it is not even documented
    */
   snapMode?: boolean;
+
+  /**
+   * Do not use screen size for calculation of breakpoints
+   * but use guessedBreakpoint or defaultBreakpoint
+   *
+   * Used for simulation of SSR in tests
+   * @default false
+   */
+  ignoreScreenSize?: boolean;
 }
 
 interface ReactBreakpointsState {
@@ -87,7 +96,7 @@ interface ReactBreakpointsState {
  * - `withBreakpoints`
  * - `useBreakpoints`
  */
-class ReactBreakpoints extends React.PureComponent<
+export class ReactBreakpoints extends React.PureComponent<
   ReactBreakpointsProps,
   ReactBreakpointsState
 > {
@@ -195,21 +204,27 @@ class ReactBreakpoints extends React.PureComponent<
   private static calculateBreakpointState(
     props: ReactBreakpointsProps,
   ): ReactBreakpointsState {
-    const { breakpoints, defaultBreakpoint, guessedBreakpoint } = props;
+    const {
+      breakpoints,
+      defaultBreakpoint,
+      guessedBreakpoint,
+      ignoreScreenSize,
+    } = props;
 
     // with fallback from defaultProps
     const breakpointUnit = props.breakpointUnit as BreakpointUnit;
 
     let currentBreakpoint = '';
 
-    const screenWidth = globalWindow
-      ? convertScreenWidth(globalWindow.innerWidth, breakpointUnit)
-      : 0;
+    const screenWidth =
+      globalWindow && !ignoreScreenSize
+        ? convertScreenWidth(globalWindow.innerWidth, breakpointUnit)
+        : 0;
 
     const sortedBreakpoints = sortBreakpoints(breakpoints);
 
     // if we are on the client, we directly compose the breakpoint using window width
-    if (globalWindow) {
+    if (globalWindow && !ignoreScreenSize) {
       currentBreakpoint = calculateBreakpoint(screenWidth, sortedBreakpoints);
     } else if (guessedBreakpoint) {
       currentBreakpoint = calculateBreakpoint(
@@ -252,4 +267,4 @@ class ReactBreakpoints extends React.PureComponent<
   }
 }
 
-export default ReactBreakpoints;
+ReactBreakpoints;

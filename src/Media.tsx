@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import { BreakpointKey, BreakpointsProps } from './breakpoints';
 import { useBreakpoints } from './useBreakpoints';
 
@@ -6,7 +5,7 @@ import { useBreakpoints } from './useBreakpoints';
  * Props for Media Component
  */
 export interface MediaProps<K extends BreakpointKey> {
-  children(value: BreakpointsProps<K>): React.ReactNode;
+  children(value: BreakpointsProps<K>): JSX.Element;
 }
 
 /**
@@ -14,7 +13,7 @@ export interface MediaProps<K extends BreakpointKey> {
  */
 export function Media<K extends BreakpointKey>(
   props: MediaProps<K>,
-): ReactNode {
+): JSX.Element {
   const breakpoints = useBreakpoints<K>();
   return props.children(breakpoints);
 }

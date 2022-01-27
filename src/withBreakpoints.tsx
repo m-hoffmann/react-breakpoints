@@ -7,12 +7,15 @@ import { BreakpointsContext } from './BreakpointsContext';
 /**
  * HOC for providing breakpoints as props
  */
-export function withBreakpoints<P, K extends BreakpointKey = BreakpointKey>(
-  Component: ComponentType<P>,
-): ComponentType<P & BreakpointsProps<K>> {
-  function WrapperComponent(props: P) {
-    const contextProps = useContext(BreakpointsContext);
-    return <Component {...props} {...contextProps} />;
+export function withBreakpoints<
+  K extends BreakpointKey = BreakpointKey,
+  P extends BreakpointsProps<K> = BreakpointsProps<K>,
+>(
+  Component: ComponentType<P & BreakpointsProps<K>>,
+): ComponentType<Omit<P, keyof BreakpointsProps<K>>> {
+  function WrapperComponent(props: Omit<P, keyof BreakpointsProps<K>>) {
+    const contextProps = useContext(BreakpointsContext) as BreakpointsProps<K>;
+    return <Component {...contextProps} {...(props as P)} />;
   }
 
   // copy displayname of wrapped component

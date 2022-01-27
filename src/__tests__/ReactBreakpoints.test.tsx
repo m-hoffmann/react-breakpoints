@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useContext } from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
-import ReactBreakpoints from '../ReactBreakpoints';
+import { ReactBreakpoints } from '../ReactBreakpoints';
 import { BreakpointsContext } from '../BreakpointsContext';
 import { BreakpointsProps } from '../breakpoints';
 
-describe('<ReactBreakpoints />', function () {
+describe('ReactBreakpoints', function () {
   const propsMock = jest.fn();
 
   function Children() {
@@ -25,6 +26,17 @@ describe('<ReactBreakpoints />', function () {
   });
 
   it('explodes if there are no breakpoints', function () {
+    expect(() =>
+      render(
+        <ReactBreakpoints breakpoints={null as any} children={<Children />} />,
+      ),
+    ).toThrow();
+    expect(() =>
+      render(
+        <ReactBreakpoints breakpoints={123 as any} children={<Children />} />,
+      ),
+    ).toThrow();
+
     expect(() =>
       render(<ReactBreakpoints breakpoints={{}} children={<Children />} />),
     ).toThrow();
@@ -343,6 +355,94 @@ describe('<ReactBreakpoints />', function () {
       {
         type: 'return',
         value: { breakpoints, currentBreakpoint: 'mobile' },
+      },
+    ]);
+  });
+
+  it('detects changes in window size when using debounceResize', async function () {
+    const breakpoints = {
+      mobile: 320,
+      tablet: 768,
+      desktop: 1200,
+    };
+
+    global.innerWidth = 1920;
+
+    render(
+      <ReactBreakpoints
+        breakpoints={breakpoints}
+        children={<Children />}
+        debounceResize
+        debounceDelay={25}
+      />,
+    );
+
+    global.innerWidth = 800;
+
+    fireEvent.resize(global.window);
+
+    global.innerWidth = 600;
+
+    fireEvent.resize(global.window);
+
+    await new Promise<void>(resolve => setTimeout(() => resolve(), 30));
+
+    expect(propsMock.mock.results).toMatchObject([
+      {
+        type: 'return',
+        value: { breakpoints, currentBreakpoint: 'desktop' },
+      },
+      {
+        type: 'return',
+        value: { breakpoints, currentBreakpoint: 'mobile' },
+      },
+    ]);
+  });
+
+  it('works without detected window but with guessedBreakpoint', async function () {
+    const breakpoints = {
+      mobile: 320,
+      tablet: 768,
+      desktop: 1200,
+    };
+
+    render(
+      <ReactBreakpoints
+        breakpoints={breakpoints}
+        children={<Children />}
+        guessedBreakpoint={breakpoints.tablet}
+        ignoreScreenSize
+      />,
+    );
+
+    expect(propsMock.mock.results).toMatchObject([
+      {
+        type: 'return',
+        value: { breakpoints, currentBreakpoint: 'tablet' },
+      },
+    ]);
+  });
+
+  it('works without detected window', async function () {
+    const breakpoints = {
+      mobile: 320,
+      tablet: 768,
+      desktop: 1200,
+    };
+
+    render(
+      <ReactBreakpoints
+        breakpoints={breakpoints}
+        children={<Children />}
+        defaultBreakpoint={breakpoints.tablet}
+        ignoreScreenSize
+      />,
+    );
+
+    expect(propsMock.mock.results).toMatchObject([
+      {
+        type: 'return',
+        value: { breakpoints, currentBreakpoint: 'tablet' },
       },
     ]);
   });

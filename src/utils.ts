@@ -4,19 +4,6 @@ import {
   SortedBreakpoints,
 } from './breakpoints';
 
-function stripUnit(value: string | number): number {
-  const unitlessValue = parseFloat(value as unknown as string);
-  if (isNaN(unitlessValue)) {
-    return value as number; // FIXME: broken logic
-  }
-  return unitlessValue;
-}
-
-function em(pxValue: number): string | number {
-  const unitlessValue = stripUnit(pxValue);
-  return `${unitlessValue / 16}em`;
-}
-
 export function calculateBreakpoint(
   screenWidth: number,
   breakpoints: SortedBreakpoints,
@@ -39,5 +26,5 @@ export function convertScreenWidth(
   screenWidth: number,
   breakpointUnit: BreakpointUnit,
 ): number {
-  return breakpointUnit === 'em' ? stripUnit(em(screenWidth)) : screenWidth;
+  return breakpointUnit === 'em' ? screenWidth / 16 : screenWidth;
 }
