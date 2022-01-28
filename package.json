@@ -32,7 +32,8 @@
     "prettier": "pretty-quick --staged",
     "precommit_": "npm run prettier",
     "prepush_": "npm run prettier",
-    "test": "jest"
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "peerDependencies": {
     "react": "^16.14.0-0 || ^17.0.0-0"

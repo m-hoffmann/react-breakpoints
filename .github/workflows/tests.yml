@@ -1,7 +1,7 @@
 name: tests
 on: [push]
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -11,4 +11,10 @@ jobs:
       - name: Install modules
         run: npm ci
       - name: Unit tests
-        run: npm run test
+        run: npm run test:coverage
+    - name: 'Upload Artifact'
+      uses: actions/upload-artifact@v2
+      with:
+        name: coverage
+        path: coverage
+        retention-days: 5
