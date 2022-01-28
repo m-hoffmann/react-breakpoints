@@ -1,5 +1,5 @@
 import React from 'react';
-import { withBreakpoints } from 'react-breakpoints-hooks';
+import { withBreakpoints } from 'react-hook-breakpoints';
 
 const DummyComponent = ({ name }) => <div>{name}</div>;
 
