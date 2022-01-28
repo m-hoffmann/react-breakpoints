@@ -11,7 +11,7 @@ export interface MediaProps<K extends BreakpointKey> {
 /**
  * React Component providing breakpoints using Render Props
  */
-export function Media<K extends BreakpointKey>(
+export function Media<K extends BreakpointKey = BreakpointKey>(
   props: MediaProps<K>,
 ): JSX.Element {
   const breakpoints = useBreakpoints<K>();
