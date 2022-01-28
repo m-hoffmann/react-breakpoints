@@ -7,7 +7,7 @@
   "types": "lib/types/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mhoffmann/react-breakpoints.git"
+    "url": "https://github.com/mhoffmann/react-hook-breakpoints.git"
   },
   "keywords": [
     "react-breakpoints-hook",
