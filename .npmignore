@@ -1,6 +1,5 @@
-.babelrc
-modules
 node_modules
 README.md
 CHANGELOG.md
 example
+src/__tests__

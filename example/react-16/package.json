@@ -1,0 +1,17 @@
+{
+  "name": "react-breakpoints-app-react-16",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^16.8.0",
+    "react-dom": "^16.14.0",
+    "react-hook-breakpoints": "^4.0.0-3",
+    "react-scripts": "1.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

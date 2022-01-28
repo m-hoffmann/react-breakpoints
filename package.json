@@ -1,12 +1,13 @@
 {
-  "name": "react-breakpoints",
-  "version": "3.0.3",
+  "name": "react-hook-breakpoints",
+  "version": "4.0.0-3",
   "description": "A library that allows you to mount/unmount components depending on the viewport size. Welcome to the next level of responsive React applications.",
-  "main": "lib/index.js",
-  "types": "index.d.ts",
+  "main": "lib/cjs/index.js",
+  "module": "lib/esm/index.js",
+  "types": "lib/types/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ehellman/react-breakpoints.git"
+    "url": "https://github.com/mhoffmann/react-hook-breakpoints.git"
   },
   "keywords": [
     "react-breakpoints",
@@ -15,64 +16,58 @@
     "breakpoint",
     "react"
   ],
+  "files": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "lib/**/*.*"
+  ],
   "scripts": {
-    "clean": "rimraf lib es",
+    "clean": "rimraf lib",
+    "lint": "eslint ./src/**/*.*",
+    "build": "npm run compile",
     "compile": "npm run compile:commonjs && npm run compile:es",
-    "compile:commonjs": "cross-env BABEL_ENV=commonjs babel modules --out-dir lib",
-    "compile:es": "cross-env BABEL_ENV=es babel modules --out-dir es --ignore test.js",
-    "prepublish": "npm run compile",
+    "compile:commonjs": "tsc --project ./tsconfig.json",
+    "compile:es": "tsc --project ./tsconfig.esm.json",
+    "prepublishOnly": "npm run clean && npm run lint && npm run test && npm run compile",
     "prettier": "pretty-quick --staged",
-    "precommit": "npm run prettier",
-    "prepush": "npm run prettier",
-    "test": "jest"
+    "precommit_": "npm run prettier",
+    "prepush_": "npm run prettier",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "peerDependencies": {
-    "react": "^15.0.0-0 || ^16.0.0-0",
-    "create-react-context": ">= 0.2.1 < 1",
-    "lodash.debounce": ">= 4.0.8 < 5",
-    "prop-types": "^15.6.2"
+    "react": "^16.14.0-0 || ^17.0.0-0"
   },
-  "author": "Erik Hellman",
+  "author": "Markus Hoffmann",
+  "contributors": ["Erik Hellman"],
   "license": "MIT",
   "devDependencies": {
-    "babel-cli": "6.26.0",
-    "babel-core": "6.26.3",
-    "babel-jest": "^23.6.0",
-    "babel-loader": "7.1.5",
-    "babel-plugin-transform-class-properties": "6.24.1",
-    "babel-plugin-transform-es2015-modules-commonjs": "6.26.2",
-    "babel-plugin-transform-export-extensions": "6.22.0",
-    "babel-plugin-transform-object-rest-spread": "6.26.0",
-    "babel-plugin-transform-react-jsx": "6.24.1",
-    "babel-plugin-transform-react-remove-prop-types": "0.4.14",
-    "babel-preset-env": "1.7.0",
-    "babel-preset-es2015": "6.24.1",
-    "babel-preset-react": "6.24.1",
-    "cross-env": "5.2.0",
-    "enzyme": "^3.6.0",
-    "enzyme-adapter-react-16": "^1.5.0",
-    "husky": "0.14.3",
-    "jest": "^23.6.0",
-    "jest-environment-enzyme": "^6.1.2",
-    "jest-enzyme": "^6.1.2",
-    "prettier": "1.14.2",
-    "pretty-quick": "1.6.0",
-    "prop-types": "15.6.2",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "rimraf": "2.6.2"
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/react": "^12.1.2",
+    "@types/hoist-non-react-statics": "^3.3.1",
+    "@types/jest": "^27.4.0",
+    "@types/lodash.debounce": "^4.0.6",
+    "@types/react": "^17.0.38",
+    "@types/react-dom": "^17.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.10.1",
+    "@typescript-eslint/parser": "^5.10.1",
+    "cross-env": "7.0.3",
+    "eslint": "^8.7.0",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "husky": "7.0.4",
+    "jest": "^27.4.7",
+    "prettier": "^2.5.1",
+    "pretty-quick": "3.1.3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "rimraf": "3.0.2",
+    "ts-jest": "^27.1.3",
+    "typescript": "^4.5.5"
   },
   "dependencies": {
-    "lodash.debounce": "4.0.8",
-    "hoist-non-react-statics": "2.5.0",
-    "create-react-context": "0.2.2"
-  },
-  "jest": {
-    "setupTestFrameworkScriptFile": "jest-enzyme",
-    "testEnvironment": "enzyme",
-    "testEnvironmentOptions": {
-      "enzymeAdapter": "react16"
-    },
-    "testRegex": "(modules/.*)(/__tests__/.*|(\\.|/)(test|spec))\\.jsx?$"
+    "hoist-non-react-statics": "^3.3.2",
+    "lodash.debounce": "^4.0.8",
+    "prop-types": "^15.8.1"
   }
 }
