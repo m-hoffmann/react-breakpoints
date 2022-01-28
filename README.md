@@ -1,24 +1,18 @@
-# react-breakpoints
+# react-breakpoints-hooks
 
-[![npm](https://img.shields.io/npm/v/react-breakpoints.svg)](https://www.npmjs.com/package/react-breakpoints)
 [![build](https://github.com/m-hoffmann/react-breakpoints/actions/workflows/build.yml/badge.svg)](https://github.com/m-hoffmann/react-breakpoints/actions/workflows/build.yml)
 [![tests](https://github.com/m-hoffmann/react-breakpoints/actions/workflows/tests.yml/badge.svg)](https://github.com/m-hoffmann/react-breakpoints/actions/workflows/tests.yml) 
 
 This library solves the problem that CSS media queries alone could not solve. Sometimes you want to create an application that looks a certain way on desktop and a certain way on mobile. Sometimes the components look too different for you to be able to just change the CSS, you have to make one component for desktop and another for mobile. This is bad, because the JavaScript for the hidden component is still running in the background even though you are not seeing it.
 
-`react-breakpoints` allows you to use the viewport width to load different components, opening up for building more complex responsive applications without suffering the performance problems of hidden desktop components on your mobile site and vice versa.
+`react-breakpoints-hooks` allows you to use the viewport width to load different components, opening up for building more complex responsive applications without suffering the performance problems of hidden desktop components on your mobile site and vice versa.
 
-Version 2.0.0 was rewrite with the new context API that came in React `16.3.0`. A polyfill for older React versions is included in the library, so it is backwards compatible with `15.x.x` and `16.x.x`. However, version 4.0.0 will no longer support `15.x.x`.
+Version 4.0.0 is a rewrite in typescript using react hooks uns includes the `useBreakpoint` hook.
 
-Version 3.0.0 introduced `<Media>` with `renderProps` an alternative to the `withBreakpoints` HOC.
-
-## Roadmap
-
-* [ ] `debounceOptions` object passdown if needed.
 
 ## Installation
 
-`npm install --save react-breakpoints`
+`npm install --save react-breakpoints-hooks`
 
 ## Usage
 
@@ -27,7 +21,7 @@ First you need to include the `ReactBreakpoints` component in your component tre
 ```js
 // index.js
 import App from './App'
-import ReactBreakpoints from 'react-breakpoints'
+import ReactBreakpoints from 'react-breakpoints-hooks'
 
 const breakpoints = {
   mobile: 320,
@@ -51,10 +45,45 @@ ReactDOM.render(
 
 When you want access to the current screen width inside a component you import the `withBreakpoints` function, wrapping your component when you export it. This will give you access to `props.currentBreakpoint` which updates whenever you resize your window to the point where it hits a new breakpoint, or your device orientation changes. It also adds `props.breakpoints` which is the original object which you supplied to the `ReactBreakpoints` component, so you can make comparisons with `props.currentBreakpoint`.
 
+### Hook
+
+```js
+import { useBreakpoints } from 'react-breakpoints-hooks'
+
+function Navigation() {
+  const { breakpoints, currentBreakpoint } = useBreakpoints();
+  return breakpoints[currentBreakpoint] > breakpoints.desktop ? (
+    <DesktopNavigation />
+  ) : (
+    <TouchNavigation />
+  );
+}
+export default Navigation
+```
+
+Typescript example
+
+```tsx
+import { useBreakpoints } from 'react-breakpoints-hooks';
+
+type MyBreakpoints = 'desktop' | 'tablet' | 'mobile';
+
+export function Navigation(): JSX.Element {
+  const { breakpoints, currentBreakpoint } = useBreakpoints<MyBreakpoints>();
+  return breakpoints[currentBreakpoint] > breakpoints.desktop ? (
+    <DesktopNavigation />
+  ) : (
+    <TouchNavigation />
+  );
+}
+```
+
+
+
 ### Render Props
 
 ```js
-import { Media } from 'react-breakpoints'
+import { Media } from 'react-breakpoints-hooks'
 
 class Navigation extends React.Component {
   render() {
@@ -78,7 +107,7 @@ export default Navigation
 ### HOC
 
 ```js
-import { withBreakpoints } from 'react-breakpoints'
+import { withBreakpoints } from 'react-breakpoints-hooks'
 
 class Navigation extends React.Component {
   render() {
@@ -101,7 +130,7 @@ export default withBreakpoints(Navigation)
 Here is a more extensive example with renderProps:
 
 ```js
-import { Media } from 'react-breakpoints'
+import { Media } from 'react-breakpoints-hooks'
 
 const MyComponent = props => (
   <div>
@@ -129,7 +158,7 @@ export default MyComponent
 ```js
 // server.js
 
-import ReactBreakpoints from 'react-breakpoints'
+import ReactBreakpoints from 'react-breakpoints-hooks'
 
 const breakpoints = {
   mobile: 320,

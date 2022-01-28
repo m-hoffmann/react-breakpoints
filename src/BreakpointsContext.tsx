@@ -5,7 +5,7 @@ import { BreakpointsProps } from './breakpoints';
 const defaultContext: BreakpointsProps = {
   breakpoints: {},
   currentBreakpoint: '',
-  screenWidth: undefined,
+  screenWidth: 0,
 };
 
 export const BreakpointsContext =

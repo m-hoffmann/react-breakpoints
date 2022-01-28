@@ -1,5 +1,5 @@
 {
-  "name": "react-breakpoints-todo",
+  "name": "react-breakpoints-hooks",
   "version": "4.0.0-3",
   "description": "A library that allows you to mount/unmount components depending on the viewport size. Welcome to the next level of responsive React applications.",
   "main": "lib/cjs/index.js",
@@ -39,7 +39,7 @@
     "react": "^16.14.0-0 || ^17.0.0-0"
   },
   "author": "Erik Hellman",
-  "contributors": [],
+  "contributors": ["Erik Hellman", "Markus Hoffmann"],
   "license": "MIT",
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.1",

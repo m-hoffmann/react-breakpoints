@@ -5540,16 +5540,16 @@ rc@^1.0.1, rc@^1.1.6, rc@^1.1.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-"react-breakpoints-todo@..\\react-breakpoints-todo-4.0.0-2.tgz":
+"react-breakpoints-hooks@..\\react-breakpoints-hooks-4.0.0-2.tgz":
   version "4.0.0-2"
-  resolved "..\\react-breakpoints-todo-4.0.0-2.tgz#09fef97405121d0f4ec8a755e980e7f7ecedce5b"
+  resolved "..\\react-breakpoints-hooks-4.0.0-2.tgz#09fef97405121d0f4ec8a755e980e7f7ecedce5b"
   dependencies:
     hoist-non-react-statics "^3.3.2"
     lodash.debounce ">= 4.0.8 < 5"
 
-"react-breakpoints-todo@..\\react-breakpoints-todo-4.0.0-3.tgz":
+"react-breakpoints-hooks@..\\react-breakpoints-hooks-4.0.0-3.tgz":
   version "4.0.0-3"
-  resolved "..\\react-breakpoints-todo-4.0.0-3.tgz#da92721d7f45886497f50727fcd8c192aaaefc85"
+  resolved "..\\react-breakpoints-hooks-4.0.0-3.tgz#da92721d7f45886497f50727fcd8c192aaaefc85"
   dependencies:
     hoist-non-react-statics "^3.3.2"
     lodash.debounce "^4.0.8"

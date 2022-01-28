@@ -1,5 +1,5 @@
 import React from 'react';
-import { Media } from 'react-breakpoints-todo';
+import { Media } from 'react-breakpoints-hooks';
 
 const DummyComponent = ({ name }) => <div>{name}</div>;
 

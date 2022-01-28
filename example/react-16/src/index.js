@@ -5,7 +5,7 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
 // import Provider
-import ReactBreakpoints from 'react-breakpoints-todo';
+import ReactBreakpoints from 'react-breakpoints-hooks';
 
 // declare breakpoints
 const breakpoints = {

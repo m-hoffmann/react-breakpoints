@@ -46,40 +46,37 @@ export interface ReactBreakpointsProps<
    * Your breakpoints object.
    */
   breakpoints: BreakpointMap<K>;
+
   /**
    * The type of unit that your breakpoints should use - px or em.
    * @default "px"
    */
   breakpointUnit?: BreakpointUnit;
+
   /**
    * When rendering on the server, you can do your own magic with for example UA
    * to guess which viewport width a user probably has.
    */
   guessedBreakpoint?: number; // from server
+
   /**
    * In case you don't want to default to mobile on SSR and no guessedBreakpoint
    * is passed, use defaultBreakpoint to set your own value.
    */
   defaultBreakpoint?: number;
+
   /**
-   * If you don't want the resize listener to be debounced, set to false. Defaults to false
-   * when snapMode is true.
+   * If you don't want the resize listener to be debounced, set to false.
    * @default false
    */
+
   debounceResize?: boolean;
+
   /**
    * Set a custom delay for how long the debounce timeout should be.
    * @default 50
    */
   debounceDelay?: number;
-  /**
-   * Replaces breakpoints.current with screenWidth, disabling re-render only
-   * when breakpoint changes, instead potentially re-rendering when
-   * calculateCurrentBreakpoint returns a new value.
-   * @default true
-   * @deprecated Remove this since it is not even documented
-   */
-  snapMode?: boolean;
 
   /**
    * Do not use screen size for calculation of breakpoints
@@ -91,14 +88,15 @@ export interface ReactBreakpointsProps<
   ignoreScreenSize?: boolean;
 
   /**
-   * Detect changes if a new breakpoints reference is detected
-   * @default
+   * Detect changes if a new breakpoints reference is detected.
+   * Otherwise, only the first breakpoints object will be used
+   * @default false
    */
   detectBreakpointsObjectChanges?: boolean;
 
   /**
    * Children props
-  //  */
+   */
   children?: ReactNode;
 }
 
@@ -117,7 +115,6 @@ export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
     breakpointUnit = 'px',
     debounceResize = false,
     debounceDelay = 50,
-    snapMode = true,
     ignoreScreenSize = !globalWindow,
     detectBreakpointsObjectChanges = false,
     guessedBreakpoint,
@@ -223,22 +220,12 @@ export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
   );
 
   const contextProps = useMemo<BreakpointsProps>(() => {
-    return snapMode
-      ? {
-          breakpoints: stableBreakpoints,
-          currentBreakpoint,
-        }
-      : {
-          breakpoints: stableBreakpoints,
-          screenWidth: convertScreenWidth(screenWidthPx, breakpointUnit),
-        };
-  }, [
-    snapMode,
-    stableBreakpoints,
-    currentBreakpoint,
-    screenWidthPx,
-    breakpointUnit,
-  ]);
+    return {
+      breakpoints: stableBreakpoints,
+      currentBreakpoint,
+      screenWidth: convertScreenWidth(screenWidthPx, breakpointUnit),
+    };
+  }, [stableBreakpoints, currentBreakpoint, screenWidthPx, breakpointUnit]);
 
   return (
     <BreakpointsContext.Provider value={contextProps}>
@@ -254,5 +241,4 @@ ReactBreakpoints.propTypes = {
   defaultBreakpoint: PropTypes.number,
   debounceResize: PropTypes.bool,
   debounceDelay: PropTypes.number,
-  snapMode: PropTypes.bool,
 };
