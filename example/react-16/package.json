@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "react": "^16.8.0",
-    "react-hook-breakpoints": "..\\react-hook-breakpoints-4.0.0-3.tgz",
     "react-dom": "^16.14.0",
+    "react-hook-breakpoints": "^4.0.0-3",
     "react-scripts": "1.1.4"
   },
   "scripts": {
