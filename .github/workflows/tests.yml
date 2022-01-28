@@ -12,9 +12,9 @@ jobs:
         run: npm ci
       - name: Unit tests
         run: npm run test:coverage
-    - name: 'Upload Artifact'
-      uses: actions/upload-artifact@v2
-      with:
-        name: coverage
-        path: coverage
-        retention-days: 5
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: coverage
+          retention-days: 5
