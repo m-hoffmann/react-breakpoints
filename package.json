@@ -7,7 +7,7 @@
   "types": "lib/types/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ehellman/react-breakpoints.git"
+    "url": "https://github.com/mhoffmann/react-breakpoints.git"
   },
   "keywords": [
     "react-breakpoints",
@@ -38,8 +38,8 @@
   "peerDependencies": {
     "react": "^16.14.0-0 || ^17.0.0-0"
   },
-  "author": "Erik Hellman",
-  "contributors": ["Erik Hellman", "Markus Hoffmann"],
+  "author": "Markus Hoffmann",
+  "contributors": ["Erik Hellman"],
   "license": "MIT",
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.1",
