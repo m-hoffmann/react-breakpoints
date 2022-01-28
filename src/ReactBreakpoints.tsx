@@ -57,7 +57,7 @@ export interface ReactBreakpointsProps<
    * When rendering on the server, you can do your own magic with for example UA
    * to guess which viewport width a user probably has.
    */
-  guessedBreakpoint?: number; // from server
+  guessedBreakpoint?: number;
 
   /**
    * In case you don't want to default to mobile on SSR and no guessedBreakpoint
@@ -84,6 +84,7 @@ export interface ReactBreakpointsProps<
    *
    * Used for simulation of SSR in tests
    * @default false
+   * @private Don't use this in your application
    */
   ignoreScreenSize?: boolean;
 
@@ -118,7 +119,7 @@ export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
     ignoreScreenSize = !globalWindow,
     detectBreakpointsObjectChanges = false,
     guessedBreakpoint,
-    defaultBreakpoint,
+    defaultBreakpoint = 0,
   } = props;
 
   const [stableBreakpoints, setStableBreakpoints] = useState(() => {
@@ -142,17 +143,16 @@ export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
   const currentBreakpoint = useMemo<string>(() => {
     const sortedBreakpoints = sortBreakpoints(stableBreakpoints);
 
-    // if we are on the client, we directly compose the breakpoint using window width
     if (!ignoreScreenSize) {
+      // if we are on the client, we directly compose the breakpoint using window width
       const screenWidth = convertScreenWidth(screenWidthPx, breakpointUnit);
       return calculateBreakpoint(screenWidth, sortedBreakpoints);
     } else if (guessedBreakpoint) {
+      // use the breakpoint provided by SSR on server
       return calculateBreakpoint(guessedBreakpoint, sortedBreakpoints);
-    } else if (defaultBreakpoint) {
-      return calculateBreakpoint(defaultBreakpoint, sortedBreakpoints);
     } else {
-      // the smallest one
-      return calculateBreakpoint(0, sortedBreakpoints);
+      // use default breakpoint if no breakpoint from server is available
+      return calculateBreakpoint(defaultBreakpoint, sortedBreakpoints);
     }
   }, [
     breakpointUnit,

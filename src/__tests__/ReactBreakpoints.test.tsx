@@ -81,6 +81,7 @@ describe('ReactBreakpoints', function () {
       desktop: 1200,
     };
 
+    const screenWidth = 1920;
     global.innerWidth = 1920;
 
     render(
@@ -88,7 +89,10 @@ describe('ReactBreakpoints', function () {
     );
 
     expect(propsMock.mock.results).toMatchObject([
-      { type: 'return', value: { breakpoints, currentBreakpoint: 'desktop' } },
+      {
+        type: 'return',
+        value: { breakpoints, currentBreakpoint: 'desktop', screenWidth },
+      },
     ]);
   });
 
@@ -106,7 +110,10 @@ describe('ReactBreakpoints', function () {
     );
 
     expect(propsMock.mock.results).toMatchObject([
-      { type: 'return', value: { breakpoints, currentBreakpoint: 'tablet' } },
+      {
+        type: 'return',
+        value: { breakpoints, currentBreakpoint: 'tablet', screenWidth: 800 },
+      },
     ]);
   });
 
@@ -124,7 +131,10 @@ describe('ReactBreakpoints', function () {
     );
 
     expect(propsMock.mock.results).toMatchObject([
-      { type: 'return', value: { breakpoints, currentBreakpoint: 'mobile' } },
+      {
+        type: 'return',
+        value: { breakpoints, currentBreakpoint: 'mobile', screenWidth: 240 },
+      },
     ]);
   });
 
@@ -142,11 +152,14 @@ describe('ReactBreakpoints', function () {
     );
 
     expect(propsMock.mock.results).toMatchObject([
-      { type: 'return', value: { breakpoints, currentBreakpoint: 'mobile' } },
+      {
+        type: 'return',
+        value: { breakpoints, currentBreakpoint: 'mobile', screenWidth: 100 },
+      },
     ]);
   });
 
-  it('detects screenWidth = 1234 if snapMode = false', function () {
+  it('detects screenWidth = 1234', function () {
     const breakpoints = {
       mobile: 320,
       tablet: 768,
@@ -157,11 +170,7 @@ describe('ReactBreakpoints', function () {
     global.innerWidth = screenWidth;
 
     render(
-      <ReactBreakpoints
-        breakpoints={breakpoints}
-        children={<Children />}
-        snapMode={false}
-      />,
+      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
     );
 
     expect(propsMock.mock.results).toMatchObject([
@@ -188,7 +197,10 @@ describe('ReactBreakpoints', function () {
     );
 
     expect(propsMock.mock.results).toMatchObject([
-      { type: 'return', value: { breakpoints, currentBreakpoint: 'desktop' } },
+      {
+        type: 'return',
+        value: { breakpoints, currentBreakpoint: 'desktop', screenWidth: 120 },
+      },
     ]);
   });
 
@@ -211,7 +223,10 @@ describe('ReactBreakpoints', function () {
     );
 
     expect(propsMock.mock.results).toMatchObject([
-      { type: 'return', value: { breakpoints, currentBreakpoint: 'tablet' } },
+      {
+        type: 'return',
+        value: { breakpoints, currentBreakpoint: 'tablet', screenWidth: 50 },
+      },
     ]);
   });
 
@@ -248,11 +263,19 @@ describe('ReactBreakpoints', function () {
     expect(propsMock.mock.results).toMatchObject([
       {
         type: 'return',
-        value: { breakpoints: initialBreakPoints, currentBreakpoint: 'tablet' },
+        value: {
+          breakpoints: initialBreakPoints,
+          currentBreakpoint: 'tablet',
+          screenWidth,
+        },
       },
       {
         type: 'return',
-        value: { breakpoints: initialBreakPoints, currentBreakpoint: 'tablet' },
+        value: {
+          breakpoints: initialBreakPoints,
+          currentBreakpoint: 'tablet',
+          screenWidth,
+        },
       },
     ]);
   });
@@ -309,20 +332,36 @@ describe('ReactBreakpoints', function () {
     expect(propsMock.mock.results).toMatchObject([
       {
         type: 'return',
-        value: { breakpoints: initialBreakPoints, currentBreakpoint: 'tablet' },
+        value: {
+          breakpoints: initialBreakPoints,
+          currentBreakpoint: 'tablet',
+          screenWidth,
+        },
       },
       // TODO: some effect causes an additional call here?
       {
         type: 'return',
-        value: { breakpoints: initialBreakPoints, currentBreakpoint: 'tablet' },
+        value: {
+          breakpoints: initialBreakPoints,
+          currentBreakpoint: 'tablet',
+          screenWidth,
+        },
       },
       {
         type: 'return',
-        value: { breakpoints: nextBreakpoints, currentBreakpoint: 'md' },
+        value: {
+          breakpoints: nextBreakpoints,
+          currentBreakpoint: 'md',
+          screenWidth,
+        },
       },
       {
         type: 'return',
-        value: { breakpoints: moreBreakpoints, currentBreakpoint: 'md' },
+        value: {
+          breakpoints: moreBreakpoints,
+          currentBreakpoint: 'md',
+          screenWidth,
+        },
       },
     ]);
   });
@@ -358,11 +397,19 @@ describe('ReactBreakpoints', function () {
     expect(propsMock.mock.results).toMatchObject([
       {
         type: 'return',
-        value: { breakpoints: initialBreakPoints, currentBreakpoint: 'tablet' },
+        value: {
+          breakpoints: initialBreakPoints,
+          currentBreakpoint: 'tablet',
+          screenWidth,
+        },
       },
       {
         type: 'return',
-        value: { breakpoints: nextBreakpoints, currentBreakpoint: 'tablet' },
+        value: {
+          breakpoints: nextBreakpoints,
+          currentBreakpoint: 'tablet',
+          screenWidth,
+        },
       },
     ]);
 
@@ -395,15 +442,15 @@ describe('ReactBreakpoints', function () {
     expect(propsMock.mock.results).toMatchObject([
       {
         type: 'return',
-        value: { breakpoints, currentBreakpoint: 'desktop' },
+        value: { breakpoints, currentBreakpoint: 'desktop', screenWidth: 1920 },
       },
       {
         type: 'return',
-        value: { breakpoints, currentBreakpoint: 'tablet' },
+        value: { breakpoints, currentBreakpoint: 'tablet', screenWidth: 800 },
       },
       {
         type: 'return',
-        value: { breakpoints, currentBreakpoint: 'mobile' },
+        value: { breakpoints, currentBreakpoint: 'mobile', screenWidth: 600 },
       },
     ]);
   });
@@ -439,11 +486,11 @@ describe('ReactBreakpoints', function () {
     expect(propsMock.mock.results).toMatchObject([
       {
         type: 'return',
-        value: { breakpoints, currentBreakpoint: 'desktop' },
+        value: { breakpoints, currentBreakpoint: 'desktop', screenWidth: 1920 },
       },
       {
         type: 'return',
-        value: { breakpoints, currentBreakpoint: 'mobile' },
+        value: { breakpoints, currentBreakpoint: 'mobile', screenWidth: 600 },
       },
     ]);
   });
@@ -467,12 +514,12 @@ describe('ReactBreakpoints', function () {
     expect(propsMock.mock.results).toMatchObject([
       {
         type: 'return',
-        value: { breakpoints, currentBreakpoint: 'tablet' },
+        value: { breakpoints, currentBreakpoint: 'tablet', screenWidth: 0 },
       },
     ]);
   });
 
-  it('works without detected window', async function () {
+  it('works without detected window and defaultBreakpoint', async function () {
     const breakpoints = {
       mobile: 320,
       tablet: 768,
@@ -491,7 +538,7 @@ describe('ReactBreakpoints', function () {
     expect(propsMock.mock.results).toMatchObject([
       {
         type: 'return',
-        value: { breakpoints, currentBreakpoint: 'tablet' },
+        value: { breakpoints, currentBreakpoint: 'tablet', screenWidth: 0 },
       },
     ]);
   });
@@ -514,7 +561,7 @@ describe('ReactBreakpoints', function () {
     expect(propsMock.mock.results).toMatchObject([
       {
         type: 'return',
-        value: { breakpoints, currentBreakpoint: 'mobile' },
+        value: { breakpoints, currentBreakpoint: 'mobile', screenWidth: 0 },
       },
     ]);
   });

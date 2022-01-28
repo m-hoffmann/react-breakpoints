@@ -25,11 +25,11 @@ export interface BreakpointsProps<K extends BreakpointKey = BreakpointKey> {
    */
   breakpoints: Record<K, number>;
   /**
-   * Undefined if `snapMode={true}`
+   * Current detected breakpoint
    */
   currentBreakpoint: K;
   /**
-   * Undefined if `snapMode={false}`
+   * The current screen width in `BreakpointUnit`
    */
   screenWidth: number;
 }
