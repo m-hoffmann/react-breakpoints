@@ -1,3 +1,4 @@
+/* eslint-disable react/no-children-prop */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useContext } from 'react';
 import { render, fireEvent } from '@testing-library/react';
@@ -5,6 +6,10 @@ import { render, fireEvent } from '@testing-library/react';
 import { ReactBreakpoints } from '../ReactBreakpoints';
 import { BreakpointsContext } from '../BreakpointsContext';
 import { BreakpointsProps } from '../breakpoints';
+
+function delay(ms: number): Promise<void> {
+  return new Promise<void>(resolve => setTimeout(() => resolve(), ms));
+}
 
 describe('ReactBreakpoints', function () {
   const propsMock = jest.fn();
@@ -210,7 +215,7 @@ describe('ReactBreakpoints', function () {
     ]);
   });
 
-  it('detects changes in breakpoints', function () {
+  it('detects no changes in breakpoints by default', function () {
     const initialBreakPoints = {
       mobile: 320,
       tablet: 768,
@@ -247,42 +252,82 @@ describe('ReactBreakpoints', function () {
       },
       {
         type: 'return',
-        value: { breakpoints: nextBreakpoints, currentBreakpoint: 'md' },
+        value: { breakpoints: initialBreakPoints, currentBreakpoint: 'tablet' },
       },
     ]);
   });
 
-  it('re-renders if the same object reference is passed again for breakpoints', function () {
-    const breakpoints = {
+  it('detects changes in breakpoints if detectBreakpointsObjectChanges = true ', async function () {
+    const initialBreakPoints = {
       mobile: 320,
       tablet: 768,
       desktop: 1200,
+    };
+
+    const nextBreakpoints = {
+      sm: 320,
+      md: 768,
+      lg: 1200,
+    };
+
+    const moreBreakpoints = {
+      sm: 320,
+      md: 768,
+      lg: 1200,
+      xl: 1920,
     };
 
     const screenWidth = 800; // = 50em
     global.innerWidth = screenWidth;
 
     const result = render(
-      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
+      <ReactBreakpoints
+        detectBreakpointsObjectChanges
+        breakpoints={initialBreakPoints}
+        children={<Children />}
+      />,
     );
 
     result.rerender(
-      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
+      <ReactBreakpoints
+        detectBreakpointsObjectChanges
+        breakpoints={nextBreakpoints}
+        children={<Children />}
+      />,
     );
+
+    result.rerender(
+      <ReactBreakpoints
+        detectBreakpointsObjectChanges
+        breakpoints={moreBreakpoints}
+        children={<Children />}
+      />,
+    );
+
+    await delay(0); // useEffect
 
     expect(propsMock.mock.results).toMatchObject([
       {
         type: 'return',
-        value: { breakpoints, currentBreakpoint: 'tablet' },
+        value: { breakpoints: initialBreakPoints, currentBreakpoint: 'tablet' },
+      },
+      // TODO: some effect causes an additional call here?
+      {
+        type: 'return',
+        value: { breakpoints: initialBreakPoints, currentBreakpoint: 'tablet' },
       },
       {
         type: 'return',
-        value: { breakpoints, currentBreakpoint: 'tablet' },
+        value: { breakpoints: nextBreakpoints, currentBreakpoint: 'md' },
+      },
+      {
+        type: 'return',
+        value: { breakpoints: moreBreakpoints, currentBreakpoint: 'md' },
       },
     ]);
   });
 
-  it('re-renders when breakpoints is a new object reference, unfortunately', function () {
+  it('does not create a new object for the context if breakpoints changes are not detected', function () {
     const initialBreakPoints = {
       mobile: 320,
       tablet: 768,
@@ -320,6 +365,10 @@ describe('ReactBreakpoints', function () {
         value: { breakpoints: nextBreakpoints, currentBreakpoint: 'tablet' },
       },
     ]);
+
+    expect(propsMock.mock.results[0].value).toBe(
+      propsMock.mock.results[1].value,
+    );
   });
 
   it('detects changes in window size', function () {
@@ -385,7 +434,7 @@ describe('ReactBreakpoints', function () {
 
     fireEvent.resize(global.window);
 
-    await new Promise<void>(resolve => setTimeout(() => resolve(), 30));
+    await delay(30);
 
     expect(propsMock.mock.results).toMatchObject([
       {
@@ -443,6 +492,29 @@ describe('ReactBreakpoints', function () {
       {
         type: 'return',
         value: { breakpoints, currentBreakpoint: 'tablet' },
+      },
+    ]);
+  });
+
+  it('without detected window and no other hints it uses the smallest breakpoint', async function () {
+    const breakpoints = {
+      mobile: 320,
+      tablet: 768,
+      desktop: 1200,
+    };
+
+    render(
+      <ReactBreakpoints
+        breakpoints={breakpoints}
+        children={<Children />}
+        ignoreScreenSize
+      />,
+    );
+
+    expect(propsMock.mock.results).toMatchObject([
+      {
+        type: 'return',
+        value: { breakpoints, currentBreakpoint: 'mobile' },
       },
     ]);
   });

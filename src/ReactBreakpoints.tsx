@@ -1,4 +1,10 @@
-import React from 'react';
+import React, {
+  ReactNode,
+  useState,
+  useEffect,
+  useMemo,
+  useLayoutEffect,
+} from 'react';
 import PropTypes from 'prop-types';
 import debounce from 'lodash.debounce';
 
@@ -19,7 +25,16 @@ import {
   BreakpointUnit,
 } from './breakpoints';
 
+/* istanbul ignore next */
 const globalWindow = typeof window !== 'undefined' ? window : null;
+
+function detectWindowWidth(ignoreScreenSize: boolean) {
+  if (!globalWindow || ignoreScreenSize) {
+    return 0;
+  } else {
+    return globalWindow.innerWidth;
+  }
+}
 
 /**
  * Props for ReactBreakpoints
@@ -74,20 +89,17 @@ export interface ReactBreakpointsProps<
    * @default false
    */
   ignoreScreenSize?: boolean;
-}
-
-interface ReactBreakpointsState {
-  /**
-   * Name of current breakpoint
-   * undefined if `snapMode=true`
-   */
-  currentBreakpoint: BreakpointKey;
 
   /**
-   * Current screen width
-   * undefined if `snapMode=false`
+   * Detect changes if a new breakpoints reference is detected
+   * @default
    */
-  screenWidth: number;
+  detectBreakpointsObjectChanges?: boolean;
+
+  /**
+   * Children props
+  //  */
+  children?: ReactNode;
 }
 
 /**
@@ -96,49 +108,23 @@ interface ReactBreakpointsState {
  * - `withBreakpoints`
  * - `useBreakpoints`
  */
-export class ReactBreakpoints extends React.PureComponent<
-  ReactBreakpointsProps,
-  ReactBreakpointsState
-> {
-  static defaultProps = {
-    breakpointUnit: 'px',
-    debounceResize: false,
-    debounceDelay: 50,
-    snapMode: true,
-  };
+export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
+  props: ReactBreakpointsProps<K>,
+) {
+  const {
+    children,
+    breakpoints,
+    breakpointUnit = 'px',
+    debounceResize = false,
+    debounceDelay = 50,
+    snapMode = true,
+    ignoreScreenSize = !globalWindow,
+    detectBreakpointsObjectChanges = false,
+    guessedBreakpoint,
+    defaultBreakpoint,
+  } = props;
 
-  static propTypes = {
-    breakpoints: PropTypes.objectOf(PropTypes.number).isRequired,
-    breakpointUnit: PropTypes.oneOf(['px', 'em']),
-    guessedBreakpoint: PropTypes.number,
-    defaultBreakpoint: PropTypes.number,
-    debounceResize: PropTypes.bool,
-    debounceDelay: PropTypes.number,
-    snapMode: PropTypes.bool,
-  };
-
-  static getDerivedStateFromProps(
-    props: ReactBreakpointsProps,
-    state: ReactBreakpointsState,
-  ) {
-    const nextState = ReactBreakpoints.calculateBreakpointState(props);
-
-    // patch the state if something changes
-    if (
-      nextState.currentBreakpoint !== state.currentBreakpoint ||
-      nextState.screenWidth !== state.screenWidth
-    ) {
-      return { ...state, ...ReactBreakpoints.calculateBreakpointState(props) };
-    }
-
-    // keep existing state
-    return state;
-  }
-
-  constructor(props: ReactBreakpointsProps) {
-    super(props);
-    const { breakpoints } = this.props;
-
+  const [stableBreakpoints, setStableBreakpoints] = useState(() => {
     // throw Error if no breakpoints were passed
     if (!breakpoints) {
       throw new Error(ERRORS.NO_BREAKPOINTS);
@@ -148,123 +134,125 @@ export class ReactBreakpoints extends React.PureComponent<
     if (typeof breakpoints !== 'object') {
       throw new Error(ERRORS.NOT_OBJECT);
     }
-
-    this.state = ReactBreakpoints.calculateBreakpointState(props);
-  }
-
-  componentDidMount() {
-    if (globalWindow) {
-      this.readWidth(); // initial width calculation
-
-      if (this.props.debounceResize) {
-        globalWindow.addEventListener(
-          'resize',
-          debounce(this.readWidth, this.props.debounceDelay),
-        );
-      } else {
-        globalWindow.addEventListener('resize', this.readWidth);
-      }
-      globalWindow.addEventListener('orientationchange', this.readWidth);
-    }
-  }
-
-  componentWillUnmount() {
-    if (globalWindow) {
-      if (this.props.debounceResize) {
-        globalWindow.addEventListener(
-          'resize',
-          debounce(this.readWidth, this.props.debounceDelay),
-        );
-      } else {
-        globalWindow.addEventListener('resize', this.readWidth);
-      }
-      globalWindow.removeEventListener('orientationchange', this.readWidth);
-    }
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private readWidth = (event?: UIEvent | Event) => {
-    this.setState(state => {
-      const nextState = ReactBreakpoints.calculateBreakpointState(this.props);
-      if (state.currentBreakpoint === nextState.currentBreakpoint) {
-        return null; // no patch
-      }
-
-      return nextState;
-    });
-  };
-
-  /**
-   * Called when
-   * - window size or changes
-   * - window orientation changes
-   * - new breakpoints passed
-   * @param screenWidth
-   */
-  private static calculateBreakpointState(
-    props: ReactBreakpointsProps,
-  ): ReactBreakpointsState {
-    const {
-      breakpoints,
-      defaultBreakpoint,
-      guessedBreakpoint,
-      ignoreScreenSize,
-    } = props;
-
-    // with fallback from defaultProps
-    const breakpointUnit = props.breakpointUnit as BreakpointUnit;
-
-    let currentBreakpoint = '';
-
-    const screenWidth =
-      globalWindow && !ignoreScreenSize
-        ? convertScreenWidth(globalWindow.innerWidth, breakpointUnit)
-        : 0;
-
-    const sortedBreakpoints = sortBreakpoints(breakpoints);
-
-    // if we are on the client, we directly compose the breakpoint using window width
-    if (globalWindow && !ignoreScreenSize) {
-      currentBreakpoint = calculateBreakpoint(screenWidth, sortedBreakpoints);
-    } else if (guessedBreakpoint) {
-      currentBreakpoint = calculateBreakpoint(
-        guessedBreakpoint,
-        sortedBreakpoints,
-      );
-    } else if (defaultBreakpoint) {
-      currentBreakpoint = calculateBreakpoint(
-        defaultBreakpoint,
-        sortedBreakpoints,
-      );
-    }
-
-    return {
-      screenWidth,
-      currentBreakpoint,
-    };
-  }
-
-  private getSnapModeProps = (): Pick<
-    BreakpointsProps,
-    'currentBreakpoint' | 'screenWidth'
-  > =>
-    this.props.snapMode
-      ? { currentBreakpoint: this.state.currentBreakpoint }
-      : { screenWidth: this.state.screenWidth };
-
-  private getContextValues = (): BreakpointsProps => ({
-    breakpoints: this.props.breakpoints,
-    ...this.getSnapModeProps(),
+    return breakpoints;
   });
 
-  render() {
-    const { children } = this.props;
-    return (
-      <BreakpointsContext.Provider value={this.getContextValues()}>
-        {children}
-      </BreakpointsContext.Provider>
-    );
-  }
+  // screen width in px
+  const [screenWidthPx, setScreenWidthPx] = useState<number>(() => {
+    return detectWindowWidth(ignoreScreenSize);
+  });
+
+  const currentBreakpoint = useMemo<string>(() => {
+    const sortedBreakpoints = sortBreakpoints(stableBreakpoints);
+
+    // if we are on the client, we directly compose the breakpoint using window width
+    if (!ignoreScreenSize) {
+      const screenWidth = convertScreenWidth(screenWidthPx, breakpointUnit);
+      return calculateBreakpoint(screenWidth, sortedBreakpoints);
+    } else if (guessedBreakpoint) {
+      return calculateBreakpoint(guessedBreakpoint, sortedBreakpoints);
+    } else if (defaultBreakpoint) {
+      return calculateBreakpoint(defaultBreakpoint, sortedBreakpoints);
+    } else {
+      // the smallest one
+      return calculateBreakpoint(0, sortedBreakpoints);
+    }
+  }, [
+    breakpointUnit,
+    defaultBreakpoint,
+    guessedBreakpoint,
+    ignoreScreenSize,
+    screenWidthPx,
+    stableBreakpoints,
+  ]);
+
+  useLayoutEffect(
+    function screenResizeEffect() {
+      function updateScreenSize() {
+        const windowWidth = detectWindowWidth(ignoreScreenSize);
+        setScreenWidthPx(windowWidth);
+      }
+
+      const resizeHandler = debounceResize
+        ? debounce(updateScreenSize, debounceDelay)
+        : updateScreenSize;
+
+      const orientationHandler = updateScreenSize;
+
+      // add event listeners for screen events
+      if (globalWindow) {
+        globalWindow.addEventListener('resize', resizeHandler);
+        globalWindow.addEventListener('orientationchange', orientationHandler);
+      }
+
+      // cleanup effect: remove all event listeners
+      return () => {
+        if (globalWindow) {
+          globalWindow.removeEventListener('resize', resizeHandler);
+          globalWindow.removeEventListener(
+            'orientationchange',
+            orientationHandler,
+          );
+        }
+      };
+    },
+    [ignoreScreenSize, debounceResize, debounceDelay],
+  );
+
+  useEffect(
+    function detectBreakpointsEffect() {
+      if (detectBreakpointsObjectChanges) {
+        const previous = sortBreakpoints(stableBreakpoints);
+        const current = sortBreakpoints(breakpoints);
+        // length differs: changed
+        if (previous.length !== current.length) {
+          return setStableBreakpoints(breakpoints);
+        }
+        // detect property changes
+        for (let i = 0; i < previous.length; i++) {
+          if (
+            previous[i][0] !== current[i][0] ||
+            previous[i][1] !== current[i][1]
+          ) {
+            return setStableBreakpoints(breakpoints);
+          }
+        }
+      }
+    },
+    [detectBreakpointsObjectChanges, stableBreakpoints, breakpoints],
+  );
+
+  const contextProps = useMemo<BreakpointsProps>(() => {
+    return snapMode
+      ? {
+          breakpoints: stableBreakpoints,
+          currentBreakpoint,
+        }
+      : {
+          breakpoints: stableBreakpoints,
+          screenWidth: convertScreenWidth(screenWidthPx, breakpointUnit),
+        };
+  }, [
+    snapMode,
+    stableBreakpoints,
+    currentBreakpoint,
+    screenWidthPx,
+    breakpointUnit,
+  ]);
+
+  return (
+    <BreakpointsContext.Provider value={contextProps}>
+      {children}
+    </BreakpointsContext.Provider>
+  );
 }
 
-ReactBreakpoints;
+ReactBreakpoints.propTypes = {
+  breakpoints: PropTypes.objectOf(PropTypes.number).isRequired,
+  breakpointUnit: PropTypes.oneOf(['px', 'em']),
+  guessedBreakpoint: PropTypes.number,
+  defaultBreakpoint: PropTypes.number,
+  debounceResize: PropTypes.bool,
+  debounceDelay: PropTypes.number,
+  snapMode: PropTypes.bool,
+};
