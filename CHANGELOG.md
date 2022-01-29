@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.0.1] - 2022-01-29
+
+### Fixed
+
+- Fixed path to repo in package.json
+
 ## [4.0.0] - 2022-01-28
 
 ### Added
