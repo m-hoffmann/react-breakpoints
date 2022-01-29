@@ -1,4 +1,4 @@
-name: test-react-app
+name: test-app
 on: [push]
 jobs:
   test-react-app-16:
