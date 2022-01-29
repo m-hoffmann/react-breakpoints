@@ -1,6 +1,6 @@
 {
   "name": "react-hook-breakpoints",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "A library that allows you to mount/unmount components depending on the viewport size. Welcome to the next level of responsive React applications.",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
