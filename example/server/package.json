@@ -1,0 +1,19 @@
+{
+  "name": "react-breakpoints-app-server",
+  "version": "1.0.0",
+  "description": "",
+  "private": "true",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/react": "^17.0.38",
+    "@types/react-dom": "^17.0.11",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-hook-breakpoints": "^4.0.0",
+    "ts-jest": "^27.1.3"
+  }
+}
