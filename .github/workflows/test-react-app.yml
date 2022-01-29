@@ -1,0 +1,27 @@
+name: test-react-app
+on: [push]
+jobs:
+  test-react-app-16:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - run cd example/react-16
+      - name: Install modules
+        run: yarn
+      - name: Unit tests
+        run: npm run test -- --all --watchAll=false
+  test-react-app-17:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+      - run cd example/react-17
+      - name: Install modules
+        run: npm ci
+      - name: Unit tests
+        run: npm run test -- --all --watchAll=false

@@ -5577,10 +5577,10 @@ react-error-overlay@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-4.0.0.tgz#d198408a85b4070937a98667f500c832f86bd5d4"
 
-react-hook-breakpoints@^4.0.0-3:
-  version "4.0.0-3"
-  resolved "https://registry.yarnpkg.com/react-hook-breakpoints/-/react-hook-breakpoints-4.0.0-3.tgz#80745ee9396143de6053fb3d27e3d2bb4a033cb4"
-  integrity sha512-zBseSW+L0pfibuyRVRi0iYnVgLHnMtACysfGAl9dlXYoaqc0RJXcij+gBSlS45s7EKeaepgaEPoWU7HVjXeRmQ==
+react-hook-breakpoints@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/react-hook-breakpoints/-/react-hook-breakpoints-4.0.0.tgz#219262462920c4caed4813f7cfebd787deea4420"
+  integrity sha512-MmavqmzrXVbii+fCZBQM66dwUpbCI+LLfltYvnsCMXNi/Y2gTimCjWDXcLDI/NG5MLC3w7iiSOXttlC36OYDFQ==
   dependencies:
     hoist-non-react-statics "^3.3.2"
     lodash.debounce "^4.0.8"
