@@ -5,4 +5,7 @@ lib
 .idea
 coverage
 example/node_modules
+example/react-16/node_modules
+example/react-17/node_modules
+example/server/node_modules
 *.tgz
