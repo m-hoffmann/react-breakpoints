@@ -8,7 +8,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
-      - run cd example/react-16
+      - run: cd example/react-16
       - name: Install modules
         run: yarn
       - name: Unit tests
@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
-      - run cd example/react-17
+      - run: cd example/react-17
       - name: Install modules
         run: npm ci
       - name: Unit tests
