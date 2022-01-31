@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Always changes in breakpoints if a new object reference is passed (breaking)
+
+### Removed
+
+- Removed property `detectBreakpointsObjectChanges` in `ReactBreakpointsProps`
+
 ## [4.0.2] - 2022-01-31
 
 ### Fixed
@@ -26,5 +36,4 @@
 
 ### Removed
 
- - Removed undocumented `snapMode` property
-
+- Removed undocumented `snapMode` property

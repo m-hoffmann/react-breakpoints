@@ -1,10 +1,4 @@
-import React, {
-  ReactNode,
-  useState,
-  useEffect,
-  useMemo,
-  useLayoutEffect,
-} from 'react';
+import React, { ReactNode, useState, useMemo, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import debounce from 'lodash.debounce';
 
@@ -89,13 +83,6 @@ export interface ReactBreakpointsProps<
   ignoreScreenSize?: boolean;
 
   /**
-   * Detect changes if a new breakpoints reference is detected.
-   * Otherwise, only the first breakpoints object will be used
-   * @default false
-   */
-  detectBreakpointsObjectChanges?: boolean;
-
-  /**
    * Children props
    */
   children?: ReactNode;
@@ -117,23 +104,19 @@ export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
     debounceResize = false,
     debounceDelay = 50,
     ignoreScreenSize = !globalWindow,
-    detectBreakpointsObjectChanges = false,
     guessedBreakpoint,
     defaultBreakpoint = 0,
   } = props;
 
-  const [stableBreakpoints, setStableBreakpoints] = useState(() => {
-    // throw Error if no breakpoints were passed
-    if (!breakpoints) {
-      throw new Error(ERRORS.NO_BREAKPOINTS);
-    }
+  // throw Error if no breakpoints were passed
+  if (!breakpoints) {
+    throw new Error(ERRORS.NO_BREAKPOINTS);
+  }
 
-    // throw Error if breakpoints is not an object
-    if (typeof breakpoints !== 'object') {
-      throw new Error(ERRORS.NOT_OBJECT);
-    }
-    return breakpoints;
-  });
+  // throw Error if breakpoints is not an object
+  if (typeof breakpoints !== 'object') {
+    throw new Error(ERRORS.NOT_OBJECT);
+  }
 
   // screen width in px
   const [screenWidthPx, setScreenWidthPx] = useState<number>(() => {
@@ -141,7 +124,7 @@ export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
   });
 
   const currentBreakpoint = useMemo<string>(() => {
-    const sortedBreakpoints = sortBreakpoints(stableBreakpoints);
+    const sortedBreakpoints = sortBreakpoints(breakpoints);
 
     if (!ignoreScreenSize) {
       // if we are on the client, we directly compose the breakpoint using window width
@@ -160,7 +143,7 @@ export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
     guessedBreakpoint,
     ignoreScreenSize,
     screenWidthPx,
-    stableBreakpoints,
+    breakpoints,
   ]);
 
   useLayoutEffect(
@@ -196,36 +179,13 @@ export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
     [ignoreScreenSize, debounceResize, debounceDelay],
   );
 
-  useEffect(
-    function detectBreakpointsEffect() {
-      if (detectBreakpointsObjectChanges) {
-        const previous = sortBreakpoints(stableBreakpoints);
-        const current = sortBreakpoints(breakpoints);
-        // length differs: changed
-        if (previous.length !== current.length) {
-          return setStableBreakpoints(breakpoints);
-        }
-        // detect property changes
-        for (let i = 0; i < previous.length; i++) {
-          if (
-            previous[i][0] !== current[i][0] ||
-            previous[i][1] !== current[i][1]
-          ) {
-            return setStableBreakpoints(breakpoints);
-          }
-        }
-      }
-    },
-    [detectBreakpointsObjectChanges, stableBreakpoints, breakpoints],
-  );
-
   const contextProps = useMemo<BreakpointsProps>(() => {
     return {
-      breakpoints: stableBreakpoints,
+      breakpoints,
       currentBreakpoint,
       screenWidth: convertScreenWidth(screenWidthPx, breakpointUnit),
     };
-  }, [stableBreakpoints, currentBreakpoint, screenWidthPx, breakpointUnit]);
+  }, [breakpoints, currentBreakpoint, screenWidthPx, breakpointUnit]);
 
   return (
     <BreakpointsContext.Provider value={contextProps}>
