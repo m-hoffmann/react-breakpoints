@@ -1,14 +1,12 @@
-import React, { ReactNode, useState, useMemo, useLayoutEffect } from 'react';
+import React, { ReactNode, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import debounce from 'lodash.debounce';
 
-import {
-  sortBreakpoints,
-  convertScreenWidth,
-  calculateBreakpoint,
-} from './utils';
+import { convertScreenWidth } from './utils';
 
 import { BreakpointsContext } from './BreakpointsContext';
+
+import { useScreenSize } from './useScreenSize';
+import { useDetectCurrentBreakpoint } from './useDetectCurrentBreakpoint';
 
 import { ERRORS } from './messages';
 
@@ -18,17 +16,6 @@ import {
   BreakpointsProps,
   BreakpointUnit,
 } from './breakpoints';
-
-/* istanbul ignore next */
-const globalWindow = typeof window !== 'undefined' ? window : null;
-
-function detectWindowWidth(ignoreScreenSize: boolean) {
-  if (!globalWindow || ignoreScreenSize) {
-    return 0;
-  } else {
-    return globalWindow.innerWidth;
-  }
-}
 
 /**
  * Props for ReactBreakpoints
@@ -73,16 +60,6 @@ export interface ReactBreakpointsProps<
   debounceDelay?: number;
 
   /**
-   * Do not use screen size for calculation of breakpoints
-   * but use guessedBreakpoint or defaultBreakpoint
-   *
-   * Used for simulation of SSR in tests
-   * @default false
-   * @private Don't use this in your application
-   */
-  ignoreScreenSize?: boolean;
-
-  /**
    * Children props
    */
   children?: ReactNode;
@@ -103,8 +80,7 @@ export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
     breakpointUnit = 'px',
     debounceResize = false,
     debounceDelay = 50,
-    ignoreScreenSize = !globalWindow,
-    guessedBreakpoint,
+    guessedBreakpoint = 0,
     defaultBreakpoint = 0,
   } = props;
 
@@ -118,74 +94,24 @@ export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
     throw new Error(ERRORS.NOT_OBJECT);
   }
 
-  // screen width in px
-  const [screenWidthPx, setScreenWidthPx] = useState<number>(() => {
-    return detectWindowWidth(ignoreScreenSize);
-  });
+  // get the screen size in px
+  const screenSize = useScreenSize({ debounceResize, debounceDelay });
 
-  const currentBreakpoint = useMemo<string>(() => {
-    const sortedBreakpoints = sortBreakpoints(breakpoints);
-
-    if (!ignoreScreenSize) {
-      // if we are on the client, we directly compose the breakpoint using window width
-      const screenWidth = convertScreenWidth(screenWidthPx, breakpointUnit);
-      return calculateBreakpoint(screenWidth, sortedBreakpoints);
-    } else if (guessedBreakpoint) {
-      // use the breakpoint provided by SSR on server
-      return calculateBreakpoint(guessedBreakpoint, sortedBreakpoints);
-    } else {
-      // use default breakpoint if no breakpoint from server is available
-      return calculateBreakpoint(defaultBreakpoint, sortedBreakpoints);
-    }
-  }, [
-    breakpointUnit,
-    defaultBreakpoint,
-    guessedBreakpoint,
-    ignoreScreenSize,
-    screenWidthPx,
+  const currentBreakpoint = useDetectCurrentBreakpoint({
     breakpoints,
-  ]);
-
-  useLayoutEffect(
-    function screenResizeEffect() {
-      function updateScreenSize() {
-        const windowWidth = detectWindowWidth(ignoreScreenSize);
-        setScreenWidthPx(windowWidth);
-      }
-
-      const resizeHandler = debounceResize
-        ? debounce(updateScreenSize, debounceDelay)
-        : updateScreenSize;
-
-      const orientationHandler = updateScreenSize;
-
-      // add event listeners for screen events
-      if (globalWindow) {
-        globalWindow.addEventListener('resize', resizeHandler);
-        globalWindow.addEventListener('orientationchange', orientationHandler);
-      }
-
-      // cleanup effect: remove all event listeners
-      return () => {
-        if (globalWindow) {
-          globalWindow.removeEventListener('resize', resizeHandler);
-          globalWindow.removeEventListener(
-            'orientationchange',
-            orientationHandler,
-          );
-        }
-      };
-    },
-    [ignoreScreenSize, debounceResize, debounceDelay],
-  );
+    breakpointUnit,
+    guessedBreakpoint,
+    defaultBreakpoint,
+    screenSize,
+  });
 
   const contextProps = useMemo<BreakpointsProps>(() => {
     return {
       breakpoints,
       currentBreakpoint,
-      screenWidth: convertScreenWidth(screenWidthPx, breakpointUnit),
+      screenWidth: convertScreenWidth(screenSize.width, breakpointUnit),
     };
-  }, [breakpoints, currentBreakpoint, screenWidthPx, breakpointUnit]);
+  }, [breakpoints, currentBreakpoint, screenSize.width, breakpointUnit]);
 
   return (
     <BreakpointsContext.Provider value={contextProps}>

@@ -39,3 +39,11 @@ export interface BreakpointsProps<K extends BreakpointKey = BreakpointKey> {
  * @example,  [["xs", 320], [md: 640]]
  */
 export type SortedBreakpoints = [string, number][];
+
+/**
+ * @private for internal use
+ */
+export interface ScreenSize {
+  width: number;
+  height: number;
+}

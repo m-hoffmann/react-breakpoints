@@ -14,6 +14,10 @@ function delay(ms: number): Promise<void> {
 describe('ReactBreakpoints', function () {
   const propsMock = jest.fn();
 
+  function propsMockResult() {
+    return propsMock.mock.results.map(v => v.value);
+  }
+
   function Children() {
     const props = useContext(BreakpointsContext);
     propsMock(props);
@@ -69,9 +73,7 @@ describe('ReactBreakpoints', function () {
       <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
     );
 
-    expect(propsMock.mock.results).toMatchObject([
-      { type: 'return', value: { breakpoints } },
-    ]);
+    expect(propsMockResult()).toMatchObject([{ breakpoints }]);
   });
 
   it('detects currentBreakpoint "desktop" for innerWidth = 1920', function () {
@@ -88,11 +90,8 @@ describe('ReactBreakpoints', function () {
       <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
     );
 
-    expect(propsMock.mock.results).toMatchObject([
-      {
-        type: 'return',
-        value: { breakpoints, currentBreakpoint: 'desktop', screenWidth },
-      },
+    expect(propsMockResult()).toMatchObject([
+      { currentBreakpoint: 'desktop', screenWidth },
     ]);
   });
 
@@ -109,11 +108,8 @@ describe('ReactBreakpoints', function () {
       <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
     );
 
-    expect(propsMock.mock.results).toMatchObject([
-      {
-        type: 'return',
-        value: { breakpoints, currentBreakpoint: 'tablet', screenWidth: 800 },
-      },
+    expect(propsMockResult()).toMatchObject([
+      { breakpoints, currentBreakpoint: 'tablet', screenWidth: 800 },
     ]);
   });
 
@@ -130,11 +126,8 @@ describe('ReactBreakpoints', function () {
       <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
     );
 
-    expect(propsMock.mock.results).toMatchObject([
-      {
-        type: 'return',
-        value: { breakpoints, currentBreakpoint: 'mobile', screenWidth: 240 },
-      },
+    expect(propsMockResult()).toMatchObject([
+      { currentBreakpoint: 'mobile', screenWidth: 240 },
     ]);
   });
 
@@ -151,11 +144,8 @@ describe('ReactBreakpoints', function () {
       <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
     );
 
-    expect(propsMock.mock.results).toMatchObject([
-      {
-        type: 'return',
-        value: { breakpoints, currentBreakpoint: 'mobile', screenWidth: 100 },
-      },
+    expect(propsMockResult()).toMatchObject([
+      { currentBreakpoint: 'mobile', screenWidth: 100 },
     ]);
   });
 
@@ -173,8 +163,8 @@ describe('ReactBreakpoints', function () {
       <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
     );
 
-    expect(propsMock.mock.results).toMatchObject([
-      { type: 'return', value: { breakpoints, screenWidth } },
+    expect(propsMock.mock.results.map(v => v.value)).toMatchObject([
+      { breakpoints, screenWidth },
     ]);
   });
 
@@ -196,11 +186,8 @@ describe('ReactBreakpoints', function () {
       />,
     );
 
-    expect(propsMock.mock.results).toMatchObject([
-      {
-        type: 'return',
-        value: { breakpoints, currentBreakpoint: 'desktop', screenWidth: 120 },
-      },
+    expect(propsMockResult()).toMatchObject([
+      { currentBreakpoint: 'desktop', screenWidth: 120 },
     ]);
   });
 
@@ -222,11 +209,8 @@ describe('ReactBreakpoints', function () {
       />,
     );
 
-    expect(propsMock.mock.results).toMatchObject([
-      {
-        type: 'return',
-        value: { breakpoints, currentBreakpoint: 'tablet', screenWidth: 50 },
-      },
+    expect(propsMockResult()).toMatchObject([
+      { currentBreakpoint: 'tablet', screenWidth: 50 },
     ]);
   });
 
@@ -276,30 +260,21 @@ describe('ReactBreakpoints', function () {
 
     await delay(0); // useEffect
 
-    expect(propsMock.mock.results).toMatchObject([
+    expect(propsMockResult()).toMatchObject([
       {
-        type: 'return',
-        value: {
-          breakpoints: initialBreakPoints,
-          currentBreakpoint: 'tablet',
-          screenWidth,
-        },
+        breakpoints: initialBreakPoints,
+        currentBreakpoint: 'tablet',
+        screenWidth,
       },
       {
-        type: 'return',
-        value: {
-          breakpoints: nextBreakpoints,
-          currentBreakpoint: 'md',
-          screenWidth,
-        },
+        breakpoints: nextBreakpoints,
+        currentBreakpoint: 'md',
+        screenWidth,
       },
       {
-        type: 'return',
-        value: {
-          breakpoints: moreBreakpoints,
-          currentBreakpoint: 'md',
-          screenWidth,
-        },
+        breakpoints: moreBreakpoints,
+        currentBreakpoint: 'md',
+        screenWidth,
       },
     ]);
   });
@@ -325,19 +300,10 @@ describe('ReactBreakpoints', function () {
 
     fireEvent.resize(global.window);
 
-    expect(propsMock.mock.results).toMatchObject([
-      {
-        type: 'return',
-        value: { breakpoints, currentBreakpoint: 'desktop', screenWidth: 1920 },
-      },
-      {
-        type: 'return',
-        value: { breakpoints, currentBreakpoint: 'tablet', screenWidth: 800 },
-      },
-      {
-        type: 'return',
-        value: { breakpoints, currentBreakpoint: 'mobile', screenWidth: 600 },
-      },
+    expect(propsMockResult()).toMatchObject([
+      { currentBreakpoint: 'desktop', screenWidth: 1920 },
+      { currentBreakpoint: 'tablet', screenWidth: 800 },
+      { currentBreakpoint: 'mobile', screenWidth: 600 },
     ]);
   });
 
@@ -369,86 +335,71 @@ describe('ReactBreakpoints', function () {
 
     await delay(30);
 
-    expect(propsMock.mock.results).toMatchObject([
-      {
-        type: 'return',
-        value: { breakpoints, currentBreakpoint: 'desktop', screenWidth: 1920 },
-      },
-      {
-        type: 'return',
-        value: { breakpoints, currentBreakpoint: 'mobile', screenWidth: 600 },
-      },
+    expect(propsMockResult()).toMatchObject([
+      { currentBreakpoint: 'desktop', screenWidth: 1920 },
+      { currentBreakpoint: 'mobile', screenWidth: 600 },
     ]);
   });
 
-  it('works without detected window but with guessedBreakpoint', async function () {
+  it('works with detected screenWidth = 0 and guessedBreakpoint', async function () {
     const breakpoints = {
       mobile: 320,
       tablet: 768,
       desktop: 1200,
     };
+
+    global.innerWidth = 0;
 
     render(
       <ReactBreakpoints
         breakpoints={breakpoints}
         children={<Children />}
         guessedBreakpoint={breakpoints.tablet}
-        ignoreScreenSize
       />,
     );
 
-    expect(propsMock.mock.results).toMatchObject([
-      {
-        type: 'return',
-        value: { breakpoints, currentBreakpoint: 'tablet', screenWidth: 0 },
-      },
+    expect(propsMockResult()).toMatchObject([
+      { currentBreakpoint: 'tablet', screenWidth: 0 },
     ]);
   });
 
-  it('works without detected window and defaultBreakpoint', async function () {
+  it('works with detected screenWidth = 0 and defaultBreakpoint', async function () {
     const breakpoints = {
       mobile: 320,
       tablet: 768,
       desktop: 1200,
     };
+
+    global.innerWidth = 0;
 
     render(
       <ReactBreakpoints
         breakpoints={breakpoints}
         children={<Children />}
         defaultBreakpoint={breakpoints.tablet}
-        ignoreScreenSize
       />,
     );
 
-    expect(propsMock.mock.results).toMatchObject([
-      {
-        type: 'return',
-        value: { breakpoints, currentBreakpoint: 'tablet', screenWidth: 0 },
-      },
+    expect(propsMockResult()).toMatchObject([
+      { currentBreakpoint: 'tablet', screenWidth: 0 },
     ]);
   });
 
-  it('without detected window and no other hints it uses the smallest breakpoint', async function () {
+  it('with detected screenWidth = 0 and no other hints it uses the smallest breakpoint', async function () {
     const breakpoints = {
       mobile: 320,
       tablet: 768,
       desktop: 1200,
     };
 
+    global.innerWidth = 0;
+
     render(
-      <ReactBreakpoints
-        breakpoints={breakpoints}
-        children={<Children />}
-        ignoreScreenSize
-      />,
+      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
     );
 
-    expect(propsMock.mock.results).toMatchObject([
-      {
-        type: 'return',
-        value: { breakpoints, currentBreakpoint: 'mobile', screenWidth: 0 },
-      },
+    expect(propsMockResult()).toMatchObject([
+      { currentBreakpoint: 'mobile', screenWidth: 0 },
     ]);
   });
 });
