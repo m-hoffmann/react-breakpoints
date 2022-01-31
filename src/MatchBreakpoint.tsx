@@ -1,6 +1,6 @@
 import React, { ReactNode, Fragment } from 'react';
-import { useBreakpoints } from '.';
 
+import { useBreakpoints } from './useBreakpoints';
 import { BreakpointKey } from './breakpoints';
 
 /**
