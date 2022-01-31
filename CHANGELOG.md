@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.0.2] - 2022-01-31
+
+### Fixed
+
+- Fixed compatibility with ES5 browsers (object destructuring support)
+
 ## [4.0.1] - 2022-01-29
 
 ### Fixed
