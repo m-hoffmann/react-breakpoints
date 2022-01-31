@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Added component `MatchBreakpoint`
+
 ### Changed
 
 - Always changes in breakpoints if a new object reference is passed (breaking)
