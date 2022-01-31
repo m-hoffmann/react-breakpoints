@@ -31,7 +31,7 @@ export interface MatchBreakpointProps<K extends BreakpointKey = BreakpointKey> {
 
 export function MatchBreakpoint<K extends BreakpointKey = BreakpointKey>(
   props: MatchBreakpointProps<K>,
-) {
+): JSX.Element {
   const { currentBreakpoint, breakpoints } = useBreakpoints();
 
   if (props.is != null && currentBreakpoint !== props.is) {
