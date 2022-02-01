@@ -15,6 +15,9 @@ export { useBreakpoints } from './useBreakpoints';
 export type { MediaProps } from './Media';
 export { Media } from './Media';
 
+export type { MediaMatchBreakpointsProviderProps } from './MediaMatchBreakpointsProvider';
+export { MediaMatchBreakpointsProvider } from './MediaMatchBreakpointsProvider';
+
 export type { ReactBreakpointsProps } from './ReactBreakpoints';
 import { ReactBreakpoints } from './ReactBreakpoints';
 export default ReactBreakpoints;

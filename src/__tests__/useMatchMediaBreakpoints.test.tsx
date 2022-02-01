@@ -1,5 +1,4 @@
 import { renderHook } from '@testing-library/react-hooks';
-
 import MatchMediaMock from 'jest-matchmedia-mock';
 
 import { delay } from './helpers/delay';
