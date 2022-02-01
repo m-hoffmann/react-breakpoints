@@ -7,9 +7,7 @@ import { ReactBreakpoints } from '../ReactBreakpoints';
 import { BreakpointsContext } from '../BreakpointsContext';
 import { BreakpointsProps } from '../breakpoints';
 
-function delay(ms: number): Promise<void> {
-  return new Promise<void>(resolve => setTimeout(() => resolve(), ms));
-}
+import { delay } from './helpers/delay';
 
 describe('ReactBreakpoints', function () {
   const propsMock = jest.fn();

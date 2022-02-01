@@ -18,6 +18,9 @@ export function calculateBreakpoint(
   return breakpoints[breakpoints.length - 1][0];
 }
 
+/**
+ * Sort from largest to smallest
+ */
 export function sortBreakpoints(breakpoints: BreakpointMap): SortedBreakpoints {
   return Object.entries(breakpoints).sort((a, b) => b[1] - a[1]);
 }
