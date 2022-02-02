@@ -1,7 +1,7 @@
 import React from 'react';
 import { Media } from 'react-hook-breakpoints';
 
-const DummyComponent = ({ name }) => <div>{name}</div>;
+import { DisplayBreakpoint } from './DisplayBreakpoint';
 
 const WithRenderProps = props => {
   return (
@@ -9,32 +9,10 @@ const WithRenderProps = props => {
       <h3>With Render Props Media Component</h3>
       <Media>
         {({ breakpoints, currentBreakpoint }) => (
-          <React.Fragment>
-            <h4>
-              Your current breakpoint is{' '}
-              <code>
-                <pre>{currentBreakpoint}</pre>
-              </code>
-            </h4>
-            {breakpoints[currentBreakpoint] > breakpoints.tablet ? (
-              <div>Should only be seen on tablet and above :)</div>
-            ) : (
-              <div />
-            )}
-            <DummyComponent
-              name={
-                breakpoints[currentBreakpoint] < breakpoints.desktop
-                  ? 'Below desktop'
-                  : 'Above desktop'
-              }
-              style={{
-                color: 'rebeccapurple',
-                ...(breakpoints[currentBreakpoint] < breakpoints.desktop && {
-                  color: 'red',
-                }),
-              }}
-            />
-          </React.Fragment>
+          <DisplayBreakpoint
+            breakpoints={breakpoints}
+            currentBreakpoint={currentBreakpoint}
+          />
         )}
       </Media>
     </div>

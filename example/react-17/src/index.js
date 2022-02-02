@@ -5,6 +5,7 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 
 // import Provider
+import { MediaMatchBreakpointsProvider } from 'react-hook-breakpoints';
 import ReactBreakpoints from 'react-hook-breakpoints';
 
 // declare breakpoints
@@ -19,9 +20,25 @@ const breakpoints = {
 };
 
 ReactDOM.render(
-  <ReactBreakpoints breakpoints={breakpoints}>
-    <App />
-  </ReactBreakpoints>,
+  <div className="row">
+    <div className="col">
+      <MediaMatchBreakpointsProvider breakpoints={breakpoints}>
+        <App
+          title={'MediaMatchBreakpointsProvider'}
+          description={'Uses window.matchMedia'}
+        />
+      </MediaMatchBreakpointsProvider>
+    </div>
+    <div className="col">
+      <code></code>
+      <ReactBreakpoints breakpoints={breakpoints}>
+        <App
+          title={'ReactBreakpoints'}
+          description={'Uses window.innerWidth'}
+        />
+      </ReactBreakpoints>
+    </div>
+  </div>,
   document.getElementById('root'),
 );
 registerServiceWorker();
