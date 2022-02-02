@@ -4,7 +4,7 @@ import { useBreakpoints } from './useBreakpoints';
 import { BreakpointKey } from './breakpoints';
 
 /**
- * Renders children if conditions are met
+ * Children and conditions
  */
 export interface MatchBreakpointProps<K extends BreakpointKey = BreakpointKey> {
   /**
@@ -29,6 +29,9 @@ export interface MatchBreakpointProps<K extends BreakpointKey = BreakpointKey> {
   is?: K;
 }
 
+/**
+ * Renders children if conditions are met
+ */
 export function MatchBreakpoint<K extends BreakpointKey = BreakpointKey>(
   props: MatchBreakpointProps<K>,
 ): JSX.Element {

@@ -1,31 +1,34 @@
 import React from 'react';
 import { render, act } from '@testing-library/react';
 
-import MatchMediaMock from 'jest-matchmedia-mock';
+import {
+  createMatchMediaMock,
+  addMockToGlobal,
+  removeMockFromGlobal,
+  MatchMediaMock2,
+} from './helpers/MatchMediaMock2';
 
 import { MatchMediaQuery } from '../MatchMediaQuery';
 
 describe('MatchMediaQuery', () => {
   describe('MatchMediaQuery (functional mock API)', () => {
-    /**
-     * jsdom does not support this event
-     */
-    let matchMediaMock: MatchMediaMock;
+    let matchMediaMock: MatchMediaMock2;
 
-    beforeAll(() => {
-      matchMediaMock = new MatchMediaMock();
+    beforeEach(() => {
+      matchMediaMock = createMatchMediaMock();
+      addMockToGlobal(matchMediaMock.matchMedia);
     });
 
     afterEach(() => {
-      matchMediaMock.clear();
+      matchMediaMock.cleanup();
     });
 
     afterAll(() => {
-      matchMediaMock.destroy();
+      removeMockFromGlobal();
     });
 
     it('does show inner div if query is satisfied', () => {
-      matchMediaMock.useMediaQuery('yes');
+      act(() => matchMediaMock.useMediaQuery('yes'));
       const result = render(
         <div>
           <MatchMediaQuery query="yes">
@@ -38,7 +41,7 @@ describe('MatchMediaQuery', () => {
     });
 
     it('does not show inner div if query is not satisfied', () => {
-      matchMediaMock.useMediaQuery('yes');
+      act(() => matchMediaMock.useMediaQuery('yes'));
       const result = render(
         <div>
           <MatchMediaQuery query="no">
@@ -51,7 +54,7 @@ describe('MatchMediaQuery', () => {
     });
 
     it('detects changes change from events', () => {
-      matchMediaMock.useMediaQuery('no');
+      act(() => matchMediaMock.useMediaQuery('no'));
 
       const result = render(
         <div>

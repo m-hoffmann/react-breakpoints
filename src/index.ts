@@ -15,9 +15,15 @@ export { useBreakpoints } from './useBreakpoints';
 export type { MediaProps } from './Media';
 export { Media } from './Media';
 
+// Consumer: MatchBreakpoint
+export type { MatchBreakpointProps } from './MatchBreakpoint';
+export { MatchBreakpoint } from './MatchBreakpoint';
+
+// Provider: window.matchMedia
 export type { MediaMatchBreakpointsProviderProps } from './MediaMatchBreakpointsProvider';
 export { MediaMatchBreakpointsProvider } from './MediaMatchBreakpointsProvider';
 
+// Provider: window.innerWidth
 export type { ReactBreakpointsProps } from './ReactBreakpoints';
 import { ReactBreakpoints } from './ReactBreakpoints';
 export default ReactBreakpoints;

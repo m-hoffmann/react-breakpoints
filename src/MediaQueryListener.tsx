@@ -7,9 +7,8 @@ export class MediaQueryListener {
     private readonly mediaQueryList: MediaQueryList,
     private readonly callback: MediaQueryCallback,
   ) {
-    // bind the event handlers
-    this.eventTargetListener = this.eventTargetListener.bind(this);
-    this.legacyListener = this.legacyListener.bind(this);
+    // bind the event handler
+    this.eventListener = this.eventListener.bind(this);
     // attach the listeners
     this.attach();
   }
@@ -21,9 +20,9 @@ export class MediaQueryListener {
     const mediaQueryList = this.mediaQueryList;
     if (mediaQueryList != null) {
       if (typeof mediaQueryList.removeEventListener === 'function') {
-        mediaQueryList.removeEventListener('change', this.eventTargetListener);
+        mediaQueryList.removeEventListener('change', this.eventListener);
       } else if (typeof mediaQueryList.removeListener === 'function') {
-        mediaQueryList.removeListener(this.legacyListener);
+        mediaQueryList.removeListener(this.eventListener);
       }
     }
   }
@@ -34,24 +33,19 @@ export class MediaQueryListener {
   private attach() {
     const mediaQueryList = this.mediaQueryList;
     if (typeof mediaQueryList.addEventListener === 'function') {
-      mediaQueryList.addEventListener('change', this.eventTargetListener);
+      mediaQueryList.addEventListener('change', this.eventListener);
     } else if (typeof mediaQueryList.addListener === 'function') {
-      mediaQueryList.addListener(this.legacyListener);
+      mediaQueryList.addListener(this.eventListener);
     }
   }
 
   /**
-   * Listener for EventTarget API
+   * Listener for
+   * - EventTarget API
+   * - legacy API
    * @param ev
    */
-  private eventTargetListener(ev: MediaQueryListEvent) {
+  private eventListener(ev: MediaQueryListEvent) {
     this.callback(ev);
-  }
-
-  /**
-   * Listener for deprecated legacy API
-   */
-  private legacyListener() {
-    this.callback(this.mediaQueryList);
   }
 }

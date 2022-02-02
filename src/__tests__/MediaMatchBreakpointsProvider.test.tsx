@@ -2,24 +2,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useContext } from 'react';
 import { render } from '@testing-library/react';
-import MatchMediaMock from 'jest-matchmedia-mock';
 
 import { MediaMatchBreakpointsProvider as ReactBreakpoints } from '../MediaMatchBreakpointsProvider';
 import { BreakpointsContext } from '../BreakpointsContext';
 import { BreakpointsProps } from '../breakpoints';
-import { MatchBreakpoint } from '../MatchBreakpoint';
-
-import { minWidth, maxWidth, minMaxWidth } from '../media-utils';
 
 describe('MediaMatchBreakpointsProvider', function () {
-  const breakpointUnit = 'px';
-  const breakpoints = { sm: 10, md: 20, lg: 30 };
-  const media = {
-    sm: maxWidth(breakpoints.md, breakpointUnit),
-    md: minMaxWidth(breakpoints.md, breakpoints.lg, breakpointUnit),
-    lg: minWidth(breakpoints.lg, breakpointUnit),
-  };
-
   const propsMock = jest.fn();
 
   function propsMockResult() {
@@ -32,15 +20,6 @@ describe('MediaMatchBreakpointsProvider', function () {
     return <div data-test-id="children">{text}</div>;
   }
 
-  /**
-   * jsdom does not support this event
-   */
-  let matchMediaMock: MatchMediaMock;
-
-  beforeAll(() => {
-    matchMediaMock = new MatchMediaMock();
-  });
-
   beforeEach(() => {
     propsMock.mockClear();
     propsMock.mockImplementation((props: BreakpointsProps) => {
@@ -49,14 +28,6 @@ describe('MediaMatchBreakpointsProvider', function () {
     jest.spyOn(console, 'error').mockImplementation(() => {
       /* linter */
     });
-  });
-
-  afterEach(() => {
-    matchMediaMock.clear();
-  });
-
-  afterAll(() => {
-    matchMediaMock.destroy();
   });
 
   it('explodes if there are no breakpoints', function () {
@@ -107,45 +78,6 @@ describe('MediaMatchBreakpointsProvider', function () {
         breakpoints={{ xs: 1 }}
         breakpointUnit="em"
         children={<div data-test-id="children" />}
-      />,
-    );
-
-    expect(result.findByTestId('children')).resolves.toBeDefined();
-  });
-
-  it('renders sm', function () {
-    matchMediaMock.useMediaQuery(media.sm);
-
-    const result = render(
-      <ReactBreakpoints
-        breakpoints={breakpoints}
-        children={<MatchBreakpoint is="sm" children={<Children />} />}
-      />,
-    );
-
-    expect(result.findByTestId('children')).resolves.toBeDefined();
-  });
-
-  it('renders md', function () {
-    matchMediaMock.useMediaQuery(media.md);
-
-    const result = render(
-      <ReactBreakpoints
-        breakpoints={breakpoints}
-        children={<MatchBreakpoint is="md" children={<Children />} />}
-      />,
-    );
-
-    expect(result.findByTestId('children')).resolves.toBeDefined();
-  });
-
-  it('renders lg', function () {
-    matchMediaMock.useMediaQuery(media.lg);
-
-    const result = render(
-      <ReactBreakpoints
-        breakpoints={breakpoints}
-        children={<MatchBreakpoint is="lg" children={<Children />} />}
       />,
     );
 
