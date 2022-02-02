@@ -18,7 +18,7 @@ describe('withBreakpoints', () => {
   const propsMock = jest.fn();
 
   beforeEach(() => {
-    propsMock.mockReset();
+    propsMock.mockClear();
     propsMock.mockImplementation((props: BreakpointsProps) => {
       return props;
     });

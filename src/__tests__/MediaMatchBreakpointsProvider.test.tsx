@@ -1,7 +1,7 @@
 /* eslint-disable react/no-children-prop */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useContext } from 'react';
-import { render, act } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import MatchMediaMock from 'jest-matchmedia-mock';
 
 import { MediaMatchBreakpointsProvider as ReactBreakpoints } from '../MediaMatchBreakpointsProvider';
@@ -10,7 +10,6 @@ import { BreakpointsProps } from '../breakpoints';
 import { MatchBreakpoint } from '../MatchBreakpoint';
 
 import { minWidth, maxWidth, minMaxWidth } from '../media-utils';
-import { delay } from './helpers/delay';
 
 describe('MediaMatchBreakpointsProvider', function () {
   const breakpointUnit = 'px';
@@ -43,7 +42,7 @@ describe('MediaMatchBreakpointsProvider', function () {
   });
 
   beforeEach(() => {
-    propsMock.mockReset();
+    propsMock.mockClear();
     propsMock.mockImplementation((props: BreakpointsProps) => {
       return props;
     });
@@ -151,54 +150,5 @@ describe('MediaMatchBreakpointsProvider', function () {
     );
 
     expect(result.findByTestId('children')).resolves.toBeDefined();
-  });
-
-  it.skip('detects changes', function () {
-    matchMediaMock.useMediaQuery(media.lg);
-
-    const result = render(
-      <ReactBreakpoints
-        breakpoints={breakpoints}
-        children={
-          <div>
-            <MatchBreakpoint is="sm" children={<Children text="sm" />} />
-            <MatchBreakpoint is="md" children={<Children text="md" />} />
-            <MatchBreakpoint is="lg" children={<Children text="lg" />} />
-          </div>
-        }
-      />,
-    );
-
-    expect(result.queryByText('lg')).toBeTruthy();
-
-    act(() => matchMediaMock.useMediaQuery(media.md));
-    expect(result.queryByText('lg')).toBeFalsy();
-    expect(result.queryByText('md')).toBeTruthy();
-
-    act(() => matchMediaMock.useMediaQuery(media.sm));
-    expect(result.queryByText('sm')).toBeTruthy();
-  });
-
-  it.skip('removes all event listeners on unnmount', async () => {
-    const result = render(
-      <ReactBreakpoints
-        breakpoints={breakpoints}
-        children={
-          <div>
-            <MatchBreakpoint is="sm" children={<Children text="sm" />} />
-            <MatchBreakpoint is="md" children={<Children text="md" />} />
-            <MatchBreakpoint is="lg" children={<Children text="lg" />} />
-          </div>
-        }
-      />,
-    );
-
-    // unmount the component and verify that the listeners are removed
-    result.unmount();
-
-    await delay(100);
-
-    // FIXME: fails, but why?
-    expect(matchMediaMock.getMediaQueries().length).toBe(0);
   });
 });

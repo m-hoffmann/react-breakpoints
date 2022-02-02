@@ -23,7 +23,7 @@ describe('ReactBreakpoints', function () {
   }
 
   beforeEach(() => {
-    propsMock.mockReset();
+    propsMock.mockClear();
     propsMock.mockImplementation((props: BreakpointsProps) => {
       return props;
     });

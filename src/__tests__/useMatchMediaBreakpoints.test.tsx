@@ -1,8 +1,10 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook, act } from '@testing-library/react-hooks';
 import MatchMediaMock from 'jest-matchmedia-mock';
 
-import { delay } from './helpers/delay';
-// import { defer } from './helpers/defer';
+import {
+  createMatchMediaMock,
+  MatchMediaMock2,
+} from './helpers/createMatchMediaMock';
 
 import { useMatchMediaBreakpoints } from '../useMatchMediaBreakpoints';
 import { minWidth, maxWidth, minMaxWidth } from '../media-utils';
@@ -27,7 +29,7 @@ describe('useMatchMediaBreakpoints', () => {
       matchMediaMock = new MatchMediaMock();
     });
 
-    afterEach(() => {
+    beforeEach(() => {
       matchMediaMock.clear();
     });
 
@@ -83,44 +85,6 @@ describe('useMatchMediaBreakpoints', () => {
       expect(result.result.current).toBe('lg');
     });
 
-    it.skip('detects changes of the breakpoint', async () => {
-      matchMediaMock.useMediaQuery(media.lg);
-
-      const breaks = { ...breakpoints, xs: 1 };
-
-      const result = renderHook(() =>
-        useMatchMediaBreakpoints({
-          breakpoints: breaks,
-          breakpointUnit,
-        }),
-      );
-
-      // verify lg
-      expect(result.result.current).toBe(names.lg);
-      result.rerender();
-      // update to md
-      // defer(() => matchMediaMock.useMediaQuery(media.md), 5);
-      matchMediaMock.useMediaQuery(media.md);
-      result.rerender();
-      // await result.waitForNextUpdate();
-      // expect(result.result.current).toBe(names.md);
-
-      // update to sm
-      // defer(() => matchMediaMock.useMediaQuery(media.sm), 10);
-
-      matchMediaMock.useMediaQuery(media.sm);
-      result.rerender();
-
-      result.rerender();
-      // await result.waitForNextUpdate();
-      // expect(result.result.current).toBe(names.sm);
-      // await result.waitForNextUpdate();
-
-      await delay(100);
-
-      expect(result.result.all).toBe([names.lg]);
-    });
-
     it('adds a single listener for each breakpoint', () => {
       renderHook(() =>
         useMatchMediaBreakpoints({
@@ -129,7 +93,7 @@ describe('useMatchMediaBreakpoints', () => {
         }),
       );
 
-      // this allows easyy detection of errors
+      // this allows easy detection of errors
       const registeredMediaQueries = matchMediaMock
         .getMediaQueries()
         .join(' # ');
@@ -142,24 +106,9 @@ describe('useMatchMediaBreakpoints', () => {
       expect(matchMediaMock.getListeners(media.md)?.length).toBe(1);
       expect(matchMediaMock.getListeners(media.lg)?.length).toBe(1);
     });
-
-    it.skip('removes all event listeners on unnmount', () => {
-      const renderer = renderHook(() =>
-        useMatchMediaBreakpoints({
-          breakpoints,
-          breakpointUnit,
-        }),
-      );
-
-      // unmount the component and verify that the listeners are removed
-      renderer.unmount();
-
-      // FIXME: fails, but why?
-      // expect(matchMediaMock.getMediaQueries().length).toBe(0);
-    });
   });
 
-  describe('MatchMediaQuery (EventTarget api)', () => {
+  describe('useMatchMediaBreakpoints (EventTarget api)', () => {
     const addMock = jest.fn();
     const removeMock = jest.fn();
     const matchMedia = 'matchMedia';
@@ -178,7 +127,7 @@ describe('useMatchMediaBreakpoints', () => {
       });
     });
 
-    afterEach(() => {
+    beforeEach(() => {
       addMock.mockClear();
       removeMock.mockClear();
     });
@@ -211,17 +160,20 @@ describe('useMatchMediaBreakpoints', () => {
     });
 
     it('removes event listeners', () => {
-      renderHook(() =>
+      const result = renderHook(() =>
         useMatchMediaBreakpoints({
           breakpoints,
           breakpointUnit,
         }),
       );
+
+      result.unmount();
       expect(removeMock).toHaveBeenCalledTimes(3);
     });
   });
 
-  describe('MatchMediaQuery (legacy api)', () => {
+  describe('useMatchMediaBreakpoints (legacy api)', () => {
+    const callbackMock = jest.fn();
     const addMock = jest.fn();
     const removeMock = jest.fn();
     const matchMedia = 'matchMedia';
@@ -240,9 +192,10 @@ describe('useMatchMediaBreakpoints', () => {
       });
     });
 
-    afterEach(() => {
+    beforeEach(() => {
       addMock.mockClear();
       removeMock.mockClear();
+      callbackMock.mockClear();
     });
 
     afterAll(() => {
@@ -269,11 +222,24 @@ describe('useMatchMediaBreakpoints', () => {
           breakpointUnit,
         }),
       );
-
       expect(addMock).toHaveBeenCalledTimes(3);
     });
 
     it('removes event listeners', () => {
+      const renderer = renderHook(() =>
+        useMatchMediaBreakpoints({
+          breakpoints,
+          breakpointUnit,
+        }),
+      );
+
+      renderer.unmount();
+      expect(removeMock).toHaveBeenCalledTimes(3);
+    });
+
+    it('executes the callback once', () => {
+      addMock.mockImplementationOnce(() => callbackMock());
+
       renderHook(() =>
         useMatchMediaBreakpoints({
           breakpoints,
@@ -281,11 +247,12 @@ describe('useMatchMediaBreakpoints', () => {
         }),
       );
 
-      expect(removeMock).toHaveBeenCalledTimes(3);
+      expect(addMock).toHaveBeenCalledTimes(3);
+      expect(callbackMock).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('MatchMediaQuery (matchMedia not available)', () => {
+  describe('useMatchMediaBreakpoints (matchMedia not available)', () => {
     it('detects the single breakpoint', () => {
       const result = renderHook(() =>
         useMatchMediaBreakpoints({
@@ -295,6 +262,49 @@ describe('useMatchMediaBreakpoints', () => {
       );
 
       expect(result.result.current).toBe('single');
+    });
+  });
+
+  describe('useMatchMediaBreakpoints (EventTarget API with callbacks)', () => {
+    const matchMedia = 'matchMedia';
+
+    let matchMediaMock: MatchMediaMock2;
+
+    beforeEach(() => {
+      matchMediaMock = createMatchMediaMock();
+      Object.defineProperty(global, matchMedia, {
+        writable: true,
+        value: matchMediaMock.matchMedia,
+      });
+    });
+
+    afterEach(() => {
+      matchMediaMock.cleanup();
+    });
+
+    afterAll(() => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      delete global[matchMedia];
+    });
+
+    it('detects changes of the breakpoint', async () => {
+      const breaks = { ...breakpoints };
+
+      const result = renderHook(() =>
+        useMatchMediaBreakpoints({
+          breakpoints: breaks,
+          breakpointUnit,
+        }),
+      );
+
+      expect(result.result.current).toBe(names.lg);
+
+      act(() => matchMediaMock.updateQuery(media.md));
+      expect(result.result.current).toBe(names.md);
+
+      act(() => matchMediaMock.updateQuery(media.sm));
+      expect(result.result.current).toBe(names.sm);
     });
   });
 });

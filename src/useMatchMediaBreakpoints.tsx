@@ -1,4 +1,4 @@
-import { useRef, useState, useLayoutEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import { BreakpointUnit } from './breakpoints';
 
 import { BreakpointKey, BreakpointMap } from './breakpoints';
@@ -60,11 +60,6 @@ export function useMatchMediaBreakpoints<K extends BreakpointKey>(
       matchedBreakpoints.current,
     );
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if ((props.breakpoints as any).xs) {
-      console.log('computeNewBreakpoint', matchedBreakpoints.current);
-    }
-
     setCurrentBreakpoint(match);
   }, [props.breakpoints]);
 
@@ -73,16 +68,11 @@ export function useMatchMediaBreakpoints<K extends BreakpointKey>(
     findLargestMatchinBreakpoint(props.breakpoints, matchedBreakpoints.current),
   );
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const listeners: MediaQueryListener[] = [];
 
     // reset the ref
     matchedBreakpoints.current = {};
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    if ((props.breakpoints as any).xs) {
-      console.log('effect');
-    }
 
     const sortedBreakpoints = sortBreakpoints(props.breakpoints);
 
