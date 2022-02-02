@@ -14,9 +14,10 @@ export interface MatchMediaBreakpointsProps<K extends BreakpointKey> {
   breakpointUnit: BreakpointUnit;
 }
 
-function findLargestMatchinBreakpoint(
+function findLargestMatchingBreakpoint(
   breakpoints: Record<string, number>,
   matchedBreakpoints: Record<string, boolean>,
+  fallbackBreakpoint = '',
 ) {
   const sortedBreakpoints = sortBreakpoints(breakpoints);
 
@@ -30,6 +31,10 @@ function findLargestMatchinBreakpoint(
     if (matchedBreakpoints[name]) {
       return name;
     }
+  }
+
+  if (fallbackBreakpoint) {
+    return fallbackBreakpoint;
   }
 
   // if no match is found, take the smallest one
@@ -55,7 +60,7 @@ export function useMatchMediaBreakpoints<K extends BreakpointKey>(
 
   /** Computes the new breakpoint */
   const computeNewBreakpoint = useCallback(() => {
-    const match = findLargestMatchinBreakpoint(
+    const match = findLargestMatchingBreakpoint(
       props.breakpoints,
       matchedBreakpoints.current,
     );
@@ -65,7 +70,10 @@ export function useMatchMediaBreakpoints<K extends BreakpointKey>(
 
   /** The current matching breakpoint, the return value of the hook */
   const [currentBreakpoint, setCurrentBreakpoint] = useState(() =>
-    findLargestMatchinBreakpoint(props.breakpoints, matchedBreakpoints.current),
+    findLargestMatchingBreakpoint(
+      props.breakpoints,
+      matchedBreakpoints.current,
+    ),
   );
 
   useEffect(() => {
