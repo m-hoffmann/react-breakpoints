@@ -31,6 +31,14 @@ export interface MediaMatchBreakpointsProviderProps<
   breakpointUnit?: BreakpointUnit;
 
   /**
+   * Default breakpoint that is used
+   * if no breakpoint matches
+   *
+   * Defaults to smallest breakpoint if not set
+   */
+  defaultBreakpoint?: K;
+
+  /**
    * Children props
    */
   children?: ReactNode;
@@ -45,7 +53,12 @@ export interface MediaMatchBreakpointsProviderProps<
 export function MediaMatchBreakpointsProvider<
   K extends BreakpointKey = BreakpointKey,
 >(props: MediaMatchBreakpointsProviderProps<K>) {
-  const { children, breakpoints, breakpointUnit = 'px' } = props;
+  const {
+    children,
+    breakpoints,
+    breakpointUnit = 'px',
+    defaultBreakpoint,
+  } = props;
 
   // throw Error if no breakpoints were passed
   if (!breakpoints) {
@@ -60,6 +73,7 @@ export function MediaMatchBreakpointsProvider<
   const currentBreakpoint = useMatchMediaBreakpoints({
     breakpoints,
     breakpointUnit,
+    defaultBreakpoint,
   });
 
   const contextProps = useMemo<BreakpointsProps>(() => {
@@ -80,8 +94,5 @@ export function MediaMatchBreakpointsProvider<
 MediaMatchBreakpointsProvider.propTypes = {
   breakpoints: PropTypes.objectOf(PropTypes.number).isRequired,
   breakpointUnit: PropTypes.oneOf(['px', 'em']),
-  guessedBreakpoint: PropTypes.number,
-  defaultBreakpoint: PropTypes.number,
-  debounceResize: PropTypes.bool,
-  debounceDelay: PropTypes.number,
+  defaultBreakpoint: PropTypes.string,
 };

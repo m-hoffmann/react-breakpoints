@@ -1,6 +1,9 @@
 import { useState, useLayoutEffect } from 'react';
 
-import { MediaQueryListener } from './MediaQueryListener';
+import {
+  createMediaQueryListener,
+  MediaQueryListener,
+} from './MediaQueryListener';
 
 /* istanbul ignore next */
 const globalWindow = typeof window !== 'undefined' ? window : null;
@@ -23,9 +26,9 @@ export function useMatchMediaQuery(mediaQuery: string): boolean {
       // flag initial match
       setMatches(mediaQueryList.matches);
 
-      // listene for changes
+      // listener for changes
       listeners.push(
-        new MediaQueryListener(mediaQueryList, ev => {
+        createMediaQueryListener(mediaQueryList, ev => {
           setMatches(ev.matches);
         }),
       );

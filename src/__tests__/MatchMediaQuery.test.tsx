@@ -28,7 +28,9 @@ describe('MatchMediaQuery', () => {
     });
 
     it('does show inner div if query is satisfied', () => {
-      act(() => matchMediaMock.useMediaQuery('yes'));
+      act(() => {
+        matchMediaMock.mediaQuery = 'yes';
+      });
       const result = render(
         <div>
           <MatchMediaQuery query="yes">
@@ -41,7 +43,9 @@ describe('MatchMediaQuery', () => {
     });
 
     it('does not show inner div if query is not satisfied', () => {
-      act(() => matchMediaMock.useMediaQuery('yes'));
+      act(() => {
+        matchMediaMock.mediaQuery = 'yes';
+      });
       const result = render(
         <div>
           <MatchMediaQuery query="no">
@@ -54,7 +58,9 @@ describe('MatchMediaQuery', () => {
     });
 
     it('detects changes change from events', () => {
-      act(() => matchMediaMock.useMediaQuery('no'));
+      act(() => {
+        matchMediaMock.mediaQuery = 'no';
+      });
 
       const result = render(
         <div>
@@ -66,7 +72,9 @@ describe('MatchMediaQuery', () => {
 
       expect(result.queryByText('inner')).toBeFalsy();
 
-      act(() => matchMediaMock.useMediaQuery('yes'));
+      act(() => {
+        matchMediaMock.mediaQuery = 'yes';
+      });
 
       expect(result.queryByText('inner')).toBeTruthy();
     });

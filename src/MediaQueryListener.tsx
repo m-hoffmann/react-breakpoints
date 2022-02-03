@@ -2,50 +2,49 @@ export type MediaQueryCallback = (
   event: Pick<MediaQueryListEvent, 'matches' | 'media'>,
 ) => void;
 
-export class MediaQueryListener {
-  constructor(
-    private readonly mediaQueryList: MediaQueryList,
-    private readonly callback: MediaQueryCallback,
-  ) {
-    // bind the event handler
-    this.eventListener = this.eventListener.bind(this);
-    // attach the listeners
-    this.attach();
-  }
-
+export interface MediaQueryListener {
   /**
    * Removes the listeners
    */
-  public detach() {
-    const mediaQueryList = this.mediaQueryList;
-    if (mediaQueryList != null) {
-      if (typeof mediaQueryList.removeEventListener === 'function') {
-        mediaQueryList.removeEventListener('change', this.eventListener);
-      } else if (typeof mediaQueryList.removeListener === 'function') {
-        mediaQueryList.removeListener(this.eventListener);
-      }
-    }
+  detach(): void;
+}
+
+/**
+ * Creates an event listener
+ * @param mediaQueryList
+ * @param callback
+ * @returns
+ */
+export function createMediaQueryListener(
+  mediaQueryList: MediaQueryList,
+  callback: MediaQueryCallback,
+): MediaQueryListener {
+  /** Listener for EventTarget API and  legacy API */
+  function eventListener(ev: MediaQueryListEvent) {
+    callback(ev);
   }
 
-  /**
-   * Called in constructor
-   */
-  private attach() {
-    const mediaQueryList = this.mediaQueryList;
+  /** Attaches the event listener */
+  function attach() {
     if (typeof mediaQueryList.addEventListener === 'function') {
-      mediaQueryList.addEventListener('change', this.eventListener);
+      mediaQueryList.addEventListener('change', eventListener);
     } else if (typeof mediaQueryList.addListener === 'function') {
-      mediaQueryList.addListener(this.eventListener);
+      mediaQueryList.addListener(eventListener);
     }
   }
 
-  /**
-   * Listener for
-   * - EventTarget API
-   * - legacy API
-   * @param ev
-   */
-  private eventListener(ev: MediaQueryListEvent) {
-    this.callback(ev);
+  /** Removes the event listener */
+  function detach() {
+    if (typeof mediaQueryList.removeEventListener === 'function') {
+      mediaQueryList.removeEventListener('change', eventListener);
+    } else if (typeof mediaQueryList.removeListener === 'function') {
+      mediaQueryList.removeListener(eventListener);
+    }
   }
+
+  attach();
+
+  return {
+    detach,
+  };
 }

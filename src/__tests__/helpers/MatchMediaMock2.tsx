@@ -1,17 +1,52 @@
 import { EventEmitter2, ListenerFn } from 'eventemitter2';
 
+/**
+ * The mock
+ */
 export interface MatchMediaMock2 {
-  matchMedia(media: string): Partial<MediaQueryList>;
-  useMediaQuery(query: string): void;
+  /**
+   * Returns a mocked media query list
+   * @param media
+   */
+  matchMedia(media: string): MediaQueryList;
+  /**
+   * Allows to get the query
+   *
+   * Event listeners are called when their mediaQuery
+   * matches this one equality(equality)
+   */
+  mediaQuery: string;
+  /**
+   * Removes event listeners
+   */
   cleanup(): void;
+  /**
+   * Number of active event listeners
+   */
   numListeners: number;
+  /**
+   * Number of calls to event listeners
+   */
   numCalls: number;
 }
 
-type ChangeEventListener = (event: MediaQueryListEvent) => void;
-
-const MEDIA_EVENT = 'media';
 const CHANGE_EVENT = 'change';
+
+/**
+ * Options for creating the mock
+ */
+interface MatchMediaMockOptions {
+  /**
+   * Has deprecated API
+   * @default true
+   */
+  eventTargetApi?: boolean;
+  /**
+   * Has EventTarget API
+   * @default true
+   */
+  legacyApi?: boolean;
+}
 
 /**
  * Create a partially working mock for matchMedia
@@ -21,55 +56,103 @@ const CHANGE_EVENT = 'change';
  * @param media
  * @returns
  */
-export function createMatchMediaMock(): MatchMediaMock2 {
-  const listeners = new Map<ChangeEventListener, ListenerFn>();
+export function createMediaQueryListMock(
+  options?: MatchMediaMockOptions,
+): MatchMediaMock2 {
+  const listeners = new Map<EventListener, ListenerFn>();
+
   const emitter = new EventEmitter2({});
   let numCalls = 0;
   let currentQuery = '';
 
-  function matchMedia(media: string): Partial<MediaQueryList> {
-    return {
+  const { eventTargetApi = true, legacyApi = true } = options ?? {};
+  function matchMedia(media: string): MediaQueryList {
+    const mediaQueryList: MediaQueryList = {
       get matches() {
         return media === currentQuery;
       },
       get media() {
         return media;
       },
-      addEventListener(eventName: string, changeListener: ChangeEventListener) {
-        if (eventName === CHANGE_EVENT) {
-          const emitterListener = () => {
-            numCalls++;
-            const matches = media === currentQuery;
-            changeListener({ matches, media } as MediaQueryListEvent);
-          };
-          listeners.set(changeListener, emitterListener);
-          emitter.on(MEDIA_EVENT, emitterListener);
-        }
-      },
-      removeEventListener(
-        eventName: string,
-        changeListener: ChangeEventListener,
-      ) {
-        if (eventName === CHANGE_EVENT) {
-          const emitterListener = listeners.get(changeListener);
-          if (emitterListener) {
-            listeners.delete(changeListener);
-            emitter.off(MEDIA_EVENT, emitterListener);
-          }
-        }
-      },
-    } as Partial<MediaQueryList>;
+    } as MediaQueryList;
+
+    function createListener(listener: EventListener): ListenerFn {
+      return () => {
+        numCalls++;
+        const matches = media === currentQuery;
+        listener({ matches, media } as MediaQueryListEvent);
+      };
+    }
+
+    function addListener(listener: EventListener) {
+      const emitterListener = createListener(listener);
+      listeners.set(listener, emitterListener);
+      emitter.on(CHANGE_EVENT, emitterListener);
+    }
+
+    function removeListener(listener: EventListener) {
+      const emitterListener = listeners.get(listener);
+      if (emitterListener) {
+        listeners.delete(listener);
+        emitter.off(CHANGE_EVENT, emitterListener);
+      }
+    }
+
+    function addEventListener(event: string, listener: EventListener) {
+      if (event === CHANGE_EVENT) {
+        addListener(listener);
+      }
+    }
+
+    function removeEventListener(event: string, listener: EventListener) {
+      if (event === CHANGE_EVENT) {
+        removeListener(listener);
+      }
+    }
+
+    function dispatchEvent(event: Event): boolean {
+      emitter.emit(CHANGE_EVENT, event);
+      return true;
+    }
+
+    if (eventTargetApi) {
+      mediaQueryList.addEventListener = addEventListener;
+      mediaQueryList.removeEventListener = removeEventListener;
+      mediaQueryList.dispatchEvent = dispatchEvent;
+      mediaQueryList.onchange = null;
+    }
+
+    if (legacyApi) {
+      mediaQueryList.addListener = addListener;
+      mediaQueryList.removeListener = removeListener;
+    }
+
+    // listener that is responsible for onchange
+    emitter.on(CHANGE_EVENT, () => {
+      if (typeof mediaQueryList.onchange === 'function') {
+        const matches = media === currentQuery;
+        numCalls++;
+        mediaQueryList.onchange({ matches, media } as MediaQueryListEvent);
+      }
+    });
+
+    return mediaQueryList;
   }
 
   return {
     matchMedia,
-    useMediaQuery(media: string): void {
-      currentQuery = media;
-      emitter.emit(MEDIA_EVENT);
-    },
     cleanup() {
       listeners.clear();
       emitter.removeAllListeners();
+    },
+    get mediaQuery(): string {
+      return currentQuery;
+    },
+    set mediaQuery(media: string) {
+      if (currentQuery !== media) {
+        currentQuery = media;
+        emitter.emit(CHANGE_EVENT);
+      }
     },
     get numListeners() {
       return listeners.size;
@@ -78,109 +161,42 @@ export function createMatchMediaMock(): MatchMediaMock2 {
       return numCalls;
     },
   };
+}
+
+/**
+ * Creates mock
+ *
+ * with event target functions
+ * - addEventListener
+ * - removeEventListener
+ * - dispatchEvent
+ * - onchange
+ *
+ * without the deprecated functions
+ * - addListener
+ * - removeListener
+ * @returns The mock object
+ */
+export function createMatchMediaMock(): MatchMediaMock2 {
+  return createMediaQueryListMock({ eventTargetApi: true, legacyApi: false });
 }
 
 /**
  * Creates legacy mock with deprecated functions
  * - addListener
  * - removeListener
- * @returns
+ * @returns The mock object
  */
 export function createLegacyMediaMock(): MatchMediaMock2 {
-  const listeners = new Map<ChangeEventListener, ListenerFn>();
-  const emitter = new EventEmitter2({});
-  let numCalls = 0;
-  let currentQuery = '';
-
-  /**
-   * Create a partially working mock for matchMedia
-   * @param media
-   * @returns
-   */
-  function matchMedia(media: string): Partial<MediaQueryList> {
-    return {
-      get matches() {
-        return media === currentQuery;
-      },
-      get media() {
-        return media;
-      },
-      addListener(changeListener: ChangeEventListener) {
-        const emitterListener = () => {
-          numCalls++;
-          const matches = media === currentQuery;
-          changeListener({ matches, media } as MediaQueryListEvent);
-        };
-        listeners.set(changeListener, emitterListener);
-        emitter.on(MEDIA_EVENT, emitterListener);
-      },
-      removeListener(changeListener: ChangeEventListener) {
-        const emitterListener = listeners.get(changeListener);
-        if (emitterListener) {
-          listeners.delete(changeListener);
-          emitter.off(MEDIA_EVENT, emitterListener);
-        }
-      },
-    };
-  }
-
-  return {
-    matchMedia,
-    useMediaQuery(media: string): void {
-      emitter.emit(MEDIA_EVENT);
-      currentQuery = media;
-    },
-    cleanup() {
-      emitter.removeAllListeners();
-      listeners.clear();
-    },
-    get numListeners() {
-      return listeners.size;
-    },
-    get numCalls() {
-      return numCalls;
-    },
-  };
+  return createMediaQueryListMock({ eventTargetApi: false, legacyApi: true });
 }
 
 /**
  * Creates a mock with no listener functions
- * @returns
+ * @returns The mock object
  */
 export function createMediaMockWithoutApi(): MatchMediaMock2 {
-  let query = '';
-
-  /**
-   * Create a partially working mock for matchMedia
-   * @param media
-   * @returns
-   */
-  function matchMedia(media: string): Partial<MediaQueryList> {
-    return {
-      get matches() {
-        return media === query;
-      },
-      get media() {
-        return media;
-      },
-    };
-  }
-
-  return {
-    matchMedia,
-    useMediaQuery(media: string): void {
-      query = media;
-    },
-    cleanup() {
-      // nothing to do
-    },
-    get numListeners() {
-      return 0;
-    },
-    get numCalls() {
-      return 0;
-    },
-  };
+  return createMediaQueryListMock({ eventTargetApi: false, legacyApi: false });
 }
 
 export function addMockToGlobal(
@@ -188,6 +204,7 @@ export function addMockToGlobal(
 ): void {
   Object.defineProperty(global, 'matchMedia', {
     writable: true,
+    configurable: true,
     value: matchMedia,
   });
 }

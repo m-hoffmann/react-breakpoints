@@ -50,7 +50,9 @@ describe('useMatchMediaBreakpoints', () => {
     });
 
     it('detects breakpoint sm', () => {
-      act(() => matchMediaMock.useMediaQuery(media.sm));
+      act(() => {
+        matchMediaMock.mediaQuery = media.sm;
+      });
 
       const result = renderHook(() =>
         useMatchMediaBreakpoints({
@@ -63,7 +65,9 @@ describe('useMatchMediaBreakpoints', () => {
     });
 
     it('detects breakpoint md', () => {
-      act(() => matchMediaMock.useMediaQuery(media.md));
+      act(() => {
+        matchMediaMock.mediaQuery = media.md;
+      });
 
       const result = renderHook(() =>
         useMatchMediaBreakpoints({
@@ -76,7 +80,9 @@ describe('useMatchMediaBreakpoints', () => {
     });
 
     it('detects breakpoint lg', () => {
-      act(() => matchMediaMock.useMediaQuery(media.lg));
+      act(() => {
+        matchMediaMock.mediaQuery = media.lg;
+      });
 
       const result = renderHook(() =>
         useMatchMediaBreakpoints({
@@ -121,12 +127,18 @@ describe('useMatchMediaBreakpoints', () => {
         }),
       );
 
-      expect(result.result.current).toBe(names.lg);
+      act(() => {
+        matchMediaMock.mediaQuery = media.lg;
+      });
 
-      act(() => matchMediaMock.useMediaQuery(media.md));
+      act(() => {
+        matchMediaMock.mediaQuery = media.md;
+      });
       expect(result.result.current).toBe(names.md);
 
-      act(() => matchMediaMock.useMediaQuery(media.sm));
+      act(() => {
+        matchMediaMock.mediaQuery = media.sm;
+      });
       expect(result.result.current).toBe(names.sm);
     });
   });
@@ -188,7 +200,9 @@ describe('useMatchMediaBreakpoints', () => {
         }),
       );
 
-      matchMediaMock.useMediaQuery('bla bla bla');
+      act(() => {
+        matchMediaMock.mediaQuery = 'bla bla bla';
+      });
       expect(matchMediaMock.numCalls).toBe(3);
     });
   });
@@ -231,6 +245,18 @@ describe('useMatchMediaBreakpoints', () => {
       );
 
       expect(result.result.current).toBe('single');
+    });
+
+    it('uses default breakpoint if no breakpoint is available', () => {
+      const result = renderHook(() =>
+        useMatchMediaBreakpoints({
+          breakpoints,
+          breakpointUnit: 'px',
+          defaultBreakpoint: 'md',
+        }),
+      );
+
+      expect(result.result.current).toBe('md');
     });
   });
 });
