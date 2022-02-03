@@ -1,4 +1,4 @@
-import { EventEmitter2, ListenerFn } from 'eventemitter2';
+import { EventEmitter, EmitterListener } from './EventEmitter';
 
 /**
  * The mock
@@ -59,9 +59,9 @@ interface MatchMediaMockOptions {
 export function createMediaQueryListMock(
   options?: MatchMediaMockOptions,
 ): MatchMediaMock2 {
-  const listeners = new Map<EventListener, ListenerFn>();
+  const listeners = new Map<EventListener, EmitterListener>();
 
-  const emitter = new EventEmitter2({});
+  const emitter = new EventEmitter();
   let numCalls = 0;
   let currentQuery = '';
 
@@ -76,7 +76,7 @@ export function createMediaQueryListMock(
       },
     } as MediaQueryList;
 
-    function createListener(listener: EventListener): ListenerFn {
+    function createListener(listener: EventListener): EmitterListener {
       return () => {
         numCalls++;
         const matches = media === currentQuery;
@@ -142,8 +142,7 @@ export function createMediaQueryListMock(
   return {
     matchMedia,
     cleanup() {
-      listeners.clear();
-      emitter.removeAllListeners();
+      emitter.clear();
     },
     get mediaQuery(): string {
       return currentQuery;

@@ -1,6 +1,6 @@
 {
   "name": "react-hook-breakpoints",
-  "version": "5.0.0-2",
+  "version": "5.0.0-3",
   "description": "A library that allows you to mount/unmount components depending on the viewport size. Welcome to the next level of responsive React applications.",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
@@ -58,7 +58,6 @@
     "eslint": "^8.7.0",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
-    "eventemitter2": "^6.4.5",
     "husky": "7.0.4",
     "jest": "^27.4.7",
     "prettier": "^2.5.1",

@@ -49,6 +49,21 @@ describe('useMatchMediaBreakpoints', () => {
       expect(result.result.current).toBe('single');
     });
 
+    it('detects breakpoint if no breakpoint matches', () => {
+      act(() => {
+        matchMediaMock.mediaQuery = '';
+      });
+
+      const result = renderHook(() =>
+        useMatchMediaBreakpoints({
+          breakpoints,
+          breakpointUnit,
+        }),
+      );
+
+      expect(result.result.current).toBe(names.sm);
+    });
+
     it('detects breakpoint sm', () => {
       act(() => {
         matchMediaMock.mediaQuery = media.sm;

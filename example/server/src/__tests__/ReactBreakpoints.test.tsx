@@ -16,7 +16,7 @@ describe('ReactBreakpoints on the server', function () {
     return <>{props.currentBreakpoint}</>;
   }
 
-  function Screenwidth() {
+  function ScreenWidth() {
     const props = useBreakpoints<Breakpoint>();
 
     return <>{props.screenWidth}</>;
@@ -121,7 +121,7 @@ describe('ReactBreakpoints on the server', function () {
         <ReactBreakpoints
           breakpoints={breakpoints}
           guessedBreakpoint={600}
-          children={<Screenwidth />}
+          children={<ScreenWidth />}
         />,
       ),
     ).toBe('0');

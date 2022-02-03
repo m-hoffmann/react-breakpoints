@@ -43,7 +43,7 @@ function findLargestMatchingBreakpoint(
   }
 
   // if no match is found, take the smallest one
-  return sortedBreakpoints[0][0];
+  return sortedBreakpoints[sortedBreakpoints.length - 1][0];
 }
 
 /**

@@ -64,7 +64,7 @@ describe('MediaMatchBreakpointsProvider on the server', function () {
     ).toThrow();
   });
 
-  it.skip('works without window and just the breakpoints, detects mobile', function () {
+  it('works without window and just the breakpoints, detects mobile', function () {
     const breakpoints = { mobile: 320, tablet: 768, desktop: 1200 };
 
     expect(
@@ -77,39 +77,42 @@ describe('MediaMatchBreakpointsProvider on the server', function () {
     ).toBe('mobile');
   });
 
-  it.skip('works without window and uses guessedBreakpoint desktop', function () {
+  it('works without window and uses guessedBreakpoint desktop', function () {
     const breakpoints = { mobile: 320, tablet: 768, desktop: 1200 };
 
     expect(
       renderToStaticMarkup(
         <MediaMatchBreakpointsProvider
           breakpoints={breakpoints}
+          defaultBreakpoint="desktop"
           children={<CurrentBreakpoint />}
         />,
       ),
     ).toBe('desktop');
   });
 
-  it.skip('works without window and uses guessedBreakpoint tablet', function () {
+  it('works without window and uses defaultBreakpoint tablet', function () {
     const breakpoints = { mobile: 320, tablet: 768, desktop: 1200 };
 
     expect(
       renderToStaticMarkup(
         <MediaMatchBreakpointsProvider
           breakpoints={breakpoints}
+          defaultBreakpoint="tablet"
           children={<CurrentBreakpoint />}
         />,
       ),
     ).toBe('tablet');
   });
 
-  it.skip('works without window and uses guessedBreakpoint mobile', function () {
+  it('works without window and uses guessedBreakpoint mobile', function () {
     const breakpoints = { mobile: 320, tablet: 768, desktop: 1200 };
 
     expect(
       renderToStaticMarkup(
         <MediaMatchBreakpointsProvider
           breakpoints={breakpoints}
+          defaultBreakpoint="mobile"
           children={<CurrentBreakpoint />}
         />,
       ),
