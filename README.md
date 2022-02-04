@@ -24,7 +24,9 @@ Version 5 adds the possibility to detect the breakpoints using `window.matchMedi
 
 First you need to include a provider components in your component tree. It expects an object that will represent your breakpoints.
 
-### Provider: ReactBreakpoints
+#### ReactBreakpoints
+
+Detects the `currentBreakpoint` using `window.innerWidth` and `resize` events.
 
 ```js
 import App from './App'
@@ -51,6 +53,8 @@ ReactDOM.render(
 
 #### MatchMediaBreakpoints
 
+Detects the `currentBreakpoint` using `window.matchMedia`.
+
 ```js
 import App from './App'
 import { MatchMediaBreakpoints } from 'react-hook-breakpoints'
@@ -74,7 +78,7 @@ ReactDOM.render(
 );
 ```
 
-### BreakpointsProps
+#### BreakpointsProps
 
 The Providers provide props in this format.
 
@@ -84,7 +88,7 @@ the device orientation is changed.
 ```js
 const breakPointProps = {
   currentBreakpoint: "desktop",
-  screenWidth: 1600,
+  screenWidth: 1600, // always zero for MatchMediaBreakpoints
   breakPoints: {
     mobile: 320,
     mobileLandscape: 480,
@@ -138,7 +142,7 @@ export function Navigation(): JSX.Element {
 }
 ```
 
-### MatchBreakpoint (Component)
+#### MatchBreakpoint (component)
 
 Renders its children if the conditions are met
 
@@ -258,6 +262,8 @@ export default MyComponent
 
 ### Server side rendering
 
+You can provide an estimation for the breakpoint, so it does not default to the smallest one.
+
 ```js
 // server.js
 import ReactBreakpoints from 'react-hook-breakpoints'
@@ -272,7 +278,8 @@ const breakpoints = {
   desktopWide: 1920,
 }
 
-const guessedBreakpoint = breakpoints.mobile // create your own logic to generate this
+// create your own logic to generate this
+const guessedBreakpoint = breakpoints.mobile;
 
 const markup = renderToString(
   <ReactBreakpoints
@@ -348,7 +355,7 @@ export default function MatchMediaQueryExample(): JSX.Element {
 
 ### Provider options
 
-### `breakpointUnit: string` option
+#### `breakpointUnit: string` option
 
 Available in `ReactBreakpoints` and `MatchMediaBreakpoints`.
 
@@ -366,7 +373,7 @@ ReactDOM.render(
 );
 ```
 
-### `debounceResize: bool` option
+#### `debounceResize: bool` option
 
 Available in `ReactBreakpoints`
 
@@ -384,7 +391,7 @@ ReactDOM.render(
 );
 ```
 
-### `debounceDelay: number[ms]` option
+#### `debounceDelay: number[ms]` option
 
 Available in `ReactBreakpoints`
 
@@ -403,7 +410,7 @@ ReactDOM.render(
 );
 ```
 
-### `defaultBreakpoint: number` option
+#### `defaultBreakpoint: number` option
 
 Available in `ReactBreakpoints`
 
@@ -429,7 +436,7 @@ ReactDOM.render(
 
 
 
-### `defaultBreakpoint: string` option
+#### `defaultBreakpoint: string` option
 
 Available in `MatchMediaBreakpoints`
 
@@ -457,7 +464,9 @@ ReactDOM.render(
 
 Use media queries directly. 
 
-**_Disclaimer_**: adds one event listener for each use of this component.
+**_Disclaimer_**:
+Adds one event listener for each use of this component, so performance might become
+and issue if you use this everywhere.
 
 ```tsx
 import { MatchMediaQuery } from 'react-hook-breakpoints';
