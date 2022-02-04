@@ -1,9 +1,9 @@
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useLayoutEffect, useCallback } from 'react';
 import { BreakpointUnit } from './breakpoints';
 
 import { BreakpointKey, BreakpointMap } from './breakpoints';
 import { sortBreakpoints } from './utils';
-import { minWidth, maxWidth } from './media-utils';
+import { createBreakpointQueryArray } from './media-utils';
 
 import {
   createMediaQueryListener,
@@ -74,7 +74,7 @@ export function useMatchMediaBreakpoints<K extends BreakpointKey>(
     setCurrentBreakpoint(match);
   }, [props.breakpoints, props.defaultBreakpoint]);
 
-  /** The current matching breakpoint, the return value of the hook */
+  // The current matching breakpoint, the return value of the hook
   const [currentBreakpoint, setCurrentBreakpoint] = useState(() =>
     findLargestMatchingBreakpoint(
       props.breakpoints,
@@ -83,47 +83,28 @@ export function useMatchMediaBreakpoints<K extends BreakpointKey>(
     ),
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const listeners: MediaQueryListener[] = [];
 
     // reset the ref
     matchedBreakpoints.current = {};
 
-    const sortedBreakpoints = sortBreakpoints(props.breakpoints);
-
     if (globalWindow && typeof globalWindow.matchMedia === 'function') {
-      sortedBreakpoints.forEach((breakpoint, breakpointIndex) => {
-        const smallerBreakpoint = sortedBreakpoints[breakpointIndex + 1];
-        const largerBreakpoint = sortedBreakpoints[breakpointIndex - 1];
-
-        const queries = [];
-
-        if (smallerBreakpoint != null) {
-          // larger than the current one
-          queries.push(minWidth(breakpoint[1], props.breakpointUnit));
-        }
-
-        if (largerBreakpoint != null) {
-          // smaller than the larger one
-          queries.push(maxWidth(largerBreakpoint[1], props.breakpointUnit));
-        }
-
-        if (queries.length === 0) {
-          // if there is no previous and no next, then the breakpoint matches
-          return;
-        }
-
-        const mediaQuery = queries.join(' and ');
-
+      const queries = createBreakpointQueryArray(
+        props.breakpoints,
+        props.breakpointUnit,
+      );
+      queries.forEach(([breakpoint, mediaQuery]) => {
         const mediaQueryList = globalWindow.matchMedia(mediaQuery);
 
-        // flag as matching
-        updateBreakpointMatch(breakpoint[0], mediaQueryList.matches);
+        // set initial match
+        updateBreakpointMatch(breakpoint, mediaQueryList.matches);
 
+        // update matches
         listeners.push(
           createMediaQueryListener(mediaQueryList, ev => {
-            updateBreakpointMatch(breakpoint[0], ev.matches); // flag matching
-            computeNewBreakpoint(); // compute new breakpoint
+            updateBreakpointMatch(breakpoint, ev.matches);
+            computeNewBreakpoint();
           }),
         );
       });
