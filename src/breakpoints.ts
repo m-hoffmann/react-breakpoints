@@ -22,13 +22,17 @@ export type BreakpointMap<B extends BreakpointKey = BreakpointKey> = Record<
 /**
  * Record with your breakpoint definition
  * @example { sm: "(max-width: 320px)", md: "(min-width: 320px) and (max-width: 768px)", lg: "(min-width: 1200px)" }
- * @example { single: "" }
+ * @example { single: "all" }
+ * @private for internal use
  */
 export type BreakpointQueries<B extends BreakpointKey = BreakpointKey> = Record<
   B,
   string
 >;
 
+/**
+ * Props passed by context to Consumers
+ */
 export interface BreakpointsProps<K extends BreakpointKey = BreakpointKey> {
   /**
    * The current breakpoints
@@ -47,6 +51,7 @@ export interface BreakpointsProps<K extends BreakpointKey = BreakpointKey> {
 /**
  * Array with breakpoints
  * @example [ ["lg", 800], ["md", 640], ["xs", 320]]
+ * @private for internal use
  */
 export type SortedBreakpoints<K extends BreakpointKey = BreakpointKey> = [
   K,
@@ -57,6 +62,7 @@ export type SortedBreakpoints<K extends BreakpointKey = BreakpointKey> = [
  * Array with breakpoints queries
  * @example [["md", "min-width: 640px)"], ["xs", "(max-width: 640px)"]]
  * @example ["single", ""]
+ * @private for internal use
  */
 export type SortedBreakpointQueries<K extends BreakpointKey = BreakpointKey> = [
   K,

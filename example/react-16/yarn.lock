@@ -5536,10 +5536,10 @@
   "resolved" "https://registry.npmjs.org/react-error-overlay/-/react-error-overlay-4.0.0.tgz"
   "version" "4.0.0"
 
-"react-hook-breakpoints@^5.0.0-1":
-  "integrity" "sha512-hNdr9NgjdwHwJACmsesiHFLsYooy736mVf2UZ8mbMdLJMP0MsnKwmbGhVKs/3hPzb1E8t3i+YpeNKQm3L6/lJA=="
-  "resolved" "https://registry.npmjs.org/react-hook-breakpoints/-/react-hook-breakpoints-5.0.0-1.tgz"
-  "version" "5.0.0-1"
+"react-hook-breakpoints@^5.0.0-4":
+  "integrity" "sha512-BDFaZdDbsZLwbYxO+MW/RMCpKzj9QXvQ3njkYB2BDJh1Lxj6FegYnj5OEe8I2GFek7RgDWYaYSE4zR9W7ij3lw=="
+  "resolved" "https://registry.npmjs.org/react-hook-breakpoints/-/react-hook-breakpoints-5.0.0-4.tgz"
+  "version" "5.0.0-4"
   dependencies:
     "hoist-non-react-statics" "^3.3.2"
     "lodash.debounce" "^4.0.8"
