@@ -1,7 +1,6 @@
-import React from 'react';
 import { MatchBreakpoint } from 'react-hook-breakpoints';
 
-const WithMatchBreakpoint = props => {
+function WithMatchBreakpoint() {
   return (
     <div>
       <h3>With MatchBreakpoint Component</h3>
@@ -32,6 +31,6 @@ const WithMatchBreakpoint = props => {
       </MatchBreakpoint>
     </div>
   );
-};
+}
 
 export default WithMatchBreakpoint;

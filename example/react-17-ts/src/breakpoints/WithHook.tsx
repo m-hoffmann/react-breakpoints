@@ -1,9 +1,8 @@
-import React from 'react';
 import { useBreakpoints } from 'react-hook-breakpoints';
 
 import { DisplayBreakpoint } from './DisplayBreakpoint';
 
-const WithHook = props => {
+function WithHook() {
   const { breakpoints, currentBreakpoint } = useBreakpoints();
   return (
     <div>
@@ -14,6 +13,6 @@ const WithHook = props => {
       />
     </div>
   );
-};
+}
 
 export default WithHook;

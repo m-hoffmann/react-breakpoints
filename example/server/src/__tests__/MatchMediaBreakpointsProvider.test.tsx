@@ -6,11 +6,11 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
 import {
-  MediaMatchBreakpointsProvider,
+  MatchMediaBreakpoints,
   useBreakpoints,
 } from 'react-hook-breakpoints';
 
-describe('MediaMatchBreakpointsProvider on the server', function () {
+describe('MatchMediaBreakpoints on the server', function () {
   type Breakpoint = 'desktop' | 'tablet' | 'mobile';
 
   function CurrentBreakpoint() {
@@ -39,7 +39,7 @@ describe('MediaMatchBreakpointsProvider on the server', function () {
   it('explodes if there are no breakpoints', function () {
     expect(() =>
       renderToStaticMarkup(
-        <MediaMatchBreakpointsProvider
+        <MatchMediaBreakpoints
           breakpoints={null as any}
           children={<CurrentBreakpoint />}
         />,
@@ -47,7 +47,7 @@ describe('MediaMatchBreakpointsProvider on the server', function () {
     ).toThrow();
     expect(() =>
       renderToStaticMarkup(
-        <MediaMatchBreakpointsProvider
+        <MatchMediaBreakpoints
           breakpoints={123 as any}
           children={<CurrentBreakpoint />}
         />,
@@ -56,7 +56,7 @@ describe('MediaMatchBreakpointsProvider on the server', function () {
 
     expect(() =>
       renderToStaticMarkup(
-        <MediaMatchBreakpointsProvider
+        <MatchMediaBreakpoints
           breakpoints={{}}
           children={<CurrentBreakpoint />}
         />,
@@ -69,7 +69,7 @@ describe('MediaMatchBreakpointsProvider on the server', function () {
 
     expect(
       renderToStaticMarkup(
-        <MediaMatchBreakpointsProvider
+        <MatchMediaBreakpoints
           breakpoints={breakpoints}
           children={<CurrentBreakpoint />}
         />,
@@ -82,7 +82,7 @@ describe('MediaMatchBreakpointsProvider on the server', function () {
 
     expect(
       renderToStaticMarkup(
-        <MediaMatchBreakpointsProvider
+        <MatchMediaBreakpoints
           breakpoints={breakpoints}
           defaultBreakpoint="desktop"
           children={<CurrentBreakpoint />}
@@ -96,7 +96,7 @@ describe('MediaMatchBreakpointsProvider on the server', function () {
 
     expect(
       renderToStaticMarkup(
-        <MediaMatchBreakpointsProvider
+        <MatchMediaBreakpoints
           breakpoints={breakpoints}
           defaultBreakpoint="tablet"
           children={<CurrentBreakpoint />}
@@ -110,7 +110,7 @@ describe('MediaMatchBreakpointsProvider on the server', function () {
 
     expect(
       renderToStaticMarkup(
-        <MediaMatchBreakpointsProvider
+        <MatchMediaBreakpoints
           breakpoints={breakpoints}
           defaultBreakpoint="mobile"
           children={<CurrentBreakpoint />}
@@ -124,7 +124,7 @@ describe('MediaMatchBreakpointsProvider on the server', function () {
 
     expect(
       renderToStaticMarkup(
-        <MediaMatchBreakpointsProvider
+        <MatchMediaBreakpoints
           breakpoints={breakpoints}
           children={<ScreenWidth />}
         />,
@@ -137,7 +137,7 @@ describe('MediaMatchBreakpointsProvider on the server', function () {
 
     expect(
       renderToStaticMarkup(
-        <MediaMatchBreakpointsProvider
+        <MatchMediaBreakpoints
           breakpoints={breakpoints}
           children={<Breakpoints />}
         />,

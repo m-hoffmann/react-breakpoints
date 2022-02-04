@@ -1,9 +1,7 @@
-import React from 'react';
-import { withBreakpoints } from 'react-hook-breakpoints';
-
+import { withBreakpoints, WithBreakpointsProps } from 'react-hook-breakpoints';
 import { DisplayBreakpoint } from './DisplayBreakpoint';
 
-const WithHOC = ({ breakpoints, currentBreakpoint }) => {
+function WithHOC({ breakpoints, currentBreakpoint }: WithBreakpointsProps) {
   return (
     <div>
       <h3>With withBreakpoints HOC</h3>
@@ -13,6 +11,6 @@ const WithHOC = ({ breakpoints, currentBreakpoint }) => {
       />
     </div>
   );
-};
+}
 
 export default withBreakpoints(WithHOC);

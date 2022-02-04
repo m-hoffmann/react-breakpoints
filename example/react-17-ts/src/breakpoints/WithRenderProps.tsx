@@ -3,7 +3,7 @@ import { Media } from 'react-hook-breakpoints';
 
 import { DisplayBreakpoint } from './DisplayBreakpoint';
 
-const WithRenderProps = props => {
+function WithRenderProps() {
   return (
     <div>
       <h3>With Render Props Media Component</h3>
@@ -17,6 +17,6 @@ const WithRenderProps = props => {
       </Media>
     </div>
   );
-};
+}
 
 export default WithRenderProps;

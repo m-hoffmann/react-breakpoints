@@ -1,12 +1,20 @@
-import React from 'react';
-import { withBreakpoints } from 'react-hook-breakpoints';
+import React, { CSSProperties } from 'react';
+import { BreakpointsProps } from 'react-hook-breakpoints';
 
-const DummyComponent = ({ name }) => <div>{name}</div>;
+const DummyComponent = ({
+  name,
+  style,
+}: {
+  name: string;
+  style: CSSProperties;
+}) => <div style={style}>{name}</div>;
 
-const WithHOC = ({ breakpoints, currentBreakpoint }) => {
+export function DisplayBreakpoint({
+  breakpoints,
+  currentBreakpoint,
+}: Omit<BreakpointsProps, 'screenWidth'>) {
   return (
-    <div>
-      <h3>With Render Props</h3>
+    <React.Fragment>
       <h4>
         Your current breakpoint is{' '}
         <code>
@@ -25,14 +33,14 @@ const WithHOC = ({ breakpoints, currentBreakpoint }) => {
             : 'Above desktop'
         }
         style={{
-          color: 'lime',
+          color: 'rebeccapurple',
           ...(breakpoints[currentBreakpoint] < breakpoints.desktop && {
             color: 'red',
           }),
         }}
       />
-    </div>
+    </React.Fragment>
   );
-};
+}
 
-export default withBreakpoints(WithHOC);
+export default DisplayBreakpoint;
