@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 
 import { BreakpointsContext } from './BreakpointsContext';
 import { useMatchMediaBreakpoints } from './useMatchMediaBreakpoints';
-
-import { ERRORS } from './messages';
+import { validateBreakpoints } from './utils';
 
 import {
   BreakpointKey,
@@ -53,22 +52,14 @@ export interface MediaMatchBreakpointsProviderProps<
 export function MediaMatchBreakpointsProvider<
   K extends BreakpointKey = BreakpointKey,
 >(props: MediaMatchBreakpointsProviderProps<K>) {
+  validateBreakpoints(props.breakpoints);
+
   const {
     children,
     breakpoints,
     breakpointUnit = 'px',
     defaultBreakpoint,
   } = props;
-
-  // throw Error if no breakpoints were passed
-  if (!breakpoints) {
-    throw new Error(ERRORS.NO_BREAKPOINTS);
-  }
-
-  // throw Error if breakpoints is not an object
-  if (typeof breakpoints !== 'object') {
-    throw new Error(ERRORS.NOT_OBJECT);
-  }
 
   const currentBreakpoint = useMatchMediaBreakpoints({
     breakpoints,

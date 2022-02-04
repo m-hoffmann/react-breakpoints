@@ -1,14 +1,12 @@
 import React, { ReactNode, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
-import { convertScreenWidth } from './utils';
+import { convertScreenWidth, validateBreakpoints } from './utils';
 
 import { BreakpointsContext } from './BreakpointsContext';
 
 import { useScreenSize } from './useScreenSize';
 import { useDetectCurrentBreakpoint } from './useDetectCurrentBreakpoint';
-
-import { ERRORS } from './messages';
 
 import {
   BreakpointKey,
@@ -74,6 +72,8 @@ export interface ReactBreakpointsProps<
 export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
   props: ReactBreakpointsProps<K>,
 ) {
+  validateBreakpoints(props.breakpoints);
+
   const {
     children,
     breakpoints,
@@ -83,16 +83,6 @@ export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
     guessedBreakpoint = 0,
     defaultBreakpoint = 0,
   } = props;
-
-  // throw Error if no breakpoints were passed
-  if (!breakpoints) {
-    throw new Error(ERRORS.NO_BREAKPOINTS);
-  }
-
-  // throw Error if breakpoints is not an object
-  if (typeof breakpoints !== 'object') {
-    throw new Error(ERRORS.NOT_OBJECT);
-  }
 
   // get the screen size in px
   const screenSize = useScreenSize({ debounceResize, debounceDelay });

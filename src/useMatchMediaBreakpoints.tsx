@@ -2,7 +2,7 @@ import { useRef, useState, useLayoutEffect, useCallback } from 'react';
 import { BreakpointUnit } from './breakpoints';
 
 import { BreakpointKey, BreakpointMap } from './breakpoints';
-import { sortBreakpoints } from './utils';
+import { sortBreakpoints, getSmallestBreakpoint } from './utils';
 import { createBreakpointQueryArray } from './media-utils';
 
 import {
@@ -22,13 +22,9 @@ export interface MatchMediaBreakpointsProps<K extends BreakpointKey> {
 function findLargestMatchingBreakpoint(
   breakpoints: Record<string, number>,
   matchedBreakpoints: Record<string, boolean>,
-  defaultBreakpoint = '',
+  defaultBreakpoint: string,
 ) {
   const sortedBreakpoints = sortBreakpoints(breakpoints);
-
-  if (sortedBreakpoints.length === 0) {
-    throw new Error('There must be at least one breakpoint');
-  }
 
   // flag matching breakpoints
   for (const item of sortedBreakpoints) {
@@ -38,12 +34,7 @@ function findLargestMatchingBreakpoint(
     }
   }
 
-  if (defaultBreakpoint) {
-    return defaultBreakpoint;
-  }
-
-  // if no match is found, take the smallest one
-  return sortedBreakpoints[sortedBreakpoints.length - 1][0];
+  return defaultBreakpoint;
 }
 
 /**
@@ -55,6 +46,12 @@ function findLargestMatchingBreakpoint(
 export function useMatchMediaBreakpoints<K extends BreakpointKey>(
   props: MatchMediaBreakpointsProps<K>,
 ): K {
+  const {
+    breakpoints,
+    breakpointUnit,
+    defaultBreakpoint = getSmallestBreakpoint(breakpoints) as K,
+  } = props;
+
   /** A ref holding the currently matched breakpoints */
   const matchedBreakpoints = useRef<Record<string, boolean>>({});
 
@@ -66,20 +63,20 @@ export function useMatchMediaBreakpoints<K extends BreakpointKey>(
   /** Computes the new breakpoint */
   const computeNewBreakpoint = useCallback(() => {
     const match = findLargestMatchingBreakpoint(
-      props.breakpoints,
+      breakpoints,
       matchedBreakpoints.current,
-      props.defaultBreakpoint,
+      defaultBreakpoint,
     );
 
     setCurrentBreakpoint(match);
-  }, [props.breakpoints, props.defaultBreakpoint]);
+  }, [breakpoints, defaultBreakpoint]);
 
   // The current matching breakpoint, the return value of the hook
   const [currentBreakpoint, setCurrentBreakpoint] = useState(() =>
     findLargestMatchingBreakpoint(
-      props.breakpoints,
+      breakpoints,
       matchedBreakpoints.current,
-      props.defaultBreakpoint,
+      defaultBreakpoint,
     ),
   );
 
@@ -90,10 +87,7 @@ export function useMatchMediaBreakpoints<K extends BreakpointKey>(
     matchedBreakpoints.current = {};
 
     if (globalWindow && typeof globalWindow.matchMedia === 'function') {
-      const queries = createBreakpointQueryArray(
-        props.breakpoints,
-        props.breakpointUnit,
-      );
+      const queries = createBreakpointQueryArray(breakpoints, breakpointUnit);
       queries.forEach(([breakpoint, mediaQuery]) => {
         const mediaQueryList = globalWindow.matchMedia(mediaQuery);
 
@@ -121,9 +115,9 @@ export function useMatchMediaBreakpoints<K extends BreakpointKey>(
       }
     };
   }, [
-    props.breakpointUnit,
-    props.breakpoints,
-    props.defaultBreakpoint,
+    breakpointUnit,
+    breakpoints,
+    defaultBreakpoint,
     computeNewBreakpoint,
     updateBreakpointMatch,
   ]);
