@@ -10,17 +10,13 @@ import {
 } from './helpers/MatchMediaMock2';
 
 import { useMatchMediaBreakpoints } from '../useMatchMediaBreakpoints';
-import { minWidth, maxWidth, minMaxWidth } from '../media-utils';
+import { createBreakpointQueryObject } from '../media-utils';
 
 describe('useMatchMediaBreakpoints', () => {
   const breakpointUnit = 'px';
   const names = { sm: 'sm', md: 'md', lg: 'lg' };
-  const breakpoints = { sm: 10, md: 20, lg: 30 };
-  const media = {
-    sm: maxWidth(breakpoints.md, breakpointUnit),
-    md: minMaxWidth(breakpoints.md, breakpoints.lg, breakpointUnit),
-    lg: minWidth(breakpoints.lg, breakpointUnit),
-  };
+  const breakpoints = { sm: 320, md: 640, lg: 1200 };
+  const media = createBreakpointQueryObject(breakpoints, breakpointUnit);
 
   describe('useMatchMediaBreakpoints (EventTarget api)', () => {
     let matchMediaMock: MatchMediaMock2;
@@ -50,9 +46,7 @@ describe('useMatchMediaBreakpoints', () => {
     });
 
     it('detects breakpoint if no breakpoint matches', () => {
-      act(() => {
-        matchMediaMock.mediaQuery = '';
-      });
+      matchMediaMock.mediaQuery = 'not all';
 
       const result = renderHook(() =>
         useMatchMediaBreakpoints({
@@ -65,9 +59,7 @@ describe('useMatchMediaBreakpoints', () => {
     });
 
     it('detects breakpoint sm', () => {
-      act(() => {
-        matchMediaMock.mediaQuery = media.sm;
-      });
+      matchMediaMock.mediaQuery = media.sm;
 
       const result = renderHook(() =>
         useMatchMediaBreakpoints({
@@ -80,9 +72,7 @@ describe('useMatchMediaBreakpoints', () => {
     });
 
     it('detects breakpoint md', () => {
-      act(() => {
-        matchMediaMock.mediaQuery = media.md;
-      });
+      matchMediaMock.mediaQuery = media.md;
 
       const result = renderHook(() =>
         useMatchMediaBreakpoints({
@@ -95,9 +85,7 @@ describe('useMatchMediaBreakpoints', () => {
     });
 
     it('detects breakpoint lg', () => {
-      act(() => {
-        matchMediaMock.mediaQuery = media.lg;
-      });
+      matchMediaMock.mediaQuery = media.lg;
 
       const result = renderHook(() =>
         useMatchMediaBreakpoints({
@@ -107,6 +95,17 @@ describe('useMatchMediaBreakpoints', () => {
       );
 
       expect(result.result.current).toBe('lg');
+    });
+
+    it('adds a single event listeners for a single breakpoint', () => {
+      renderHook(() =>
+        useMatchMediaBreakpoints({
+          breakpoints: { single: 1 },
+          breakpointUnit,
+        }),
+      );
+
+      expect(matchMediaMock.numListeners).toBe(1);
     });
 
     it('adds event listeners', () => {
@@ -132,19 +131,13 @@ describe('useMatchMediaBreakpoints', () => {
       expect(matchMediaMock.numListeners).toBe(0);
     });
 
-    it('detects changes of the breakpoint', async () => {
-      const breaks = { ...breakpoints };
-
+    it('detects changes of the breakpoint', () => {
       const result = renderHook(() =>
         useMatchMediaBreakpoints({
-          breakpoints: breaks,
+          breakpoints,
           breakpointUnit,
         }),
       );
-
-      act(() => {
-        matchMediaMock.mediaQuery = media.lg;
-      });
 
       act(() => {
         matchMediaMock.mediaQuery = media.md;
@@ -208,6 +201,8 @@ describe('useMatchMediaBreakpoints', () => {
     });
 
     it('executes the callback', () => {
+      matchMediaMock.mediaQuery = 'not all';
+
       renderHook(() =>
         useMatchMediaBreakpoints({
           breakpoints,
@@ -216,7 +211,7 @@ describe('useMatchMediaBreakpoints', () => {
       );
 
       act(() => {
-        matchMediaMock.mediaQuery = 'bla bla bla';
+        matchMediaMock.mediaQuery = 'all';
       });
       expect(matchMediaMock.numCalls).toBe(3);
     });

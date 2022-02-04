@@ -24,8 +24,8 @@ describe('MatchMediaMock2', () => {
       expect(mock.numListeners).toBe(0);
     });
 
-    it('has property mediaQuery and its initial value is the empty string', () => {
-      expect(mock.mediaQuery).toBe('');
+    it('has property mediaQuery and its initial value is "all"', () => {
+      expect(mock.mediaQuery).toBe('all');
     });
 
     it('property mediaQuery can bet set', () => {
@@ -51,7 +51,7 @@ describe('MatchMediaMock2', () => {
 
       it('dispatchEvent can be called and returns true', () => {
         const mql = mock.matchMedia('foo');
-        expect(mql.dispatchEvent(new Event('foo'))).toBe(true);
+        expect(mql.dispatchEvent(new Event('foo'))).toBe(false);
       });
 
       it('has property onchange', () => {
@@ -67,6 +67,30 @@ describe('MatchMediaMock2', () => {
         mock.mediaQuery = 'foo';
         expect(onChange).toHaveBeenCalledTimes(1);
       });
+    });
+
+    it('calls event listeners on updates', () => {
+      mock.mediaQuery = 'bar';
+      const listener = jest.fn();
+      const mql = mock.matchMedia('foo');
+      mql.addEventListener('change', listener);
+      expect(listener).toHaveBeenCalledTimes(0);
+      mock.mediaQuery = 'not all';
+      expect(listener).toHaveBeenCalledTimes(1);
+      mock.mediaQuery = 'all';
+      expect(listener).toHaveBeenCalledTimes(2);
+    });
+
+    it('tracks the number of calls', () => {
+      mock.mediaQuery = 'bar';
+      const listener = jest.fn();
+      const mql = mock.matchMedia('foo');
+      mql.addEventListener('change', listener);
+      expect(mock.numCalls).toBe(0);
+      mock.mediaQuery = 'not all';
+      expect(mock.numCalls).toBe(1);
+      mock.mediaQuery = 'all';
+      expect(mock.numCalls).toBe(2);
     });
   });
 

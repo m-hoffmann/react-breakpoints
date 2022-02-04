@@ -63,7 +63,7 @@ export function createMediaQueryListMock(
 
   const emitter = new EventEmitter();
   let numCalls = 0;
-  let currentQuery = '';
+  let currentQuery = 'all';
 
   const { eventTargetApi = true, legacyApi = true } = options ?? {};
   function matchMedia(media: string): MediaQueryList {
@@ -79,7 +79,7 @@ export function createMediaQueryListMock(
     function createListener(listener: EventListener): EmitterListener {
       return () => {
         numCalls++;
-        const matches = media === currentQuery;
+        const matches = mediaQueryList.matches;
         listener({ matches, media } as MediaQueryListEvent);
       };
     }
@@ -110,9 +110,8 @@ export function createMediaQueryListMock(
       }
     }
 
-    function dispatchEvent(event: Event): boolean {
-      emitter.emit(CHANGE_EVENT, event);
-      return true;
+    function dispatchEvent(): boolean {
+      return false;
     }
 
     if (eventTargetApi) {
@@ -130,8 +129,8 @@ export function createMediaQueryListMock(
     // listener that is responsible for onchange
     emitter.on(CHANGE_EVENT, () => {
       if (typeof mediaQueryList.onchange === 'function') {
-        const matches = media === currentQuery;
         numCalls++;
+        const matches = mediaQueryList.matches;
         mediaQueryList.onchange({ matches, media } as MediaQueryListEvent);
       }
     });
