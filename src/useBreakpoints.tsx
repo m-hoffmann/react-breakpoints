@@ -5,7 +5,7 @@ import { useContext } from 'react';
 /**
  * Access breakpoints computed by `ReactBreakpoints`
  *
- * Needs `ReactBreakpoints` in parent react tree
+ * Needs provider for `BreakpointsProps`
  * @returns The breakpoint props
  */
 export function useBreakpoints<

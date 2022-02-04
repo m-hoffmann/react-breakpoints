@@ -3,13 +3,21 @@ import { useBreakpoints } from './useBreakpoints';
 
 /**
  * Props for Media Component
+ *
  */
 export interface MediaProps<K extends BreakpointKey> {
   children(value: BreakpointsProps<K>): JSX.Element;
 }
 
 /**
- * React Component providing breakpoints using Render Props
+ * Passes the `BreakpointsProps` to its children
+ *
+ * Needs provider for `BreakpointsProps`
+ * 
+ * @example
+ * <Media>
+ *  {({ currentBreakpoint }) => currentBreakpoint === "desktop" && <div />}
+ * </Media>
  */
 export function Media<K extends BreakpointKey = BreakpointKey>(
   props: MediaProps<K>,

@@ -1,10 +1,12 @@
-import React, { ReactNode, Fragment } from 'react';
+import { ReactNode, Fragment } from 'react';
 
 import { useBreakpoints } from './useBreakpoints';
 import { BreakpointKey } from './breakpoints';
 
 /**
  * Children and conditions
+ * 
+ * Needs provider for `BreakpointsProps`
  */
 export interface MatchBreakpointProps<K extends BreakpointKey = BreakpointKey> {
   /**

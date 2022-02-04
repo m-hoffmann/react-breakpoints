@@ -1,4 +1,4 @@
-import React from 'react';
+import { createContext } from 'react';
 
 import { BreakpointsProps } from './breakpoints';
 
@@ -9,6 +9,6 @@ const defaultContext: BreakpointsProps = {
 };
 
 export const BreakpointsContext =
-  React.createContext<BreakpointsProps>(defaultContext);
+  createContext<BreakpointsProps>(defaultContext);
 
 BreakpointsContext.displayName = 'ReactBreakpoints';

@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import { convertScreenWidth, validateBreakpoints } from './utils';
@@ -64,10 +64,8 @@ export interface ReactBreakpointsProps<
 }
 
 /**
- * Provides the breakpoints for
- * - `Media` Component
- * - `withBreakpoints`
- * - `useBreakpoints`
+ * Provides the breakpoints for consumer components
+ * using `window.innerWidth`
  */
 export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
   props: ReactBreakpointsProps<K>,

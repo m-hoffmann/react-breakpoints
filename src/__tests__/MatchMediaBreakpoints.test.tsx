@@ -1,13 +1,13 @@
 /* eslint-disable react/no-children-prop */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { render } from '@testing-library/react';
 
-import { MediaMatchBreakpointsProvider as ReactBreakpoints } from '../MediaMatchBreakpointsProvider';
+import { MatchMediaBreakpoints as ReactBreakpoints } from '../MatchMediaBreakpoints';
 import { BreakpointsContext } from '../BreakpointsContext';
 import { BreakpointsProps } from '../breakpoints';
 
-describe('MediaMatchBreakpointsProvider', function () {
+describe('MatchMediaBreakpoints', function () {
   const propsMock = jest.fn();
 
   function propsMockResult() {

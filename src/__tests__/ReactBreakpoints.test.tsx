@@ -1,6 +1,6 @@
 /* eslint-disable react/no-children-prop */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
 import { ReactBreakpoints } from '../ReactBreakpoints';
