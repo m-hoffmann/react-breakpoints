@@ -13,6 +13,7 @@ Version 4 is a rewrite in typescript using react hooks uns includes the `useBrea
 
 Version 5 adds the possibility to detect the breakpoints using `window.matchMedia` instead of listening to `resize` events.
 
+The library is tree shakeable.
 
 ## Installation
 

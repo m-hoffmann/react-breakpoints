@@ -1,5 +1,8 @@
 name: test-app
-on: [push]
+on:
+  push:
+    paths:
+      - 'example/**'
 jobs:
   test-react-app-16:
     runs-on: ubuntu-latest
