@@ -1,10 +1,9 @@
 import { ReactNode, useMemo } from 'react';
-import PropTypes from 'prop-types';
+import { objectOf, oneOf, number, bool } from 'prop-types';
 
-import { convertScreenWidth, validateBreakpoints } from './utils';
-
+import { convertScreenWidth } from './helpers/convertScreenWidth';
+import { validateBreakpoints } from './helpers/validateBreakpoints';
 import { BreakpointsContext } from './BreakpointsContext';
-
 import { useScreenSize } from './useScreenSize';
 import { useDetectCurrentBreakpoint } from './useDetectCurrentBreakpoint';
 
@@ -109,10 +108,10 @@ export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
 }
 
 ReactBreakpoints.propTypes = {
-  breakpoints: PropTypes.objectOf(PropTypes.number).isRequired,
-  breakpointUnit: PropTypes.oneOf(['px', 'em']),
-  guessedBreakpoint: PropTypes.number,
-  defaultBreakpoint: PropTypes.number,
-  debounceResize: PropTypes.bool,
-  debounceDelay: PropTypes.number,
+  breakpoints: objectOf(number).isRequired,
+  breakpointUnit: oneOf(['px', 'em']),
+  guessedBreakpoint: number,
+  defaultBreakpoint: number,
+  debounceResize: bool,
+  debounceDelay: number,
 };

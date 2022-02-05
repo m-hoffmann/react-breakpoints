@@ -1,6 +1,8 @@
 import { useState, useLayoutEffect } from 'react';
 import debounce from 'lodash.debounce';
 
+import type { ScreenSize } from './breakpoints';
+
 /* istanbul ignore next */
 const globalWindow = typeof window !== 'undefined' ? window : null;
 
@@ -20,15 +22,10 @@ function detectScreenSize(ignoreScreenSize: boolean): ScreenSize {
 /**
  * Detection options for window width
  */
-interface WindowSizeDetectionOptions {
+export interface WindowSizeDetectionOptions {
   debounceResize?: boolean;
   debounceDelay?: number;
   ignoreScreenSize?: boolean;
-}
-
-interface ScreenSize {
-  width: number;
-  height: number;
 }
 
 /**

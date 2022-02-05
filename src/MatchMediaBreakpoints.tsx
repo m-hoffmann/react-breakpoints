@@ -1,9 +1,9 @@
 import { ReactNode, useMemo } from 'react';
-import PropTypes from 'prop-types';
+import { objectOf, oneOf, number, string } from 'prop-types';
 
 import { BreakpointsContext } from './BreakpointsContext';
 import { useMatchMediaBreakpoints } from './useMatchMediaBreakpoints';
-import { validateBreakpoints } from './utils';
+import { validateBreakpoints } from './helpers/validateBreakpoints';
 
 import {
   BreakpointKey,
@@ -47,9 +47,9 @@ export interface MatchMediaBreakpointsProps<
  * Provides the breakpoints for the Consumer components
  * using `window.matchMedia`
  */
-export function MatchMediaBreakpoints<
-  K extends BreakpointKey = BreakpointKey,
->(props: MatchMediaBreakpointsProps<K>) {
+export function MatchMediaBreakpoints<K extends BreakpointKey = BreakpointKey>(
+  props: MatchMediaBreakpointsProps<K>,
+) {
   validateBreakpoints(props.breakpoints);
 
   const {
@@ -81,7 +81,7 @@ export function MatchMediaBreakpoints<
 }
 
 MatchMediaBreakpoints.propTypes = {
-  breakpoints: PropTypes.objectOf(PropTypes.number).isRequired,
-  breakpointUnit: PropTypes.oneOf(['px', 'em']),
-  defaultBreakpoint: PropTypes.string,
+  breakpoints: objectOf(number).isRequired,
+  breakpointUnit: oneOf(['px', 'em']),
+  defaultBreakpoint: string,
 };

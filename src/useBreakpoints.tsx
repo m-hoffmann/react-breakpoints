@@ -1,6 +1,7 @@
-import { BreakpointsContext } from './BreakpointsContext';
-import { BreakpointsProps, BreakpointKey } from './breakpoints';
 import { useContext } from 'react';
+
+import { BreakpointsContext } from './BreakpointsContext';
+import type { BreakpointsProps, BreakpointKey } from './breakpoints';
 
 /**
  * Access breakpoints computed by `ReactBreakpoints`

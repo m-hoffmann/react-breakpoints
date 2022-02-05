@@ -21,6 +21,7 @@
     "src/**/*.tsx",
     "lib/**/*.*"
   ],
+  "sideEffects": false,
   "scripts": {
     "clean": "rimraf lib",
     "lint": "eslint ./src/**/*.*",

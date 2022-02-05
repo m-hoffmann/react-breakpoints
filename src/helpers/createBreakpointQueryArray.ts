@@ -1,26 +1,17 @@
-import {
+import type {
   BreakpointMap,
-  BreakpointQueries,
   BreakpointUnit,
   SortedBreakpointQueries,
-} from './breakpoints';
+} from '../breakpoints';
 
-import { sortBreakpoints } from './utils';
+import { sortBreakpoints } from './sortBreakpoints';
 
-export function minWidth(value: number, unit: BreakpointUnit): string {
+function minWidth(value: number, unit: BreakpointUnit): string {
   return `(min-width: ${value}${unit})`;
 }
 
-export function maxWidth(value: number, unit: BreakpointUnit): string {
+function maxWidth(value: number, unit: BreakpointUnit): string {
   return `(max-width: ${value}${unit})`;
-}
-
-export function minMaxWidth(
-  min: number,
-  max: number,
-  unit: BreakpointUnit,
-): string {
-  return `${minWidth(min, unit)} and ${maxWidth(max, unit)}`;
 }
 
 /**
@@ -63,24 +54,4 @@ export function createBreakpointQueryArray<K extends string>(
   );
 
   return queryArray as SortedBreakpointQueries<K>;
-}
-
-/**
- * Map the breakpoints to an object
- * @param breakpoints
- * @param breakpointUnit
- * @returns
- */
-export function createBreakpointQueryObject<K extends string>(
-  breakpoints: BreakpointMap<K>,
-  breakpointUnit: BreakpointUnit,
-): BreakpointQueries<K> {
-  const queryArray = createBreakpointQueryArray<K>(breakpoints, breakpointUnit);
-  const queryObject: Partial<BreakpointQueries<K>> = {};
-  queryArray.forEach(value => {
-    const name = value[0];
-    const query = value[1];
-    queryObject[name] = query;
-  });
-  return queryObject as BreakpointQueries<K>;
 }

@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 
 import { useBreakpoints } from '../useBreakpoints';
 import { BreakpointsContext } from '../BreakpointsContext';
-import { BreakpointsProps } from '../breakpoints';
+import type { BreakpointsProps } from '../breakpoints';
 
 describe('useBreakpoints', () => {
   const propsMock = jest.fn();

@@ -1,14 +1,13 @@
 import { useRef, useState, useLayoutEffect, useCallback } from 'react';
 import { BreakpointUnit } from './breakpoints';
 
-import { BreakpointKey, BreakpointMap } from './breakpoints';
-import { sortBreakpoints, getSmallestBreakpoint } from './utils';
-import { createBreakpointQueryArray } from './media-utils';
+import type { BreakpointKey, BreakpointMap } from './breakpoints';
+import { getSmallestBreakpoint } from './helpers/getSmallestBreakpoint';
+import { sortBreakpoints } from './helpers/sortBreakpoints';
+import { createBreakpointQueryArray } from './helpers/createBreakpointQueryArray';
 
-import {
-  createMediaQueryListener,
-  MediaQueryListener,
-} from './MediaQueryListener';
+import type { MediaQueryListener } from './MediaQueryListener';
+import { createMediaQueryListener } from './MediaQueryListener';
 
 /* istanbul ignore next */
 const globalWindow = typeof window !== 'undefined' ? window : null;

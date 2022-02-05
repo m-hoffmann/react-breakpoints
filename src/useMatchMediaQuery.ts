@@ -1,9 +1,7 @@
 import { useState, useLayoutEffect } from 'react';
 
-import {
-  createMediaQueryListener,
-  MediaQueryListener,
-} from './MediaQueryListener';
+import type { MediaQueryListener } from './MediaQueryListener';
+import { createMediaQueryListener } from './MediaQueryListener';
 
 /* istanbul ignore next */
 const globalWindow = typeof window !== 'undefined' ? window : null;

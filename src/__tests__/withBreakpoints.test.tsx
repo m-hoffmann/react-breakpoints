@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 
 import { withBreakpoints } from '../withBreakpoints';
 import { BreakpointsContext } from '../BreakpointsContext';
-import { BreakpointsProps } from '../breakpoints';
+import type { BreakpointsProps } from '../breakpoints';
 
 describe('withBreakpoints', () => {
   type Breakpoints = 'sm' | 'md' | 'lg';

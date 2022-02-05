@@ -1,17 +1,15 @@
 import { useMemo } from 'react';
 
-import {
+import type {
   BreakpointKey,
   BreakpointMap,
   BreakpointUnit,
   ScreenSize,
 } from './breakpoints';
 
-import {
-  sortBreakpoints,
-  convertScreenWidth,
-  calculateBreakpoint,
-} from './utils';
+import { sortBreakpoints } from './helpers/sortBreakpoints';
+import { convertScreenWidth } from './helpers/convertScreenWidth';
+import { calculateBreakpoint } from './helpers/calculateBreakpoint';
 
 export interface BreakpointDetectionOptions<
   K extends BreakpointKey = BreakpointKey,

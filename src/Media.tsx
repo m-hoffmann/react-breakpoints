@@ -1,4 +1,4 @@
-import { BreakpointKey, BreakpointsProps } from './breakpoints';
+import type { BreakpointKey, BreakpointsProps } from './breakpoints';
 import { useBreakpoints } from './useBreakpoints';
 
 /**
@@ -13,7 +13,7 @@ export interface MediaProps<K extends BreakpointKey> {
  * Passes the `BreakpointsProps` to its children
  *
  * Needs provider for `BreakpointsProps`
- * 
+ *
  * @example
  * <Media>
  *  {({ currentBreakpoint }) => currentBreakpoint === "desktop" && <div />}

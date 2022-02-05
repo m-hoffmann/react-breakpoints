@@ -10,7 +10,7 @@ import {
 } from './helpers/MatchMediaMock2';
 
 import { useMatchMediaBreakpoints } from '../useMatchMediaBreakpoints';
-import { createBreakpointQueryObject } from '../media-utils';
+import { createBreakpointQueryObject } from '../helpers/createBreakpointQueryObject';
 
 describe('useMatchMediaBreakpoints', () => {
   const breakpointUnit = 'px';
