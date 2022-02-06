@@ -25,7 +25,7 @@ function detectScreenSize(ignoreScreenSize: boolean): WindowSize {
 export interface WindowSizeDetectionOptions {
   debounceResize?: boolean;
   debounceDelay?: number;
-  ignoreScreenSize?: boolean;
+  ignoreWindowSize?: boolean;
 }
 
 /**
@@ -33,22 +33,24 @@ export interface WindowSizeDetectionOptions {
  * @param props
  * @returns Screen with in pixels
  */
-export function useDetectWindowSize(props: WindowSizeDetectionOptions): WindowSize {
+export function useDetectWindowSize(
+  props: WindowSizeDetectionOptions,
+): WindowSize {
   const {
     debounceResize = false,
     debounceDelay = 50,
-    ignoreScreenSize = !globalWindow,
+    ignoreWindowSize = !globalWindow,
   } = props;
 
   // screen width in px
   const [screenSize, setScreenSize] = useState<WindowSize>(() =>
-    detectScreenSize(ignoreScreenSize),
+    detectScreenSize(ignoreWindowSize),
   );
 
   useLayoutEffect(
     function screenResizeEffect() {
       function updateScreenSize() {
-        setScreenSize(detectScreenSize(ignoreScreenSize));
+        setScreenSize(detectScreenSize(ignoreWindowSize));
       }
 
       const resizeHandler = debounceResize
@@ -74,7 +76,7 @@ export function useDetectWindowSize(props: WindowSizeDetectionOptions): WindowSi
         }
       };
     },
-    [ignoreScreenSize, debounceResize, debounceDelay],
+    [ignoreWindowSize, debounceResize, debounceDelay],
   );
 
   return screenSize;
