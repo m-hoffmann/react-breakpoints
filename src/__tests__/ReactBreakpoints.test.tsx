@@ -3,7 +3,7 @@
 import { useContext } from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
-import { ReactBreakpoints } from '../ReactBreakpoints';
+import { ReactBreakpoints } from '../WindowSizeBreakpoints';
 import { BreakpointsContext } from '../BreakpointsContext';
 import { BreakpointsProps } from '../breakpoints';
 
