@@ -24,9 +24,9 @@ export type { MatchMediaBreakpointsProps as MatchMediaBreakpointsProps } from '.
 export { MatchMediaBreakpoints } from './MatchMediaBreakpoints';
 
 // Provider: window.innerWidth
-export type { ReactBreakpointsProps } from './ReactBreakpoints';
-import { ReactBreakpoints } from './ReactBreakpoints';
-export default ReactBreakpoints;
+export type { ReactBreakpointsProps } from './WindowSizeBreakpoints';
+import { WindowSizeBreakpoints } from './WindowSizeBreakpoints';
+export default WindowSizeBreakpoints;
 
 // standalone
 

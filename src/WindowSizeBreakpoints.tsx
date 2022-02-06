@@ -14,9 +14,9 @@ import {
 } from './breakpoints';
 
 /**
- * Props for ReactBreakpoints
+ * Props for WindowSizeBreakpoints
  */
-export interface ReactBreakpointsProps<
+export interface WindowSizeBreakpointsProps<
   K extends BreakpointKey = BreakpointKey,
 > {
   /**
@@ -65,8 +65,8 @@ export interface ReactBreakpointsProps<
  * Provides the breakpoints for consumer components
  * using `window.innerWidth`
  */
-export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
-  props: ReactBreakpointsProps<K>,
+export function WindowSizeBreakpoints<K extends BreakpointKey = BreakpointKey>(
+  props: WindowSizeBreakpointsProps<K>,
 ) {
   validateBreakpoints(props.breakpoints);
 
@@ -105,7 +105,7 @@ export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
   );
 }
 
-ReactBreakpoints.propTypes = {
+WindowSizeBreakpoints.propTypes = {
   breakpoints: objectOf(number).isRequired,
   breakpointUnit: oneOf(['px', 'em']),
   guessedBreakpoint: number,

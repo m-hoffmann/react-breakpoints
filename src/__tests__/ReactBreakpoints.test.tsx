@@ -3,7 +3,7 @@
 import { useContext } from 'react';
 import { render, fireEvent } from '@testing-library/react';
 
-import { ReactBreakpoints } from '../WindowSizeBreakpoints';
+import { WindowSizeBreakpoints } from '../WindowSizeBreakpoints';
 import { BreakpointsContext } from '../BreakpointsContext';
 import { BreakpointsProps } from '../breakpoints';
 
@@ -35,23 +35,31 @@ describe('ReactBreakpoints', function () {
   it('explodes if there are no breakpoints', function () {
     expect(() =>
       render(
-        <ReactBreakpoints breakpoints={null as any} children={<Children />} />,
+        <WindowSizeBreakpoints
+          breakpoints={null as any}
+          children={<Children />}
+        />,
       ),
     ).toThrow();
     expect(() =>
       render(
-        <ReactBreakpoints breakpoints={123 as any} children={<Children />} />,
+        <WindowSizeBreakpoints
+          breakpoints={123 as any}
+          children={<Children />}
+        />,
       ),
     ).toThrow();
 
     expect(() =>
-      render(<ReactBreakpoints breakpoints={{}} children={<Children />} />),
+      render(
+        <WindowSizeBreakpoints breakpoints={{}} children={<Children />} />,
+      ),
     ).toThrow();
   });
 
   it('renders its children', function () {
     const result = render(
-      <ReactBreakpoints
+      <WindowSizeBreakpoints
         breakpoints={{ xs: 1 }}
         children={<div data-test-id="children" />}
       />,
@@ -68,7 +76,10 @@ describe('ReactBreakpoints', function () {
     };
 
     render(
-      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
+      <WindowSizeBreakpoints
+        breakpoints={breakpoints}
+        children={<Children />}
+      />,
     );
 
     expect(propsMockResult()).toMatchObject([{ breakpoints }]);
@@ -84,7 +95,10 @@ describe('ReactBreakpoints', function () {
     global.innerWidth = 1920;
 
     render(
-      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
+      <WindowSizeBreakpoints
+        breakpoints={breakpoints}
+        children={<Children />}
+      />,
     );
 
     expect(propsMockResult()).toMatchObject([{ currentBreakpoint: 'desktop' }]);
@@ -100,7 +114,10 @@ describe('ReactBreakpoints', function () {
     global.innerWidth = 800;
 
     render(
-      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
+      <WindowSizeBreakpoints
+        breakpoints={breakpoints}
+        children={<Children />}
+      />,
     );
 
     expect(propsMockResult()).toMatchObject([
@@ -118,7 +135,10 @@ describe('ReactBreakpoints', function () {
     global.innerWidth = 240;
 
     render(
-      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
+      <WindowSizeBreakpoints
+        breakpoints={breakpoints}
+        children={<Children />}
+      />,
     );
 
     expect(propsMockResult()).toMatchObject([{ currentBreakpoint: 'mobile' }]);
@@ -134,7 +154,10 @@ describe('ReactBreakpoints', function () {
     global.innerWidth = 100;
 
     render(
-      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
+      <WindowSizeBreakpoints
+        breakpoints={breakpoints}
+        children={<Children />}
+      />,
     );
 
     expect(propsMockResult()).toMatchObject([{ currentBreakpoint: 'mobile' }]);
@@ -150,7 +173,7 @@ describe('ReactBreakpoints', function () {
     global.innerWidth = 1920; // = 120em
 
     render(
-      <ReactBreakpoints
+      <WindowSizeBreakpoints
         breakpoints={breakpoints}
         breakpointUnit="em"
         children={<Children />}
@@ -170,7 +193,7 @@ describe('ReactBreakpoints', function () {
     global.innerWidth = 800; // = 50em
 
     render(
-      <ReactBreakpoints
+      <WindowSizeBreakpoints
         breakpoints={breakpoints}
         breakpointUnit="em"
         children={<Children />}
@@ -203,21 +226,21 @@ describe('ReactBreakpoints', function () {
     global.innerWidth = 800; // = 50em
 
     const result = render(
-      <ReactBreakpoints
+      <WindowSizeBreakpoints
         breakpoints={initialBreakPoints}
         children={<Children />}
       />,
     );
 
     result.rerender(
-      <ReactBreakpoints
+      <WindowSizeBreakpoints
         breakpoints={nextBreakpoints}
         children={<Children />}
       />,
     );
 
     result.rerender(
-      <ReactBreakpoints
+      <WindowSizeBreakpoints
         breakpoints={moreBreakpoints}
         children={<Children />}
       />,
@@ -251,7 +274,10 @@ describe('ReactBreakpoints', function () {
     global.innerWidth = 1920;
 
     render(
-      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
+      <WindowSizeBreakpoints
+        breakpoints={breakpoints}
+        children={<Children />}
+      />,
     );
 
     global.innerWidth = 800;
@@ -279,7 +305,7 @@ describe('ReactBreakpoints', function () {
     global.innerWidth = 1920;
 
     render(
-      <ReactBreakpoints
+      <WindowSizeBreakpoints
         breakpoints={breakpoints}
         children={<Children />}
         debounceResize
@@ -313,7 +339,7 @@ describe('ReactBreakpoints', function () {
     global.innerWidth = 0;
 
     render(
-      <ReactBreakpoints
+      <WindowSizeBreakpoints
         breakpoints={breakpoints}
         children={<Children />}
         guessedBreakpoint={breakpoints.tablet}
@@ -333,7 +359,7 @@ describe('ReactBreakpoints', function () {
     global.innerWidth = 0;
 
     render(
-      <ReactBreakpoints
+      <WindowSizeBreakpoints
         breakpoints={breakpoints}
         children={<Children />}
         defaultBreakpoint={breakpoints.tablet}
@@ -353,7 +379,10 @@ describe('ReactBreakpoints', function () {
     global.innerWidth = 0;
 
     render(
-      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
+      <WindowSizeBreakpoints
+        breakpoints={breakpoints}
+        children={<Children />}
+      />,
     );
 
     expect(propsMockResult()).toMatchObject([{ currentBreakpoint: 'mobile' }]);
