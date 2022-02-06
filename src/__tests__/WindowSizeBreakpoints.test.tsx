@@ -9,7 +9,7 @@ import { BreakpointsProps } from '../breakpoints';
 
 import { delay } from './helpers/delay';
 
-describe('ReactBreakpoints', function () {
+describe('WindowSizeBreakpoints', function () {
   const propsMock = jest.fn();
 
   function propsMockResult() {

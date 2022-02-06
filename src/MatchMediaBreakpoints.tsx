@@ -44,6 +44,12 @@ export interface MatchMediaBreakpointsProps<
 }
 
 /**
+ * Alias for MatchMediaBreakpointsProps default export
+ */
+export type ReactBreakpointsProps<K extends BreakpointKey = BreakpointKey> =
+  MatchMediaBreakpointsProps<K>;
+
+/**
  * Provides the breakpoints for the Consumer components
  * using `window.matchMedia`
  */
@@ -84,3 +90,5 @@ MatchMediaBreakpoints.propTypes = {
   breakpointUnit: oneOf(['px', 'em']),
   defaultBreakpoint: string,
 };
+
+export default MatchMediaBreakpoints;

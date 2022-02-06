@@ -1,3 +1,4 @@
+// shared type exports
 export type {
   BreakpointKey,
   BreakpointUnit,
@@ -19,14 +20,17 @@ export { Media } from './Media';
 export type { MatchBreakpointProps } from './MatchBreakpoint';
 export { MatchBreakpoint } from './MatchBreakpoint';
 
+// Provider: default provider export for compatibility
+export type { ReactBreakpointsProps } from './MatchMediaBreakpoints';
+export { default } from './MatchMediaBreakpoints';
+
 // Provider: window.matchMedia
-export type { MatchMediaBreakpointsProps as MatchMediaBreakpointsProps } from './MatchMediaBreakpoints';
+export type { MatchMediaBreakpointsProps } from './MatchMediaBreakpoints';
 export { MatchMediaBreakpoints } from './MatchMediaBreakpoints';
 
 // Provider: window.innerWidth
-export type { ReactBreakpointsProps } from './WindowSizeBreakpoints';
-import { WindowSizeBreakpoints } from './WindowSizeBreakpoints';
-export default WindowSizeBreakpoints;
+export type { WindowSizeBreakpointsProps } from './WindowSizeBreakpoints';
+export { WindowSizeBreakpoints } from './WindowSizeBreakpoints';
 
 // standalone
 
