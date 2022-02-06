@@ -5,10 +5,7 @@
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import {
-  MatchMediaBreakpoints,
-  useBreakpoints,
-} from 'react-hook-breakpoints';
+import { MatchMediaBreakpoints, useBreakpoints } from 'react-hook-breakpoints';
 
 describe('MatchMediaBreakpoints on the server', function () {
   type Breakpoint = 'desktop' | 'tablet' | 'mobile';
@@ -17,12 +14,6 @@ describe('MatchMediaBreakpoints on the server', function () {
     const props = useBreakpoints<Breakpoint>();
 
     return <>{props.currentBreakpoint}</>;
-  }
-
-  function ScreenWidth() {
-    const props = useBreakpoints<Breakpoint>();
-
-    return <>{props.screenWidth}</>;
   }
 
   function Breakpoints() {
@@ -117,19 +108,6 @@ describe('MatchMediaBreakpoints on the server', function () {
         />,
       ),
     ).toBe('mobile');
-  });
-
-  it('Detects screenWidth 0', function () {
-    const breakpoints = { mobile: 320, tablet: 768, desktop: 1200 };
-
-    expect(
-      renderToStaticMarkup(
-        <MatchMediaBreakpoints
-          breakpoints={breakpoints}
-          children={<ScreenWidth />}
-        />,
-      ),
-    ).toBe('0');
   });
 
   it('Renders breakpoints', function () {
