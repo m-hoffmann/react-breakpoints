@@ -3,7 +3,7 @@ import { BreakpointUnit } from './breakpoints';
 
 import type { BreakpointKey, BreakpointMap } from './breakpoints';
 import { getSmallestBreakpoint } from './helpers/getSmallestBreakpoint';
-import { sortBreakpoints } from './helpers/sortBreakpoints';
+import { findLargestMatchingBreakpoint } from './helpers/findLargestMatchingBreakpoint';
 import { createBreakpointQueryArray } from './helpers/createBreakpointQueryArray';
 
 import type { MediaQueryListener } from './MediaQueryListener';
@@ -16,24 +16,6 @@ export interface MatchMediaBreakpointsProps<K extends BreakpointKey> {
   breakpoints: BreakpointMap<K>;
   breakpointUnit: BreakpointUnit;
   defaultBreakpoint?: K;
-}
-
-function findLargestMatchingBreakpoint(
-  breakpoints: Record<string, number>,
-  matchedBreakpoints: Record<string, boolean>,
-  defaultBreakpoint: string,
-) {
-  const sortedBreakpoints = sortBreakpoints(breakpoints);
-
-  // flag matching breakpoints
-  for (const item of sortedBreakpoints) {
-    const [name] = item;
-    if (matchedBreakpoints[name]) {
-      return name;
-    }
-  }
-
-  return defaultBreakpoint;
 }
 
 /**
