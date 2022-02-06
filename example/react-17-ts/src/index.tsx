@@ -2,13 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import './index.css';
-import AppToggler from './App.Toggler';
+
+import ExampleApp from './App.Toggler';
+// import ExampleApp from './examples/ExampleAppJS';
+// import ExampleApp from './examples/ExampleAppTS';
 
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <AppToggler />
+    <ExampleApp />
   </React.StrictMode>,
   document.getElementById('root'),
 );

@@ -1,4 +1,4 @@
-import type { BreakpointMap, BreakpointUnit } from '../breakpoints';
+import type { Breakpoints, BreakpointUnit } from '../breakpoints';
 
 import { createBreakpointQueryArray } from './createBreakpointQueryArray';
 
@@ -10,7 +10,7 @@ import { createBreakpointQueryArray } from './createBreakpointQueryArray';
  * @returns
  */
 export function createBreakpointQueryObject(
-  breakpoints: BreakpointMap,
+  breakpoints: Breakpoints,
   breakpointUnit: BreakpointUnit,
 ): Record<string, string> {
   const queryArray = createBreakpointQueryArray(breakpoints, breakpointUnit);

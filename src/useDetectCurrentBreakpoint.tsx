@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 
 import type {
   BreakpointKey,
-  BreakpointMap,
+  Breakpoints,
   BreakpointUnit,
   WindowSize,
 } from './breakpoints';
@@ -14,7 +14,7 @@ export interface BreakpointDetectionOptions<
   K extends BreakpointKey = BreakpointKey,
 > {
   screenSize: WindowSize;
-  breakpoints: BreakpointMap<K>;
+  breakpoints: Breakpoints<K>;
   breakpointUnit: BreakpointUnit;
   guessedBreakpoint: number;
   defaultBreakpoint: number;

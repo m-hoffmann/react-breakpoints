@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
-import App from './App.MatchMediaQuery';
+import App from './ExampleAppJS';
 
 it('renders without crashing', () => {
   const div = document.createElement('div');

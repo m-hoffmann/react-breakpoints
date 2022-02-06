@@ -1,4 +1,4 @@
-import type { BreakpointMap, BreakpointSize } from '../breakpoints';
+import type { Breakpoints, BreakpointSize } from '../breakpoints';
 
 /**
  * Sorts breakpoints
@@ -7,7 +7,7 @@ import type { BreakpointMap, BreakpointSize } from '../breakpoints';
  * @returns
  */
 export function sortBreakpoints(
-  breakpoints: BreakpointMap,
+  breakpoints: Breakpoints,
   order: 'asc' | 'desc' = 'desc',
 ): BreakpointSize[] {
   const sign = order === 'asc' ? -1 : 1;

@@ -1,5 +1,6 @@
 // shared type exports
 export type {
+  Breakpoints,
   BreakpointKey,
   BreakpointUnit,
   BreakpointsProps,

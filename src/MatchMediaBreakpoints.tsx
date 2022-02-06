@@ -7,7 +7,7 @@ import { validateBreakpoints } from './helpers/validateBreakpoints';
 
 import {
   BreakpointKey,
-  BreakpointMap,
+  Breakpoints,
   BreakpointsProps,
   BreakpointUnit,
 } from './breakpoints';
@@ -21,7 +21,7 @@ export interface MatchMediaBreakpointsProps<
   /**
    * Your breakpoints object.
    */
-  breakpoints: BreakpointMap<K>;
+  breakpoints: Breakpoints<K>;
 
   /**
    * The type of unit that your breakpoints should use - px or em.
@@ -51,7 +51,12 @@ export type ReactBreakpointsProps<K extends BreakpointKey = BreakpointKey> =
 
 /**
  * Provides the breakpoints for the Consumer components
- * using `window.matchMedia`
+ *
+ * Uses [window.matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia)
+ *
+ * Uses CSS media queries (level 3)(https://www.w3.org/TR/css3-mediaqueries/)
+ * - min-width
+ * - max-width
  */
 export function MatchMediaBreakpoints<K extends BreakpointKey = BreakpointKey>(
   props: MatchMediaBreakpointsProps<K>,

@@ -1,5 +1,5 @@
 import type {
-  BreakpointMap,
+  Breakpoints,
   BreakpointUnit,
   BreakpointQuery,
 } from '../breakpoints';
@@ -21,7 +21,7 @@ function maxWidth(value: number, unit: BreakpointUnit): string {
  * @returns
  */
 export function createBreakpointQueryArray(
-  breakpoints: BreakpointMap,
+  breakpoints: Breakpoints,
   breakpointUnit: BreakpointUnit,
 ): BreakpointQuery[] {
   const sortedBreakpoints = sortBreakpoints(breakpoints);

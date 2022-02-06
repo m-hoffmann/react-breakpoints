@@ -1,7 +1,7 @@
 import { useRef, useState, useLayoutEffect, useCallback } from 'react';
 import { BreakpointUnit } from './breakpoints';
 
-import type { BreakpointKey, BreakpointMap } from './breakpoints';
+import type { BreakpointKey, Breakpoints } from './breakpoints';
 import { getSmallestBreakpoint } from './helpers/getSmallestBreakpoint';
 import { findLargestMatchingBreakpoint } from './helpers/findLargestMatchingBreakpoint';
 import { createBreakpointQueryArray } from './helpers/createBreakpointQueryArray';
@@ -16,7 +16,7 @@ const globalWindow = typeof window !== 'undefined' ? window : null;
  * @private for internal use
  */
 export interface MatchMediaBreakpointsProps<K extends BreakpointKey> {
-  breakpoints: BreakpointMap<K>;
+  breakpoints: Breakpoints<K>;
   breakpointUnit: BreakpointUnit;
   defaultBreakpoint?: K;
 }

@@ -1,10 +1,10 @@
-import type { BreakpointMap } from '../breakpoints';
+import type { Breakpoints } from '../breakpoints';
 import { sortBreakpoints } from '../helpers/sortBreakpoints';
 
 /** Calculate breakpoint by width */
 export function calculateBreakpoint(
   screenWidth: number,
-  breakpoints: BreakpointMap,
+  breakpoints: Breakpoints,
 ): string {
   const sortedBreakpoints = sortBreakpoints(breakpoints);
 

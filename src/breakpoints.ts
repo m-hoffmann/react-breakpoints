@@ -14,7 +14,7 @@ export type BreakpointUnit = 'px' | 'em';
  * @example { mobile: 320, tablet: 768, desktop: 1200 }
  * @example { sm: 320, md: 768, lg: 1200 }
  */
-export type BreakpointMap<B extends BreakpointKey = BreakpointKey> = Record<
+export type Breakpoints<B extends BreakpointKey = BreakpointKey> = Record<
   B,
   number
 >;

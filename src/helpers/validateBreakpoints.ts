@@ -1,12 +1,12 @@
 import { ERRORS } from './messages';
 
-import { BreakpointMap } from '../breakpoints';
+import { Breakpoints } from '../breakpoints';
 
 /**
  * Throw Error if no breakpoints were passed
  * @param breakpoints
  */
-export function validateBreakpoints(breakpoints: BreakpointMap): void {
+export function validateBreakpoints(breakpoints: Breakpoints): void {
   // throw Error if no breakpoints were passed
   if (!breakpoints) {
     throw new Error(ERRORS.NO_BREAKPOINTS);

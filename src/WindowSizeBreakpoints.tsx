@@ -8,7 +8,7 @@ import { useDetectCurrentBreakpoint } from './useDetectCurrentBreakpoint';
 
 import {
   BreakpointKey,
-  BreakpointMap,
+  Breakpoints,
   BreakpointsProps,
   BreakpointUnit,
 } from './breakpoints';
@@ -22,7 +22,7 @@ export interface WindowSizeBreakpointsProps<
   /**
    * Your breakpoints object.
    */
-  breakpoints: BreakpointMap<K>;
+  breakpoints: Breakpoints<K>;
 
   /**
    * The type of unit that your breakpoints should use - px or em.
@@ -63,7 +63,11 @@ export interface WindowSizeBreakpointsProps<
 
 /**
  * Provides the breakpoints for consumer components
- * using `window.innerWidth`
+ * using [window.innerWidth](https://developer.mozilla.org/en-US/docs/Web/API/Window/innerWidth)
+ *
+ * Uses the events
+ * - [resize](https://developer.mozilla.org/en-US/docs/Web/API/Window/resize_event)
+ * - [orientationchange](https://developer.mozilla.org/en-US/docs/Web/API/Window/orientationchange_event)
  */
 export function WindowSizeBreakpoints<K extends BreakpointKey = BreakpointKey>(
   props: WindowSizeBreakpointsProps<K>,

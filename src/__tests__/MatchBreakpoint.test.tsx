@@ -3,24 +3,24 @@ import { render } from '@testing-library/react';
 
 import { MatchBreakpoint } from '../MatchBreakpoint';
 import { BreakpointsContext } from '../BreakpointsContext';
-import type { BreakpointsProps, BreakpointMap } from '../breakpoints';
+import type { BreakpointsProps, Breakpoints } from '../breakpoints';
 
 describe('MatchBreakpoint', () => {
-  type Breakpoints = 'sm' | 'md' | 'lg';
+  type MyBreakpoints = 'sm' | 'md' | 'lg';
 
-  const breakpoints: BreakpointMap<Breakpoints> = { sm: 100, md: 200, lg: 300 };
+  const breakpoints: Breakpoints<MyBreakpoints> = { sm: 100, md: 200, lg: 300 };
 
   const Sm = () => <div>sm</div>;
   const Md = () => <div>md</div>;
   const Lg = () => <div>lg</div>;
 
   describe('property "is"', () => {
-    const breakpointsProps: BreakpointsProps<Breakpoints> = {
+    const breakpointsProps: BreakpointsProps<MyBreakpoints> = {
       breakpoints,
       currentBreakpoint: 'md',
     };
 
-    it('renders [sm] for "sm"', () => {
+    it('renders [Md]', () => {
       const result = render(
         <BreakpointsContext.Provider value={breakpointsProps}>
           <MatchBreakpoint is="sm" children={<Sm />} />
@@ -33,15 +33,27 @@ describe('MatchBreakpoint', () => {
       expect(result.queryByText('md')).toBeTruthy();
       expect(result.queryByText('lg')).toBeFalsy();
     });
+
+    it('renders [1]', () => {
+      const result = render(
+        <BreakpointsContext.Provider value={breakpointsProps}>
+          <MatchBreakpoint is={['sm', 'md']} children={<>1</>} />
+          <MatchBreakpoint is="lg" children={<>2</>} />
+        </BreakpointsContext.Provider>,
+      );
+
+      expect(result.queryByText('1')).toBeTruthy();
+      expect(result.queryByText('2')).toBeFalsy();
+    });
   });
 
   describe('property "not"', () => {
-    const breakpointsProps: BreakpointsProps<Breakpoints> = {
+    const breakpointsProps: BreakpointsProps<MyBreakpoints> = {
       breakpoints,
       currentBreakpoint: 'md',
     };
 
-    it('renders [sm,lg] for "sm"', () => {
+    it('renders [Sm,Lg]', () => {
       const result = render(
         <BreakpointsContext.Provider value={breakpointsProps}>
           <MatchBreakpoint not="sm" children={<Sm />} />
@@ -54,15 +66,27 @@ describe('MatchBreakpoint', () => {
       expect(result.queryByText('md')).toBeFalsy();
       expect(result.queryByText('lg')).toBeTruthy();
     });
+
+    it('renders [1] for ["sm", "lg]', () => {
+      const result = render(
+        <BreakpointsContext.Provider value={breakpointsProps}>
+          <MatchBreakpoint not={['sm', 'lg']} children={<>1</>} />
+          <MatchBreakpoint not={['md']} children={<>2</>} />
+        </BreakpointsContext.Provider>,
+      );
+
+      expect(result.queryByText('1')).toBeTruthy();
+      expect(result.queryByText('2')).toBeFalsy();
+    });
   });
 
   describe('property "min"', () => {
-    const breakpointsProps: BreakpointsProps<Breakpoints> = {
+    const breakpointsProps: BreakpointsProps<MyBreakpoints> = {
       breakpoints,
       currentBreakpoint: 'md',
     };
 
-    it('renders [md,lg] for "md"', () => {
+    it('renders [Md,Lg]', () => {
       const result = render(
         <BreakpointsContext.Provider value={breakpointsProps}>
           <MatchBreakpoint min="sm" children={<Sm />} />
@@ -78,12 +102,12 @@ describe('MatchBreakpoint', () => {
   });
 
   describe('property "max"', () => {
-    const breakpointsProps: BreakpointsProps<Breakpoints> = {
+    const breakpointsProps: BreakpointsProps<MyBreakpoints> = {
       breakpoints,
       currentBreakpoint: 'md',
     };
 
-    it('renders [sm] for "md"', () => {
+    it('renders [Sm,Md]', () => {
       const result = render(
         <BreakpointsContext.Provider value={breakpointsProps}>
           <MatchBreakpoint max="sm" children={<Sm />} />
@@ -93,7 +117,7 @@ describe('MatchBreakpoint', () => {
       );
 
       expect(result.queryByText('sm')).toBeFalsy();
-      expect(result.queryByText('md')).toBeFalsy();
+      expect(result.queryByText('md')).toBeTruthy();
       expect(result.queryByText('lg')).toBeTruthy();
     });
   });
