@@ -4,7 +4,7 @@ import type {
   BreakpointKey,
   BreakpointMap,
   BreakpointUnit,
-  ScreenSize,
+  WindowSize,
 } from './breakpoints';
 
 import { sortBreakpoints } from './helpers/sortBreakpoints';
@@ -14,7 +14,7 @@ import { calculateBreakpoint } from './helpers/calculateBreakpoint';
 export interface BreakpointDetectionOptions<
   K extends BreakpointKey = BreakpointKey,
 > {
-  screenSize: ScreenSize;
+  screenSize: WindowSize;
   breakpoints: BreakpointMap<K>;
   breakpointUnit: BreakpointUnit;
   guessedBreakpoint: number;

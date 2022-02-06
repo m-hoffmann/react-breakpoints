@@ -1,11 +1,11 @@
 import { renderHook } from '@testing-library/react-hooks';
-import { useScreenSize } from '../useScreenSize';
+import { useDetectWindowSize } from '../useDetectWindowSize';
 
 describe('useScreenSize', () => {
   // this is just for 100% coverage
   it('returns 0x0 without window', async function () {
     const { result } = renderHook(() =>
-      useScreenSize({ ignoreScreenSize: true }),
+      useDetectWindowSize({ ignoreScreenSize: true }),
     );
 
     expect(result.current).toMatchObject({ width: 0, height: 0 });
@@ -16,7 +16,7 @@ describe('useScreenSize', () => {
     global.innerHeight = 600;
 
     const { result } = renderHook(() =>
-      useScreenSize({ ignoreScreenSize: false }),
+      useDetectWindowSize({ ignoreScreenSize: false }),
     );
 
     expect(result.current).toMatchObject({ width: 800, height: 600 });

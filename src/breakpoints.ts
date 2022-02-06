@@ -66,9 +66,10 @@ export type SortedBreakpointQueries<K extends BreakpointKey = BreakpointKey> = [
 ][];
 
 /**
+ * Detected window size
  * @private for internal use
  */
-export interface ScreenSize {
+export interface WindowSize {
   width: number;
   height: number;
 }
