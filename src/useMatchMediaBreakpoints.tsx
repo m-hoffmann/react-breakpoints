@@ -12,6 +12,9 @@ import { createMediaQueryListener } from './MediaQueryListener';
 /* istanbul ignore next */
 const globalWindow = typeof window !== 'undefined' ? window : null;
 
+/**
+ * @private for internal use
+ */
 export interface MatchMediaBreakpointsProps<K extends BreakpointKey> {
   breakpoints: BreakpointMap<K>;
   breakpointUnit: BreakpointUnit;
@@ -19,8 +22,10 @@ export interface MatchMediaBreakpointsProps<K extends BreakpointKey> {
 }
 
 /**
+ * Detects breakpoints by window size
  * Might not work on older browsers
  * @see https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList
+ * @private for internal use
  * @param props
  * @return
  */
