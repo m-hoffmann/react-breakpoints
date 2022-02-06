@@ -30,9 +30,9 @@
     "compile:commonjs": "tsc --project ./tsconfig.cjs.json",
     "compile:es": "tsc --project ./tsconfig.esm.json",
     "prepublishOnly": "npm run clean && npm run lint && npm run test && npm run compile",
-    "prettier": "pretty-quick --staged",
-    "precommit_": "npm run prettier",
-    "prepush_": "npm run prettier",
+    "prettier": "prettier --write ./src",
+    "pretty-quick": "pretty-quick --staged",
+    "precommit": "npm run pretty-quick",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },

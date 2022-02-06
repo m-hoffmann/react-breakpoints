@@ -5,7 +5,7 @@ import { BreakpointKey } from './breakpoints';
 
 /**
  * Children and conditions
- * 
+ *
  * Needs provider for `BreakpointsProps`
  */
 export interface MatchBreakpointProps<K extends BreakpointKey = BreakpointKey> {
