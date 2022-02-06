@@ -1,19 +1,20 @@
 # Changelog
 
-## Unreleased
+## [5.0.0] - 2022-02-06
 
 ### Added
 
-- Added component `MatchBreakpoint`
-- Added component `MatchMediaBreakpoints`
+- Added provider component`MatchMediaBreakpoints`
+- Added consumer component`MatchBreakpoint`
+- Added standalone component `MatchMediaQuery`
 
 ### Changed
 
+**BREAKING CHANGES**
 
-BREAKING CHANGES
-
-- Always changes in breakpoints if a new object reference is passed
+- Always triggers breakpoint detection if a new object reference is passed for `breakpoints`
 - Remove property `windowWidth` from `BreakpointsProps`, since it triggers unnecessary re-renders
+- Default export is now `MatchMediaBreakpoints`, the previous component is available as `WindowSizeBreakpoints`
 
 ### Removed
 

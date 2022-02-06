@@ -52,9 +52,11 @@ export type ReactBreakpointsProps<K extends BreakpointKey = BreakpointKey> =
 /**
  * Provides the breakpoints for the Consumer components
  *
- * Uses [window.matchMedia](https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia)
+ * Detects current breakpoint using media queries
+ * - [matchMedia]( https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia)
+ * - [MediaQueryList](https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList)
  *
- * Uses CSS media queries (level 3)(https://www.w3.org/TR/css3-mediaqueries/)
+ * Uses CSS media queries [level 3](https://www.w3.org/TR/css3-mediaqueries/)
  * - min-width
  * - max-width
  */

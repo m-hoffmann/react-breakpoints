@@ -22,9 +22,11 @@ export interface MatchMediaBreakpointsProps<K extends BreakpointKey> {
 }
 
 /**
- * Detects breakpoints by window size
- * Might not work on older browsers
- * @see https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList
+ * Detects breakpoints using media queries
+ * - [matchMedia]( https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia)
+ * - [MediaQueryList](https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList)
+ *
+ * Might not work for some older browsers
  * @private for internal use
  * @param props
  * @return

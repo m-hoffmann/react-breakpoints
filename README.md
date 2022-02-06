@@ -9,11 +9,15 @@ This library solves the problem that CSS media queries alone could not solve. So
 
 `react-hook-breakpoints` allows you to use the viewport width to load different components, opening up for building more complex responsive applications without suffering the performance problems of hidden desktop components on your mobile site and vice versa.
 
-Version 4 is a rewrite in typescript using react hooks uns includes the `useBreakpoint` hook.
+**Version 4**
 
-Version 5 adds the possibility to detect the breakpoints using `window.matchMedia` instead of listening to `resize` events.
+Is a rewrite in typescript using react hooks and includes the `useBreakpoints` hook.
 
-The library is tree shakeable.
+**Version 5**
+
+Adds the possibility to detect the breakpoints using `window.matchMedia` instead of listening to `resize` events and adds some new alternatives to simplify the usage of the library.
+
+Version 5 is tree shakeable.
 
 ## Installation
 
@@ -21,43 +25,119 @@ The library is tree shakeable.
 
 ## Usage
 
-### Providers
+### tl;dr 
 
-First you need to include a provider components in your component tree. It expects an object that will represent your breakpoints.
+Javascript
 
-#### ReactBreakpoints
+```jsx
+import {
+  MatchMediaBreakpoints,
+  MatchBreakpoint,
+  MatchMediaQuery,
+} from 'react-hook-breakpoints';
 
-Detects the `currentBreakpoint` using `window.innerWidth` and `resize` events.
-
-```js
-import App from './App'
-import ReactBreakpoints from 'react-hook-breakpoints'
-
-// don't place this in a component without memoization
 const breakpoints = {
   mobile: 320,
   mobileLandscape: 480,
   tablet: 768,
   tabletLandscape: 1024,
   desktop: 1200,
-  desktopLarge: 1500,
-  desktopWide: 1920,
+  desktopWide: 1500,
+  desktopHuge: 1920,
 };
 
-ReactDOM.render(
-  <ReactBreakpoints breakpoints={breakpoints}>
-    <App />
-  </ReactBreakpoints>,
-  document.getElementById('root'),
-);
+export default function ExampleApp() {
+  return (
+    <MatchMediaBreakpoints breakpoints={breakpoints}>
+      <MatchBreakpoint min="desktop">
+        At least <strong>desktop</strong>
+      </MatchBreakpoint>
+      <MatchBreakpoint min="tablet" max="tabletLandscape">
+        Between <strong>tablet</strong> and <strong>tabletLandscape</strong>
+      </MatchBreakpoint>
+      <MatchBreakpoint max="mobileLandscape">
+        At most <strong>mobileLandscape</strong>
+      </MatchBreakpoint>
+      <MatchBreakpoint is="desktopWide">
+        Only <strong>desktopWide</strong>
+      </MatchBreakpoint>
+      <MatchBreakpoint is="mobile">
+        Only <strong>desktopWide</strong>
+      </MatchBreakpoint>
+      <MatchMediaQuery query="print">Only visible in print</MatchMediaQuery>
+    </MatchMediaBreakpoints>
+  );
+}
+
 ```
 
-#### MatchMediaBreakpoints
+Typescript
 
-Detects the `currentBreakpoint` using `window.matchMedia`.
+```tsx
+import {
+  MatchMediaBreakpoints,
+  MatchBreakpoint,
+  MatchMediaQuery,
+  Breakpoints,
+} from 'react-hook-breakpoints';
 
+type Breakpoint =
+  | 'mobile'
+  | 'mobileLandscape'
+  | 'tablet'
+  | 'tabletLandscape'
+  | 'desktop'
+  | 'desktopWide'
+  | 'desktopHuge';
+
+const breakpoints: Breakpoints<Breakpoint> = {
+  mobile: 320,
+  mobileLandscape: 480,
+  tablet: 768,
+  tabletLandscape: 1024,
+  desktop: 1200,
+  desktopWide: 1500,
+  desktopHuge: 1920,
+};
+
+export default function ExampleApp() {
+  return (
+    <MatchMediaBreakpoints<Breakpoint> breakpoints={breakpoints}>
+      <MatchBreakpoint min="desktop">
+        At least <strong>desktop</strong>
+      </MatchBreakpoint>
+      <MatchBreakpoint<Breakpoint> min="tablet" max="tabletLandscape">
+        Between <strong>tablet</strong> and <strong>tabletLandscape</strong>
+      </MatchBreakpoint>
+      <MatchBreakpoint<Breakpoint> max="mobileLandscape">
+        At most <strong>mobileLandscape</strong>
+      </MatchBreakpoint>
+      <MatchBreakpoint<Breakpoint> is="desktopWide">
+        Only <strong>desktopWide</strong>
+      </MatchBreakpoint>
+      <MatchBreakpoint<Breakpoint> is="mobile">
+        Only <strong>desktopWide</strong>
+      </MatchBreakpoint>
+      <MatchMediaQuery query="print">Only visible in print</MatchMediaQuery>
+    </MatchMediaBreakpoints>
+  );
+}
+```
+
+### MatchMediaBreakpoints
+
+First you need to include a provider components in your component tree. It expects an object that will represent your breakpoints.
+
+Detects the current breakpoint using media queries
+
+ - [matchMedia]( https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia)
+ - [MediaQueryList](https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList)
+
+ Uses CSS media queries [level 3](https://www.w3.org/TR/css3-mediaqueries/)
+ - `min-width`
+ - `max-width`
+ 
 ```js
-import App from './App'
 import { MatchMediaBreakpoints } from 'react-hook-breakpoints'
 
 // don't place this in a component without memoization
@@ -71,25 +151,25 @@ const breakpoints = {
   desktopWide: 1920,
 };
 
-ReactDOM.render(
-  <MatchMediaBreakpoints breakpoints={breakpoints}>
-    <App />
-  </MatchMediaBreakpoints>,
-  document.getElementById('root'),
-);
+export default function App() {
+  return (
+    <MatchMediaBreakpoints breakpoints={breakpoints}>
+      <AppContent />
+    </MatchMediaBreakpoints>
+  ); 
+}
 ```
 
-#### BreakpointsProps
+You can als use the [legacy provider](#WindowSizeBreakpoints)
 
-The Providers provide props in this format.
+### BreakpointsProps
 
-The `currentBreakpoint` will change if the browser window is resized or
-the device orientation is changed.
+
+The Provider provides props in this format.
 
 ```js
 const breakPointProps = {
   currentBreakpoint: "desktop",
-  screenWidth: 1600, // always zero for MatchMediaBreakpoints
   breakPoints: {
     mobile: 320,
     mobileLandscape: 480,
@@ -102,11 +182,14 @@ const breakPointProps = {
 }
 ```
 
+The `currentBreakpoint` can change if the browser window is resized or
+the device orientation is changed.
+
 ### Consumers
 
-Consumers will allow you to to access the computed breakpoints for the current screen size
+Consumers will allow you to to access the computed breakpoint
 
-#### useBreakpoints (hook)
+### useBreakpoints
 
 Access the properties directly via a hook.
 
@@ -131,10 +214,10 @@ Typescript example
 ```tsx
 import { useBreakpoints } from 'react-hook-breakpoints';
 
-type MyBreakpoints = 'desktop' | 'tablet' | 'mobile';
+type Breakpoint = 'desktop' | 'tablet' | 'mobile';
 
 export function Navigation(): JSX.Element {
-  const { breakpoints, currentBreakpoint } = useBreakpoints<MyBreakpoints>();
+  const { breakpoints, currentBreakpoint } = useBreakpoints<Breakpoint>();
   return breakpoints[currentBreakpoint] > breakpoints.desktop ? (
     <DesktopNavigation />
   ) : (
@@ -143,7 +226,52 @@ export function Navigation(): JSX.Element {
 }
 ```
 
-#### MatchBreakpoint (component)
+Option `breakpointUnit: string` option
+
+Set the unit type of the breakpoints. Either 'em' or 'px'. The default is 'px'.
+
+```xml
+<ReactBreakpoints breakpoints={breakpoints} breakpointUnit="em">
+  <AppContent />
+</ReactBreakpoints>  
+);
+```
+
+Option `defaultBreakpoint: string`
+
+In case you always want to default to a certain breakpoint.
+The default will be the smallest breakpoint provided.
+
+```xml
+<MatchMediaBreakpoints breakpoints={breakpoints} defaultBreakpoint="mobile">
+  <AppContent />
+</MatchMediaBreakpoints>
+```
+
+You can provide an estimation for the breakpoint, so it does not default to the smallest one.
+
+This can be useful in SSR.
+
+```jsx
+import { MatchMediaBreakpoints } from 'react-hook-breakpoints';
+
+const breakpoints = {
+  mobile: 320,
+  tablet: 768,
+  desktop: 1200,
+}
+
+ // create your own logic to generate this
+const defaultBreakpoint = "tablet";
+
+const markup = renderToString(
+  <MatchMediaBreakpoints defaultBreakpoint={defaultBreakpoint} breakpoints={breakpoints}>
+    <AppContent />
+  </MatchMediaBreakpoints>,
+);
+```
+
+#### MatchBreakpoint
 
 Renders its children if the conditions are met
 
@@ -184,15 +312,112 @@ export function MatchBreakpointExample() {
 }
 ```
 
-### Media (render props)
+### MatchMediaQuery
 
-Access as child render function
+Use media queries directly. Does not depend on a provider in the react tree.
+
+**_Disclaimer_**:
+Adds one event listener for each use of this component, so performance might become
+and issue if you use this everywhere.
+
+```tsx
+import { MatchMediaQuery } from 'react-hook-breakpoints';
+
+export default function MatchMediaQueryExample(): JSX.Element {
+  return (
+    <div>
+      <MatchMediaQuery query="screen and (min-width: 800px)">
+        <h1>MatchMediaQuery</h1>
+        <div>Visible for screens larger 800px</div>
+      </MatchMediaQuery>
+      <MatchMediaQuery query="(max-width: 800px)">
+        <h1>MatchMediaQuery</h1>
+        <div>Visible for screens smaller than 800px</div>
+      </MatchMediaQuery>
+      <MatchMediaQuery query="(min-width: 600px) and (max-width: 800px)">
+        <h1>MatchMediaQuery</h1>
+        <div>Visible between 600px and 800px</div>
+      </MatchMediaQuery>
+      <MatchMediaQuery query="print">
+        <div>Only rendered in print</div>
+      </MatchMediaQuery>
+    </div>
+  );
+}
+```
+
+### Legacy components
+
+These components can still be used, but might be deprecated in the future.
+
+#### WindowSizeBreakpoints
+
+Default export before version 5.
+
+Detects the current breakpoint
+using [window.innerWidth](https://developer.mozilla.org/en-US/docs/Web/API/Window/innerWidth)
+and the window events
+- [resize](https://developer.mozilla.org/en-US/docs/Web/API/Window/resize_event)
+- [orientationchange](https://developer.mozilla.org/en-US/docs/Web/API/Window/orientationchange_event)
+
+```js
+import { WindowSizeBreakpoints } from 'react-hook-breakpoints'
+
+// don't place this in a component without memoization
+const breakpoints = {
+  mobile: 320,
+  mobileLandscape: 480,
+  tablet: 768,
+  tabletLandscape: 1024,
+  desktop: 1200,
+  desktopLarge: 1500,
+  desktopWide: 1920,
+};
+
+export default function App() {
+  return (
+    <WindowSizeBreakpoints breakpoints={breakpoints}>
+      <AppContent />
+    </WindowSizeBreakpoints>
+  );
+}
+```
+
+Options for debouncing
+
+- `debounceResize: boolean`, defaults `false`
+- `debounceDelay: number` in milliseconds, default `50`
+
+By default, this library does NOT debounce the `resize` listener. However, by passing the `debounceResize` prop to the `ReactBreakpoints` component it will be enabled with a default delay.
+
+You can set a custom delay in milliseconds for how the length of the debounce wait.
+
+```xml
+<WindowSizeBreakpoints breakpoints={breakpoints} debounceResize={true} debounceDelay={250}>
+  <AppContent />
+</WindowSizeBreakpoints>
+```
+
+
+Option `defaultBreakpoint: number`
+
+In case you want to default to a certain breakpoint.
+
+```xml
+<WindowSizeBreakpoints breakpoints={breakpoints} defaultBreakpoint={320}>
+  <AppContent />
+</WindowSizeBreakpoints>
+```
+
+
+### Media
+
+Access the `BreakpointsProps` as render prop children.
 
 ```js
 import { Media } from 'react-hook-breakpoints'
 
-class Navigation extends React.Component {
-  render() {
+export function Navigation() {
     return (
       <Media>
         {({ breakpoints, currentBreakpoint }) =>
@@ -206,13 +431,11 @@ class Navigation extends React.Component {
     )
   }
 }
-
-export default Navigation
 ```
 
 #### withBreakpoints (HOC)
 
-Don't use the HOC!
+The `withBreakpoints` HOC injects the `BreakpointsProps` in the props of the wrapped component.
 
 ```js
 import { withBreakpoints } from 'react-hook-breakpoints'
@@ -233,238 +456,4 @@ class Navigation extends React.Component {
 }
 
 export default withBreakpoints(Navigation)
-```
-
-Here is a more extensive example with renderProps:
-
-```js
-import { Media } from 'react-hook-breakpoints'
-
-const MyComponent = props => (
-  <div>
-    <h3>Select from the list below:</h3>
-    <Media>
-      {({ breakpoints, currentBreakpoint }) => {
-        switch (currentBreakpoint) {
-          case breakpoints.mobile:
-            return <MobileList />
-          case breakpoints.tablet:
-            return <TabletList />
-          case breakpoints.desktop:
-            return <DesktopList />
-        }
-      }}
-    </Media>
-  </div>
-)
-
-export default MyComponent
-```
-
-### Server side rendering
-
-You can provide an estimation for the breakpoint, so it does not default to the smallest one.
-
-```js
-// server.js
-import ReactBreakpoints from 'react-hook-breakpoints'
-
-const breakpoints = {
-  mobile: 320,
-  mobileLandscape: 480,
-  tablet: 768,
-  tabletLandscape: 1024,
-  desktop: 1200,
-  desktopLarge: 1500,
-  desktopWide: 1920,
-}
-
-// create your own logic to generate this
-const guessedBreakpoint = breakpoints.mobile;
-
-const markup = renderToString(
-  <ReactBreakpoints
-    guessedBreakpoint={guessedBreakpoint}
-    breakpoints={breakpoints}
-  >
-    <App />
-  </ReactBreakpoints>,
-)
-```
-
-or
-
-```js
-// server.js
-import { MatchMediaBreakpoints } from 'react-hook-breakpoints';
-
-const breakpoints = {
-  mobile: 320,
-  mobileLandscape: 480,
-  tablet: 768,
-  tabletLandscape: 1024,
-  desktop: 1200,
-  desktopLarge: 1500,
-  desktopWide: 1920,
-}
-
- // create your own logic to generate this
-const defaultBreakpoint = "tablet";
-
-const markup = renderToString(
-  <MatchMediaBreakpoints
-    guessedBreakpoint={guessedBreakpoint}
-    breakpoints={breakpoints}
-  >
-    <App />
-  </MatchMediaBreakpoints>,
-);
-```
-
-### Provider options
-
-#### `breakpointUnit: string` option
-
-Available in `ReactBreakpoints` and `MatchMediaBreakpoints`.
-
-Set the unit type of the breakpoints. Either 'em' or 'px'. The default is 'px'.
-
-```js
-ReactDOM.render(
-  <ReactBreakpoints
-    breakpoints={...}
-    breakpointUnit="em"
-  >
-    <App />
-  </ReactBreakpoints>  
-  , document.getElementById('root')
-);
-```
-
-#### `debounceResize: bool` option
-
-Available in `ReactBreakpoints`
-
-By default, this library does NOT debounce the `resize` listener. However, by passing the `debounceResize` prop to the `ReactBreakpoints` component it will be enabled with a default delay.
-
-```js
-ReactDOM.render(
-  <ReactBreakpoints
-    breakpoints={...}
-    debounceResize={true}
-  >
-    <App />
-  </ReactBreakpoints>  
-  , document.getElementById('root')
-);
-```
-
-#### `debounceDelay: number[ms]` option
-
-Available in `ReactBreakpoints`
-
-Set a custom delay in milliseconds for how the length of the debounce wait.
-
-```js
-ReactDOM.render(
-  <ReactBreakpoints
-    breakpoints={...}
-    debounceResize={true}
-    debounceDelay={100}
-  >
-    <App />
-  </ReactBreakpoints>  
-  , document.getElementById('root')
-);
-```
-
-#### `defaultBreakpoint: number` option
-
-Available in `ReactBreakpoints`
-
-In case you always want to default to a certain breakpoint.
-
-```js
-const breakpoints = {
-  mobile: 320,
-  tablet: 768,
-  desktop: 1025,
-};
-
-ReactDOM.render(
-  <ReactBreakpoints
-    breakpoints={breakpoints}
-    defaultBreakpoint={breakpoints.mobile}
-  >
-    <App />
-  </ReactBreakpoints>,
-  document.getElementById('root'),
-);
-```
-
-
-
-#### `defaultBreakpoint: string` option
-
-Available in `MatchMediaBreakpoints`
-
-In case you always want to default to a certain breakpoint.
-
-```js
-const breakpoints = {
-  mobile: 320,
-  tablet: 768,
-  desktop: 1025,
-};
-
-ReactDOM.render(
-  <MatchMediaBreakpoints
-    breakpoints={breakpoints}
-    defaultBreakpoint={"mobile"}
-  >
-    <App />
-  </MatchMediaBreakpoints>,
-  document.getElementById('root'),
-);
-```
-
-### Standalone component
-
-Use media queries directly. 
-
-**_Disclaimer_**:
-Adds one event listener for each use of this component, so performance might become
-and issue if you use this everywhere.
-
-```tsx
-import { MatchMediaQuery } from 'react-hook-breakpoints';
-
-export default function MatchMediaQueryExample(): JSX.Element {
-  return (
-    <div>
-      <h2 className="App-title">
-        Standalone component that window.matchMedia to detect breakpoints
-      </h2>
-
-      <MatchMediaQuery query="screen and (min-width: 800px)">
-        <h1>MatchMediaQuery</h1>
-        <div>Visible for screens larger 800px</div>
-      </MatchMediaQuery>
-
-      <MatchMediaQuery query="(max-width: 800px)">
-        <h1>MatchMediaQuery</h1>
-        <div>Visible for screens smaller than 800px</div>
-      </MatchMediaQuery>
-
-      <MatchMediaQuery query="(min-width: 600px) and (max-width: 800px)">
-        <h1>MatchMediaQuery</h1>
-        <div>Visible between 600px and 800px</div>
-      </MatchMediaQuery>
-
-      <MatchMediaQuery query="print">
-        <div>Only rendered in print</div>
-      </MatchMediaQuery>
-    </div>
-  );
-}
 ```
