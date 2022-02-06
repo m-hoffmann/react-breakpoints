@@ -97,7 +97,7 @@
     "src/**/*"
   ],
   "exclude": [
-    "src/**/*.test.ts",
-    "src/**/*.test.tsx",
+    // "src/**/*.test.ts",
+    // "src/**/*.test.tsx",
   ]
 }
