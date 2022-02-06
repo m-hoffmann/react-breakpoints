@@ -10,11 +10,15 @@
     "url": "https://github.com/m-hoffmann/react-hook-breakpoints.git"
   },
   "keywords": [
-    "react-breakpoints",
+    
     "responsive",
     "breakpoints",
     "breakpoint",
-    "react"
+    "react",
+    "react-breakpoints",
+    "media queries",
+    "media query",
+    "matchMedia"
   ],
   "files": [
     "src/**/*.ts",
