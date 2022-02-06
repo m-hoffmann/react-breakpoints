@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
 import { render } from '@testing-library/react';
 
 import { withBreakpoints } from '../withBreakpoints';
 import { BreakpointsContext } from '../BreakpointsContext';
-import { BreakpointsProps } from '../breakpoints';
+import type { BreakpointsProps } from '../breakpoints';
 
 describe('withBreakpoints', () => {
   type Breakpoints = 'sm' | 'md' | 'lg';
@@ -12,13 +11,12 @@ describe('withBreakpoints', () => {
   const breakpointsProps: BreakpointsProps<Breakpoints> = {
     breakpoints: { sm: 1, md: 2, lg: 3 },
     currentBreakpoint: 'md',
-    screenWidth: 1234,
   };
 
   const propsMock = jest.fn();
 
   beforeEach(() => {
-    propsMock.mockReset();
+    propsMock.mockClear();
     propsMock.mockImplementation((props: BreakpointsProps) => {
       return props;
     });

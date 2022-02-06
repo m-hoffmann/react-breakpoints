@@ -1,11 +1,12 @@
-import React, { ComponentType, useContext } from 'react';
+import { ComponentType, useContext } from 'react';
 import hoistStatics from 'hoist-non-react-statics';
 
-import { BreakpointKey, BreakpointsProps } from './breakpoints';
+import type { BreakpointKey, BreakpointsProps } from './breakpoints';
 import { BreakpointsContext } from './BreakpointsContext';
 
 /**
  * HOC for providing breakpoints as props
+ * Needs provider for `BreakpointsProps`
  */
 export function withBreakpoints<
   K extends BreakpointKey = BreakpointKey,

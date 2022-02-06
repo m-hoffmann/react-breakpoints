@@ -5,7 +5,7 @@
 import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
-import ReactBreakpoints, { useBreakpoints } from 'react-hook-breakpoints';
+import { WindowSizeBreakpoints, useBreakpoints } from 'react-hook-breakpoints';
 
 describe('ReactBreakpoints on the server', function () {
   type Breakpoint = 'desktop' | 'tablet' | 'mobile';
@@ -14,12 +14,6 @@ describe('ReactBreakpoints on the server', function () {
     const props = useBreakpoints<Breakpoint>();
 
     return <>{props.currentBreakpoint}</>;
-  }
-
-  function Screenwidth() {
-    const props = useBreakpoints<Breakpoint>();
-
-    return <>{props.screenWidth}</>;
   }
 
   function Breakpoints() {
@@ -36,7 +30,7 @@ describe('ReactBreakpoints on the server', function () {
   it('explodes if there are no breakpoints', function () {
     expect(() =>
       renderToStaticMarkup(
-        <ReactBreakpoints
+        <WindowSizeBreakpoints
           breakpoints={null as any}
           children={<CurrentBreakpoint />}
         />,
@@ -44,7 +38,7 @@ describe('ReactBreakpoints on the server', function () {
     ).toThrow();
     expect(() =>
       renderToStaticMarkup(
-        <ReactBreakpoints
+        <WindowSizeBreakpoints
           breakpoints={123 as any}
           children={<CurrentBreakpoint />}
         />,
@@ -53,7 +47,10 @@ describe('ReactBreakpoints on the server', function () {
 
     expect(() =>
       renderToStaticMarkup(
-        <ReactBreakpoints breakpoints={{}} children={<CurrentBreakpoint />} />,
+        <WindowSizeBreakpoints
+          breakpoints={{}}
+          children={<CurrentBreakpoint />}
+        />,
       ),
     ).toThrow();
   });
@@ -63,7 +60,7 @@ describe('ReactBreakpoints on the server', function () {
 
     expect(
       renderToStaticMarkup(
-        <ReactBreakpoints
+        <WindowSizeBreakpoints
           breakpoints={breakpoints}
           children={<CurrentBreakpoint />}
         />,
@@ -76,7 +73,7 @@ describe('ReactBreakpoints on the server', function () {
 
     expect(
       renderToStaticMarkup(
-        <ReactBreakpoints
+        <WindowSizeBreakpoints
           breakpoints={breakpoints}
           guessedBreakpoint={1900}
           children={<CurrentBreakpoint />}
@@ -90,7 +87,7 @@ describe('ReactBreakpoints on the server', function () {
 
     expect(
       renderToStaticMarkup(
-        <ReactBreakpoints
+        <WindowSizeBreakpoints
           breakpoints={breakpoints}
           guessedBreakpoint={800}
           children={<CurrentBreakpoint />}
@@ -104,7 +101,7 @@ describe('ReactBreakpoints on the server', function () {
 
     expect(
       renderToStaticMarkup(
-        <ReactBreakpoints
+        <WindowSizeBreakpoints
           breakpoints={breakpoints}
           guessedBreakpoint={600}
           children={<CurrentBreakpoint />}
@@ -113,26 +110,12 @@ describe('ReactBreakpoints on the server', function () {
     ).toBe('mobile');
   });
 
-  it('Detects screenWidth 0', function () {
-    const breakpoints = { mobile: 320, tablet: 768, desktop: 1200 };
-
-    expect(
-      renderToStaticMarkup(
-        <ReactBreakpoints
-          breakpoints={breakpoints}
-          guessedBreakpoint={600}
-          children={<Screenwidth />}
-        />,
-      ),
-    ).toBe('0');
-  });
-
   it('Renders breakpoints', function () {
     const breakpoints = { mobile: 320, tablet: 768, desktop: 1200 };
 
     expect(
       renderToStaticMarkup(
-        <ReactBreakpoints
+        <WindowSizeBreakpoints
           breakpoints={breakpoints}
           guessedBreakpoint={600}
           children={<Breakpoints />}

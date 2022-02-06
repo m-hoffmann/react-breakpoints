@@ -1,6 +1,6 @@
 {
   "name": "react-hook-breakpoints",
-  "version": "4.0.1",
+  "version": "5.0.0-11",
   "description": "A library that allows you to mount/unmount components depending on the viewport size. Welcome to the next level of responsive React applications.",
   "main": "lib/cjs/index.js",
   "module": "lib/esm/index.js",
@@ -21,17 +21,18 @@
     "src/**/*.tsx",
     "lib/**/*.*"
   ],
+  "sideEffects": false,
   "scripts": {
     "clean": "rimraf lib",
     "lint": "eslint ./src/**/*.*",
     "build": "npm run compile",
     "compile": "npm run compile:commonjs && npm run compile:es",
-    "compile:commonjs": "tsc --project ./tsconfig.json",
+    "compile:commonjs": "tsc --project ./tsconfig.cjs.json",
     "compile:es": "tsc --project ./tsconfig.esm.json",
     "prepublishOnly": "npm run clean && npm run lint && npm run test && npm run compile",
-    "prettier": "pretty-quick --staged",
-    "precommit_": "npm run prettier",
-    "prepush_": "npm run prettier",
+    "prettier": "prettier --write ./src",
+    "pretty-quick": "pretty-quick --staged",
+    "precommit": "npm run pretty-quick",
     "test": "jest",
     "test:coverage": "jest --coverage"
   },
@@ -46,6 +47,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
+    "@testing-library/react-hooks": "^7.0.2",
     "@types/hoist-non-react-statics": "^3.3.1",
     "@types/jest": "^27.4.0",
     "@types/lodash.debounce": "^4.0.6",

@@ -1,4 +1,3 @@
-import React from 'react';
 import { render } from '@testing-library/react';
 
 import { Media } from '../Media';
@@ -9,7 +8,7 @@ describe('Media', () => {
   const propsMock = jest.fn();
 
   beforeEach(() => {
-    propsMock.mockReset();
+    propsMock.mockClear();
     propsMock.mockImplementation((props: BreakpointsProps) => {
       return props;
     });
@@ -20,7 +19,6 @@ describe('Media', () => {
   const breakpointsProps: BreakpointsProps<Breakpoints> = {
     breakpoints: { sm: 1, md: 2, lg: 3 },
     currentBreakpoint: 'md',
-    screenWidth: 1234,
   };
 
   function TestComponent() {

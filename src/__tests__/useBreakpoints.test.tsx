@@ -1,15 +1,14 @@
-import React from 'react';
 import { render } from '@testing-library/react';
 
 import { useBreakpoints } from '../useBreakpoints';
 import { BreakpointsContext } from '../BreakpointsContext';
-import { BreakpointsProps } from '../breakpoints';
+import type { BreakpointsProps } from '../breakpoints';
 
 describe('useBreakpoints', () => {
   const propsMock = jest.fn();
 
   beforeEach(() => {
-    propsMock.mockReset();
+    propsMock.mockClear();
     propsMock.mockImplementation((props: BreakpointsProps) => {
       return props;
     });
@@ -20,7 +19,6 @@ describe('useBreakpoints', () => {
   const breakpointsProps: BreakpointsProps<Breakpoints> = {
     breakpoints: { sm: 1, md: 2, lg: 3 },
     currentBreakpoint: 'md',
-    screenWidth: 1234,
   };
 
   function SomeComponent(): JSX.Element {
