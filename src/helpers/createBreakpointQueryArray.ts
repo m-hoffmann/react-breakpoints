@@ -1,7 +1,7 @@
 import type {
   BreakpointMap,
   BreakpointUnit,
-  SortedBreakpointQueries,
+  BreakpointQuery,
 } from '../breakpoints';
 
 import { sortBreakpoints } from './sortBreakpoints';
@@ -15,18 +15,18 @@ function maxWidth(value: number, unit: BreakpointUnit): string {
 }
 
 /**
- * Creates sorted array of breakpoints
+ * Creates sorted array of breakpoints sorted by descending order
  * @param breakpoints
  * @param breakpointUnit
  * @returns
  */
-export function createBreakpointQueryArray<K extends string>(
-  breakpoints: BreakpointMap<K>,
+export function createBreakpointQueryArray(
+  breakpoints: BreakpointMap,
   breakpointUnit: BreakpointUnit,
-): SortedBreakpointQueries<K> {
+): BreakpointQuery[] {
   const sortedBreakpoints = sortBreakpoints(breakpoints);
 
-  const queryArray: SortedBreakpointQueries = sortedBreakpoints.map(
+  const queryArray: BreakpointQuery[] = sortedBreakpoints.map(
     (breakpoint, breakpointIndex) => {
       const smallerBreakpoint = sortedBreakpoints[breakpointIndex + 1];
       const largerBreakpoint = sortedBreakpoints[breakpointIndex - 1];
@@ -34,12 +34,12 @@ export function createBreakpointQueryArray<K extends string>(
 
       if (smallerBreakpoint != null) {
         // larger than the current one
-        queries.push(minWidth(breakpoint[1], breakpointUnit));
+        queries.push(minWidth(breakpoint.width, breakpointUnit));
       }
 
       if (largerBreakpoint != null) {
         // smaller than the larger one
-        queries.push(maxWidth(largerBreakpoint[1], breakpointUnit));
+        queries.push(maxWidth(largerBreakpoint.width, breakpointUnit));
       }
 
       // if there is no previous and no next
@@ -49,9 +49,13 @@ export function createBreakpointQueryArray<K extends string>(
         queries.push('all');
       }
 
-      return [breakpoint[0], queries.join(' and ')];
+      return {
+        name: breakpoint.name,
+        width: breakpoint.width,
+        query: queries.join(' and '),
+      };
     },
   );
 
-  return queryArray as SortedBreakpointQueries<K>;
+  return queryArray as BreakpointQuery[];
 }

@@ -45,29 +45,42 @@ export interface BreakpointsProps<K extends BreakpointKey = BreakpointKey> {
 }
 
 /**
- * Array with breakpoints
- * @example [ ["lg", 800], ["md", 640], ["xs", 320]]
+ * Breakpoint as object
+ * @example { name: "lg", width: 1200  }
  * @private for internal use
  */
-export type SortedBreakpoints<K extends BreakpointKey = BreakpointKey> = [
-  K,
-  number,
-][];
+export type BreakpointSize<K extends BreakpointKey = BreakpointKey> = {
+  name: K;
+  width: number;
+};
 
 /**
- * Array with breakpoints queries
- * @example [["md", "min-width: 640px)"], ["xs", "(max-width: 640px)"]]
- * @example ["single", ""]
+ * Breakpoint as object
+ * @example { name: "desktop", width: 1200, query: "(min-width: 1200px)" }
  * @private for internal use
  */
-export type SortedBreakpointQueries<K extends BreakpointKey = BreakpointKey> = [
-  K,
-  string,
-][];
+export type BreakpointQuery<K extends BreakpointKey = BreakpointKey> = {
+  /**
+   * Name
+   * @example "desktop"
+   */
+  name: K;
+  /**
+   * Width
+   * @example 1920
+   */
+  width: number;
+  /**
+   * Media query
+   * @example "(min-width: 1920px)"
+   */
+  query: string;
+};
 
 /**
  * Detected window size
  * @private for internal use
+ * @example { width: 1920, height: 1080 }
  */
 export interface WindowSize {
   width: number;

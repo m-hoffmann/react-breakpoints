@@ -8,10 +8,9 @@ export function findLargestMatchingBreakpoint(
   const sortedBreakpoints = sortBreakpoints(breakpoints);
 
   // flag matching breakpoints
-  for (const item of sortedBreakpoints) {
-    const [name] = item;
-    if (matchedBreakpoints[name]) {
-      return name;
+  for (const breakpoint of sortedBreakpoints) {
+    if (matchedBreakpoints[breakpoint.name]) {
+      return breakpoint.name;
     }
   }
 

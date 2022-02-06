@@ -7,7 +7,6 @@ import type {
   WindowSize,
 } from './breakpoints';
 
-import { sortBreakpoints } from './helpers/sortBreakpoints';
 import { convertScreenWidth } from './helpers/convertScreenWidth';
 import { calculateBreakpoint } from './helpers/calculateBreakpoint';
 
@@ -37,18 +36,16 @@ export function useDetectCurrentBreakpoint<
   } = options;
 
   const currentBreakpoint = useMemo<string>(() => {
-    const sortedBreakpoints = sortBreakpoints(breakpoints);
-
     if (screenSize.width) {
       // if we are on the client, we directly compose the breakpoint using window width
       const screenWidth = convertScreenWidth(screenSize.width, breakpointUnit);
-      return calculateBreakpoint(screenWidth, sortedBreakpoints);
+      return calculateBreakpoint(screenWidth, breakpoints);
     } else if (guessedBreakpoint) {
       // use the breakpoint provided by SSR on server
-      return calculateBreakpoint(guessedBreakpoint, sortedBreakpoints);
+      return calculateBreakpoint(guessedBreakpoint, breakpoints);
     } else {
       // use default breakpoint if no breakpoint from server is available
-      return calculateBreakpoint(defaultBreakpoint, sortedBreakpoints);
+      return calculateBreakpoint(defaultBreakpoint, breakpoints);
     }
   }, [
     breakpointUnit,

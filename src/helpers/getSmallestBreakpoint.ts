@@ -6,5 +6,5 @@ import { sortBreakpoints } from './sortBreakpoints';
  */
 export function getSmallestBreakpoint(breakpoints: BreakpointMap): string {
   const sortedBreakpoints = sortBreakpoints(breakpoints);
-  return sortedBreakpoints[sortedBreakpoints.length - 1][0];
+  return sortedBreakpoints[sortedBreakpoints.length - 1].name;
 }

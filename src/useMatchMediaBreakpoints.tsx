@@ -74,16 +74,16 @@ export function useMatchMediaBreakpoints<K extends BreakpointKey>(
 
     if (globalWindow && typeof globalWindow.matchMedia === 'function') {
       const queries = createBreakpointQueryArray(breakpoints, breakpointUnit);
-      queries.forEach(([breakpoint, mediaQuery]) => {
-        const mediaQueryList = globalWindow.matchMedia(mediaQuery);
+      queries.forEach(({ name, query }) => {
+        const mediaQueryList = globalWindow.matchMedia(query);
 
         // set initial match
-        updateBreakpointMatch(breakpoint, mediaQueryList.matches);
+        updateBreakpointMatch(name, mediaQueryList.matches);
 
         // update matches
         listeners.push(
           createMediaQueryListener(mediaQueryList, ev => {
-            updateBreakpointMatch(breakpoint, ev.matches);
+            updateBreakpointMatch(name, ev.matches);
             computeNewBreakpoint();
           }),
         );

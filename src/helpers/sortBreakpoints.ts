@@ -1,8 +1,17 @@
-import type { BreakpointMap, SortedBreakpoints } from '../breakpoints';
+import type { BreakpointMap, BreakpointSize } from '../breakpoints';
 
 /**
- * Sort from largest to smallest
+ * Sorts breakpoints
+ * @param breakpoints
+ * @param order default is "desc"
+ * @returns
  */
-export function sortBreakpoints(breakpoints: BreakpointMap): SortedBreakpoints {
-  return Object.entries(breakpoints).sort((a, b) => b[1] - a[1]);
+export function sortBreakpoints(
+  breakpoints: BreakpointMap,
+  order: 'asc' | 'desc' = 'desc',
+): BreakpointSize[] {
+  const sign = order === 'asc' ? -1 : 1;
+  const entries = Object.entries(breakpoints);
+  const entriesAsObject = entries.map(([name, width]) => ({ name, width }));
+  return entriesAsObject.sort((a, b) => sign * (b.width - a.width));
 }
