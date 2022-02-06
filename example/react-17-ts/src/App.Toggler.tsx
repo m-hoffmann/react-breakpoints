@@ -2,47 +2,55 @@ import { useState } from 'react';
 
 import App from './App';
 import AppMatchMediaBreakpoints from './App.MatchMediaBreakpoints';
-import AppReactBreakpoints from './App.ReactBreakpoints';
+import AppWindowSizeBreakpoints from './App.WindowSizeBreakpoints';
 import AppMatchMediaQuery from './App.MatchMediaQuery';
 
-type Provider =
-  | 'MatchMediaBreakpoints'
-  | 'ReactBreakpoints'
-  | 'MatchMediaQuery';
+enum Provider {
+  MatchMediaBreakpoints = 'MatchMediaBreakpoints',
+  WindowSizeBreakpoints = 'WindowSizeBreakpoints',
+  MatchMediaQuery = 'MatchMediaQuery',
+}
 
 export default function AppToggler() {
-  const [provider, setProvider] = useState<Provider>('MatchMediaBreakpoints');
+  const [provider, setProvider] = useState<Provider>(
+    Provider.MatchMediaBreakpoints,
+  );
+
   return (
     <App title={'react-hook-break-points'}>
       <div className="AppProvider">
         <button
-          className={provider === 'MatchMediaBreakpoints' ? 'active' : ''}
+          className={
+            provider === Provider.MatchMediaBreakpoints ? 'active' : ''
+          }
           type="button"
-          onClick={() => setProvider('MatchMediaBreakpoints')}
+          onClick={() => setProvider(Provider.MatchMediaBreakpoints)}
         >
-          MatchMediaBreakpoints
+          {Provider.MatchMediaBreakpoints}
         </button>
 
         <button
-          className={provider === 'ReactBreakpoints' ? 'active' : ''}
+          className={
+            provider === Provider.WindowSizeBreakpoints ? 'active' : ''
+          }
           type="button"
-          onClick={() => setProvider('ReactBreakpoints')}
+          onClick={() => setProvider(Provider.WindowSizeBreakpoints)}
         >
-          ReactBreakpoints
+          {Provider.WindowSizeBreakpoints}
         </button>
 
         <button
-          className={provider === 'MatchMediaQuery' ? 'active' : ''}
+          className={provider === Provider.MatchMediaQuery ? 'active' : ''}
           type="button"
-          onClick={() => setProvider('MatchMediaQuery')}
+          onClick={() => setProvider(Provider.MatchMediaQuery)}
         >
-          MatchMediaQuery
+          {Provider.MatchMediaQuery}
         </button>
       </div>
-      {provider === 'MatchMediaBreakpoints' ? (
+      {provider === Provider.MatchMediaBreakpoints ? (
         <AppMatchMediaBreakpoints />
-      ) : provider === 'ReactBreakpoints' ? (
-        <AppReactBreakpoints />
+      ) : provider === Provider.WindowSizeBreakpoints ? (
+        <AppWindowSizeBreakpoints />
       ) : (
         <AppMatchMediaQuery />
       )}

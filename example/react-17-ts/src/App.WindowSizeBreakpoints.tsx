@@ -1,4 +1,4 @@
-import ReactBreakpoints from 'react-hook-breakpoints';
+import { WindowSizeBreakpoints } from 'react-hook-breakpoints';
 import BreakpointsApp from './breakpoints/App';
 
 // breakpoints
@@ -12,14 +12,14 @@ const breakpoints = {
   desktopHuge: 1920,
 };
 
-export default function AppReactBreakpoints() {
+export default function AppWindowSizeBreakpoints() {
   return (
-    <ReactBreakpoints breakpoints={breakpoints}>
+    <WindowSizeBreakpoints breakpoints={breakpoints}>
       <h2 className="App-title">
         Provider for breakpoints using window.innerWidth
       </h2>
       <p className="App-intro"></p>
       <BreakpointsApp />
-    </ReactBreakpoints>
+    </WindowSizeBreakpoints>
   );
 }

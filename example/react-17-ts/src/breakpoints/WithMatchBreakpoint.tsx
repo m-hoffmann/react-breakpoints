@@ -3,7 +3,11 @@ import { MatchBreakpoint } from 'react-hook-breakpoints';
 function WithMatchBreakpoint() {
   return (
     <div>
-      <h3>With MatchBreakpoint Component</h3>
+      <h3>
+        <code>MatchBreakpoint</code>
+        <br />
+        <small>component that renders its children</small>
+      </h3>
       <MatchBreakpoint is="desktop">
         <p>
           Only <strong>desktop</strong>

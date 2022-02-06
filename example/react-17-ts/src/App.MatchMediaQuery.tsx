@@ -7,7 +7,7 @@ export default function MatchMediaQueryExample(): JSX.Element {
         Standalone component that window.matchMedia to detect breakpoints
       </h2>
 
-      <MatchMediaQuery query="screen and (min-width: 800px)">
+      <MatchMediaQuery query="(min-width: 800px)">
         <h1>MatchMediaQuery</h1>
         <div>Visible for screens larger 800px</div>
       </MatchMediaQuery>
@@ -24,6 +24,10 @@ export default function MatchMediaQueryExample(): JSX.Element {
 
       <MatchMediaQuery query="print">
         <div>Only rendered in print</div>
+      </MatchMediaQuery>
+
+      <MatchMediaQuery query="not print">
+        <div>Not rendered in print</div>
       </MatchMediaQuery>
     </div>
   );

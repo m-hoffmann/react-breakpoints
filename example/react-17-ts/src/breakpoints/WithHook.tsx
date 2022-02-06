@@ -6,7 +6,11 @@ function WithHook() {
   const { breakpoints, currentBreakpoint } = useBreakpoints();
   return (
     <div>
-      <h3>With hook useBreakpoints</h3>
+      <h3>
+        <code>useBreakpoints</code>
+        <br />
+        <small>hook</small>
+      </h3>
       <DisplayBreakpoint
         breakpoints={breakpoints}
         currentBreakpoint={currentBreakpoint}

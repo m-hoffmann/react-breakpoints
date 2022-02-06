@@ -6,7 +6,11 @@ import { DisplayBreakpoint } from './DisplayBreakpoint';
 function WithRenderProps() {
   return (
     <div>
-      <h3>With Render Props Media Component</h3>
+      <h3>
+        <code>Media</code>
+        <br />
+        <small> component with function as children</small>
+      </h3>
       <Media>
         {({ breakpoints, currentBreakpoint }) => (
           <DisplayBreakpoint
