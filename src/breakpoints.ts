@@ -42,10 +42,6 @@ export interface BreakpointsProps<K extends BreakpointKey = BreakpointKey> {
    * Current detected breakpoint
    */
   currentBreakpoint: K;
-  /**
-   * The current screen width in `BreakpointUnit`
-   */
-  screenWidth: number;
 }
 
 /**

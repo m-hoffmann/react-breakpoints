@@ -5,10 +5,15 @@
 ### Added
 
 - Added component `MatchBreakpoint`
+- Added component `MatchMediaBreakpoints`
 
 ### Changed
 
-- Always changes in breakpoints if a new object reference is passed (breaking)
+
+BREAKING CHANGES
+
+- Always changes in breakpoints if a new object reference is passed
+- Remove property `windowWidth` from `BreakpointsProps`, since it triggers unnecessary re-renders
 
 ### Removed
 

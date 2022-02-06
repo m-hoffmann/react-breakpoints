@@ -69,7 +69,6 @@ export function MatchMediaBreakpoints<K extends BreakpointKey = BreakpointKey>(
     return {
       breakpoints,
       currentBreakpoint,
-      screenWidth: 0,
     };
   }, [breakpoints, currentBreakpoint]);
 

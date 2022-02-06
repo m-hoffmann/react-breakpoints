@@ -19,7 +19,6 @@ describe('useBreakpoints', () => {
   const breakpointsProps: BreakpointsProps<Breakpoints> = {
     breakpoints: { sm: 1, md: 2, lg: 3 },
     currentBreakpoint: 'md',
-    screenWidth: 1234,
   };
 
   function SomeComponent(): JSX.Element {

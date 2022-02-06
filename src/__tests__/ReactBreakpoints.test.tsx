@@ -81,16 +81,13 @@ describe('ReactBreakpoints', function () {
       desktop: 1200,
     };
 
-    const screenWidth = 1920;
     global.innerWidth = 1920;
 
     render(
       <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
     );
 
-    expect(propsMockResult()).toMatchObject([
-      { currentBreakpoint: 'desktop', screenWidth },
-    ]);
+    expect(propsMockResult()).toMatchObject([{ currentBreakpoint: 'desktop' }]);
   });
 
   it('detects currentBreakpoint "tablet" for innerWidth = 800', function () {
@@ -107,7 +104,7 @@ describe('ReactBreakpoints', function () {
     );
 
     expect(propsMockResult()).toMatchObject([
-      { breakpoints, currentBreakpoint: 'tablet', screenWidth: 800 },
+      { breakpoints, currentBreakpoint: 'tablet' },
     ]);
   });
 
@@ -124,9 +121,7 @@ describe('ReactBreakpoints', function () {
       <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
     );
 
-    expect(propsMockResult()).toMatchObject([
-      { currentBreakpoint: 'mobile', screenWidth: 240 },
-    ]);
+    expect(propsMockResult()).toMatchObject([{ currentBreakpoint: 'mobile' }]);
   });
 
   it('detects currentBreakpoint "mobile" for innerWidth = 100', function () {
@@ -142,28 +137,7 @@ describe('ReactBreakpoints', function () {
       <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
     );
 
-    expect(propsMockResult()).toMatchObject([
-      { currentBreakpoint: 'mobile', screenWidth: 100 },
-    ]);
-  });
-
-  it('detects screenWidth = 1234', function () {
-    const breakpoints = {
-      mobile: 320,
-      tablet: 768,
-      desktop: 1200,
-    };
-
-    const screenWidth = 1234;
-    global.innerWidth = screenWidth;
-
-    render(
-      <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
-    );
-
-    expect(propsMock.mock.results.map(v => v.value)).toMatchObject([
-      { breakpoints, screenWidth },
-    ]);
+    expect(propsMockResult()).toMatchObject([{ currentBreakpoint: 'mobile' }]);
   });
 
   it('detects currentBreakpoint "desktop" for innerWidth = 1920 with breakpointUnit = "em"', function () {
@@ -173,8 +147,7 @@ describe('ReactBreakpoints', function () {
       desktop: 75, //  75em = 1200px
     };
 
-    const screenWidth = 1920; // = 120em
-    global.innerWidth = screenWidth;
+    global.innerWidth = 1920; // = 120em
 
     render(
       <ReactBreakpoints
@@ -184,9 +157,7 @@ describe('ReactBreakpoints', function () {
       />,
     );
 
-    expect(propsMockResult()).toMatchObject([
-      { currentBreakpoint: 'desktop', screenWidth: 120 },
-    ]);
+    expect(propsMockResult()).toMatchObject([{ currentBreakpoint: 'desktop' }]);
   });
 
   it('detects currentBreakpoint "tablet" for innerWidth = 800 with breakpointUnit = "em"', function () {
@@ -196,8 +167,7 @@ describe('ReactBreakpoints', function () {
       desktop: 75, //  75em = 1200px
     };
 
-    const screenWidth = 800; // = 50em
-    global.innerWidth = screenWidth;
+    global.innerWidth = 800; // = 50em
 
     render(
       <ReactBreakpoints
@@ -207,9 +177,7 @@ describe('ReactBreakpoints', function () {
       />,
     );
 
-    expect(propsMockResult()).toMatchObject([
-      { currentBreakpoint: 'tablet', screenWidth: 50 },
-    ]);
+    expect(propsMockResult()).toMatchObject([{ currentBreakpoint: 'tablet' }]);
   });
 
   it('detects changes in breakpoints', async function () {
@@ -232,8 +200,7 @@ describe('ReactBreakpoints', function () {
       xl: 1920,
     };
 
-    const screenWidth = 800; // = 50em
-    global.innerWidth = screenWidth;
+    global.innerWidth = 800; // = 50em
 
     const result = render(
       <ReactBreakpoints
@@ -262,17 +229,14 @@ describe('ReactBreakpoints', function () {
       {
         breakpoints: initialBreakPoints,
         currentBreakpoint: 'tablet',
-        screenWidth,
       },
       {
         breakpoints: nextBreakpoints,
         currentBreakpoint: 'md',
-        screenWidth,
       },
       {
         breakpoints: moreBreakpoints,
         currentBreakpoint: 'md',
-        screenWidth,
       },
     ]);
   });
@@ -299,9 +263,9 @@ describe('ReactBreakpoints', function () {
     fireEvent.resize(global.window);
 
     expect(propsMockResult()).toMatchObject([
-      { currentBreakpoint: 'desktop', screenWidth: 1920 },
-      { currentBreakpoint: 'tablet', screenWidth: 800 },
-      { currentBreakpoint: 'mobile', screenWidth: 600 },
+      { currentBreakpoint: 'desktop' },
+      { currentBreakpoint: 'tablet' },
+      { currentBreakpoint: 'mobile' },
     ]);
   });
 
@@ -331,11 +295,11 @@ describe('ReactBreakpoints', function () {
 
     fireEvent.resize(global.window);
 
-    await delay(30);
+    await delay(30); // wait for debounce
 
     expect(propsMockResult()).toMatchObject([
-      { currentBreakpoint: 'desktop', screenWidth: 1920 },
-      { currentBreakpoint: 'mobile', screenWidth: 600 },
+      { currentBreakpoint: 'desktop' },
+      { currentBreakpoint: 'mobile' },
     ]);
   });
 
@@ -356,9 +320,7 @@ describe('ReactBreakpoints', function () {
       />,
     );
 
-    expect(propsMockResult()).toMatchObject([
-      { currentBreakpoint: 'tablet', screenWidth: 0 },
-    ]);
+    expect(propsMockResult()).toMatchObject([{ currentBreakpoint: 'tablet' }]);
   });
 
   it('works with detected screenWidth = 0 and defaultBreakpoint', async function () {
@@ -378,9 +340,7 @@ describe('ReactBreakpoints', function () {
       />,
     );
 
-    expect(propsMockResult()).toMatchObject([
-      { currentBreakpoint: 'tablet', screenWidth: 0 },
-    ]);
+    expect(propsMockResult()).toMatchObject([{ currentBreakpoint: 'tablet' }]);
   });
 
   it('with detected screenWidth = 0 and no other hints it uses the smallest breakpoint', async function () {
@@ -396,8 +356,6 @@ describe('ReactBreakpoints', function () {
       <ReactBreakpoints breakpoints={breakpoints} children={<Children />} />,
     );
 
-    expect(propsMockResult()).toMatchObject([
-      { currentBreakpoint: 'mobile', screenWidth: 0 },
-    ]);
+    expect(propsMockResult()).toMatchObject([{ currentBreakpoint: 'mobile' }]);
   });
 });

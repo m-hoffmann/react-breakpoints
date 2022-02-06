@@ -1,7 +1,6 @@
 import { ReactNode, useMemo } from 'react';
 import { objectOf, oneOf, number, bool } from 'prop-types';
 
-import { convertScreenWidth } from './helpers/convertScreenWidth';
 import { validateBreakpoints } from './helpers/validateBreakpoints';
 import { BreakpointsContext } from './BreakpointsContext';
 import { useScreenSize } from './useScreenSize';
@@ -96,9 +95,8 @@ export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
     return {
       breakpoints,
       currentBreakpoint,
-      screenWidth: convertScreenWidth(screenSize.width, breakpointUnit),
     };
-  }, [breakpoints, currentBreakpoint, screenSize.width, breakpointUnit]);
+  }, [breakpoints, currentBreakpoint]);
 
   return (
     <BreakpointsContext.Provider value={contextProps}>

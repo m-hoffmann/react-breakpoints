@@ -18,7 +18,6 @@ describe('MatchBreakpoint', () => {
     const breakpointsProps: BreakpointsProps<Breakpoints> = {
       breakpoints,
       currentBreakpoint: 'md',
-      screenWidth: breakpoints.md,
     };
 
     it('renders [sm] for "sm"', () => {
@@ -40,7 +39,6 @@ describe('MatchBreakpoint', () => {
     const breakpointsProps: BreakpointsProps<Breakpoints> = {
       breakpoints,
       currentBreakpoint: 'md',
-      screenWidth: breakpoints.md,
     };
 
     it('renders [sm,lg] for "sm"', () => {
@@ -62,7 +60,6 @@ describe('MatchBreakpoint', () => {
     const breakpointsProps: BreakpointsProps<Breakpoints> = {
       breakpoints,
       currentBreakpoint: 'md',
-      screenWidth: breakpoints.md,
     };
 
     it('renders [md,lg] for "md"', () => {
@@ -84,7 +81,6 @@ describe('MatchBreakpoint', () => {
     const breakpointsProps: BreakpointsProps<Breakpoints> = {
       breakpoints,
       currentBreakpoint: 'md',
-      screenWidth: breakpoints.md,
     };
 
     it('renders [sm] for "md"', () => {
