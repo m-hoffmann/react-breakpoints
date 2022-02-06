@@ -3,7 +3,7 @@ import { objectOf, oneOf, number, bool } from 'prop-types';
 
 import { validateBreakpoints } from './helpers/validateBreakpoints';
 import { BreakpointsContext } from './BreakpointsContext';
-import { useScreenSize } from './useScreenSize';
+import { useDetectWindowSize } from './useDetectWindowSize';
 import { useDetectCurrentBreakpoint } from './useDetectCurrentBreakpoint';
 
 import {
@@ -81,7 +81,7 @@ export function ReactBreakpoints<K extends BreakpointKey = BreakpointKey>(
   } = props;
 
   // get the screen size in px
-  const screenSize = useScreenSize({ debounceResize, debounceDelay });
+  const screenSize = useDetectWindowSize({ debounceResize, debounceDelay });
 
   const currentBreakpoint = useDetectCurrentBreakpoint({
     breakpoints,

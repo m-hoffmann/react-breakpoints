@@ -22,7 +22,8 @@ export interface BreakpointDetectionOptions<
 }
 
 /**
- * Detect the the current breakpoint
+ * Detect the the current breakpoint by window size
+ * @private for internal use
  */
 export function useDetectCurrentBreakpoint<
   K extends BreakpointKey = BreakpointKey,
