@@ -208,7 +208,5 @@ export function addMockToGlobal(
 }
 
 export function removeMockFromGlobal(): void {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  delete global.matchMedia;
+  delete (global as unknown as { matchMedia: unknown }).matchMedia;
 }
