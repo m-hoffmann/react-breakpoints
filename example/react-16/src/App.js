@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 
-import ReactBreakpoints, {
+import {
+  WindowSizeBreakpoints,
   MatchMediaBreakpoints,
   MatchMediaQuery,
   Media,
@@ -49,10 +50,10 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <ReactBreakpoints breakpoints={breakpoints}>
+        <WindowSizeBreakpoints breakpoints={breakpoints}>
           <h1>ReactBreakpoints</h1>
           <All />
-        </ReactBreakpoints>
+        </WindowSizeBreakpoints>
         <MatchMediaBreakpoints breakpoints={breakpoints}>
           <h1>MatchMediaBreakpoints</h1>
           <All />
