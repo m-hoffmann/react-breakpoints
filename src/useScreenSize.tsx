@@ -29,11 +29,11 @@ export interface WindowSizeDetectionOptions {
 }
 
 /**
- * Encapsulates detection of screen width
+ * Encapsulates detection of window dimensions
  * @param props
  * @returns Screen with in pixels
  */
-export function useScreenSize(props: WindowSizeDetectionOptions): ScreenSize {
+export function useDetectWindowSize(props: WindowSizeDetectionOptions): ScreenSize {
   const {
     debounceResize = false,
     debounceDelay = 50,
