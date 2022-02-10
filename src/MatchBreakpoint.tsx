@@ -47,7 +47,7 @@ export function MatchBreakpoint<K extends BreakpointKey = BreakpointKey>(
 
   if (props.is != null) {
     if (Array.isArray(props.is)) {
-      if (!props.is.includes(currentBreakpoint)) {
+      if (props.is.indexOf(currentBreakpoint) < 0) {
         return <Fragment />;
       }
     } else {
@@ -59,7 +59,7 @@ export function MatchBreakpoint<K extends BreakpointKey = BreakpointKey>(
 
   if (props.not != null) {
     if (Array.isArray(props.not)) {
-      if (props.not.includes(currentBreakpoint)) {
+      if (props.not.indexOf(currentBreakpoint) >= 0) {
         return <Fragment />;
       }
     } else {
