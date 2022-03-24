@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from 'react';
+import { useState, useLayoutEffect, useEffect } from 'react';
 
 import type { MediaQueryListener } from './MediaQueryListener';
 import { createMediaQueryListener } from './MediaQueryListener';
@@ -6,6 +6,7 @@ import { createMediaQueryListener } from './MediaQueryListener';
 /* istanbul ignore next */
 const globalWindow = typeof window !== 'undefined' ? window : null;
 
+const useIsomorphicLayoutEffect = globalWindow ? useLayoutEffect : useEffect;
 /**
  * Might not work on older browsers
  * @see https://developer.mozilla.org/en-US/docs/Web/API/MediaQueryList
@@ -15,7 +16,7 @@ const globalWindow = typeof window !== 'undefined' ? window : null;
 export function useMatchMediaQuery(mediaQuery: string): boolean {
   const [matches, setMatches] = useState(false);
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const listeners: MediaQueryListener[] = [];
 
     if (globalWindow && typeof globalWindow.matchMedia === 'function') {

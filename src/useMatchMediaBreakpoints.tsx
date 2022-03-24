@@ -1,4 +1,10 @@
-import { useRef, useState, useLayoutEffect, useCallback } from 'react';
+import {
+  useRef,
+  useState,
+  useLayoutEffect,
+  useCallback,
+  useEffect,
+} from 'react';
 import { BreakpointUnit } from './breakpoints';
 
 import type { BreakpointKey, Breakpoints } from './breakpoints';
@@ -11,6 +17,8 @@ import { createMediaQueryListener } from './MediaQueryListener';
 
 /* istanbul ignore next */
 const globalWindow = typeof window !== 'undefined' ? window : null;
+
+const useIsomorphicLayoutEffect = globalWindow ? useLayoutEffect : useEffect;
 
 /**
  * @private for internal use
@@ -68,7 +76,7 @@ export function useMatchMediaBreakpoints<K extends BreakpointKey>(
     ),
   );
 
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     const listeners: MediaQueryListener[] = [];
 
     // reset the ref

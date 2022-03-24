@@ -1,4 +1,4 @@
-import { useState, useLayoutEffect } from 'react';
+import { useState, useLayoutEffect, useEffect } from 'react';
 import debounce from 'lodash.debounce';
 
 import type { WindowSize } from './breakpoints';
@@ -6,6 +6,7 @@ import type { WindowSize } from './breakpoints';
 /* istanbul ignore next */
 const globalWindow = typeof window !== 'undefined' ? window : null;
 
+const useIsomorphicLayoutEffect = globalWindow ? useLayoutEffect : useEffect;
 /**
  * Detects screen size from window object
  * @param ignoreScreenSize
@@ -47,7 +48,7 @@ export function useDetectWindowSize(
     detectScreenSize(ignoreWindowSize),
   );
 
-  useLayoutEffect(
+  useIsomorphicLayoutEffect(
     function screenResizeEffect() {
       function updateScreenSize() {
         setScreenSize(detectScreenSize(ignoreWindowSize));
