@@ -13,7 +13,7 @@ jobs:
           node-version: '16'
       - run: cd example/react-16
       - name: Install modules
-        run: yarn
+        run: npm ci
       - name: Unit tests
         run: npm run test -- --all --watchAll=false
   test-react-app-17:
