@@ -15,7 +15,7 @@ jobs:
       - name: Install modules
         run: npm ci
       - name: Unit tests
-        run: npm run test -- --all --watchAll=false
+        run: npm run test -- --watchAll=false --rootDir=./
   test-react-app-17:
     runs-on: ubuntu-latest
     steps:
