@@ -44,7 +44,8 @@
   },
   "author": "Markus Hoffmann",
   "contributors": [
-    "Erik Hellman"
+    "Erik Hellman",
+    "Aleksey Makas"
   ],
   "license": "MIT",
   "devDependencies": {
