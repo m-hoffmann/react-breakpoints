@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.1.0] - 2022-04-21
+
+### Changed
+
+- Added check for useLayoutEffect to disable it on ssr
+
 ## [5.0.0] - 2022-02-06
 
 ### Added
